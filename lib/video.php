@@ -1,0 +1,293 @@
+<?php
+/**
+ * Redaxo Videomanager Addon
+ * @author Tobias Krais
+ * @author <a href="http://www.design-to-use.de">www.design-to-use.de</a>
+ */
+
+/**
+ * class representing database video object
+ */
+class Video {
+	/**
+	 * @var int Video ID.
+	 */
+	var $video_id = 0;
+	
+	/**
+	 * @var String name
+	 */
+	var $name = "";
+	
+	/**
+	 * @var String Teaser
+	 */
+	var $teaser = "";
+	
+	/**
+	 * @var String Youtube Video ID for all langs
+	 */
+	var $youtube_video_id = "";
+	
+	/**
+	 * @var String Youtube Video ID
+	 */
+	var $youtube_video_id_lang = "";
+	
+	/**
+	 * @var String Preview picture filename
+	 */
+	var $picture = "";
+	
+	/**
+	 * @var String priority
+	 */
+	var $priority = "";
+	
+	/**
+	 * @var String MP4 filename for all languages
+	 */
+	var $redaxo_file = "";
+	
+	/**
+	 * @var String MP4 filename
+	 */
+	var $redaxo_file_lang = "";
+	
+	/**
+	 * @var int Redaxo language ID
+	 */
+	var $clang_id = 0;
+	
+	/**
+	 * @var string "yes" if translation needs update
+	 */
+	var $translation_needs_update = "delete";
+
+	/**
+	 * @var String Video URL
+	 */
+	private $video_url = "";
+	
+	/**
+	 * Constructor
+	 * @param int $video_id Video ID.
+	 * @param int $clang_id Redaxo language ID
+	 */
+	public function __construct($video_id, $clang_id) {
+		$this->clang_id = $clang_id;
+		
+		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_videos_videos AS videos "
+				."LEFT JOIN ". rex::getTablePrefix() ."d2u_videos_videos_lang AS lang "
+					."ON lang.video_id = videos.video_id "
+				."WHERE videos.video_id = ". $video_id ." "
+					."AND clang_id = ". $this->clang_id;
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+
+		if ($result->getRows() > 0) {
+			$this->video_id = $video_id;
+			$this->name = $result->getValue("name");
+			$this->teaser = $result->getValue("teaser");
+			$this->youtube_video_id = $result->getValue("videos.youtube_video_id");
+			$this->youtube_video_id_lang = $result->getValue("lang.youtube_video_id");
+			$this->redaxo_file = $result->getValue("videos.redaxo_file");
+			$this->redaxo_file_lang = $result->getValue("lang.redaxo_file");
+			$this->picture = $result->getValue("picture");
+			$this->priority = $result->getValue("priority");
+			$this->translation_needs_update = $result->getValue("translation_needs_update");
+		}
+		
+		// If no name is available, fallback to default lang
+		if($this->video_id > 0 && $this->name == "") {
+			$d2u_videos = rex_addon::get('d2u_videos');
+			$query_fallback = "SELECT * FROM ". rex::getTablePrefix() ."d2u_videos_videos AS videos "
+					."LEFT JOIN ". rex::getTablePrefix() ."d2u_videos_videos_lang AS lang "
+						."ON lang.video_id = videos.video_id "
+					."WHERE videos.video_id = ". $video_id ." "
+						."AND clang_id = ". $d2u_videos->getConfig('default_lang');
+			$result_fallback = rex_sql::factory();
+			$result_fallback->setQuery($query_fallback);
+
+			if ($result_fallback->getRows() > 0) {
+				$this->name = $result_fallback->getValue("name");
+			}
+		}
+	}
+	
+	/**
+	 * Deletes the object in all languages.
+	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * FALSE, only this translation will be deleted.
+	 */
+	public function delete($delete_all = TRUE) {
+		if($delete_all) {
+			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_videos_videos_lang "
+				."WHERE video_id = ". $this->video_id;
+			$result_lang = rex_sql::factory();
+			$result_lang->setQuery($query_lang);
+
+			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_videos_videos "
+				."WHERE video_id = ". $this->video_id;
+			$result = rex_sql::factory();
+			$result->setQuery($query);
+		}
+		else {
+			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_videos_videos_lang "
+				."WHERE video_id = ". $this->video_id ." AND clang_id = ". $this->clang_id;
+			$result_lang = rex_sql::factory();
+			$result_lang->setQuery($query_lang);
+		}
+	}
+
+	/**
+	 * Get all videos.
+	 * @param int $clang_id Redaxo clang id.
+	 * @return Video[] Array with Video objects.
+	 */
+	public static function getAll($clang_id) {
+		$query = "SELECT video_id FROM ". rex::getTablePrefix() ."d2u_videos_videos "
+			."ORDER BY priority";
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		$videos = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$videos[$result->getValue("video_id")] = new Video($result->getValue("video_id"), $clang_id);
+			$result->next();
+		}
+		return $videos;
+	}
+
+	/**
+	 * Get all playlists, the video is in.
+	 * @return Playlist[] Array with playlists objects.
+	 */
+	public function getPlaylists() {
+		$query = "SELECT playlist_id FROM ". rex::getTablePrefix() ."d2u_videos_playlists "
+			."WHERE video_ids = '". $this->video_id ."' OR video_ids LIKE '%,". $this->video_id ."%' OR video_ids LIKE '%". $this->video_id .",%'";
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		$playlists = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$playlists[$result->getValue("playlist_id")] = new Playlist($result->getValue("playlist_id"));
+			$result->next();
+		}
+		return $playlists;
+	}
+
+	/**
+	 * Gibt die URL des Videos zurück.
+	 */
+	public function getVideoURL() {
+		if($this->video_url == "") {
+			$d2u_videos = rex_addon::get('d2u_videos');
+			if(($this->youtube_video_id != "" && ($d2u_videos->getConfig('preferred_video_type') == 'youtube') || $this->redaxo_file == "")) {
+				$this->video_url = $this->youtube_video_id;				
+			}
+			else if($this->redaxo_file != "") {
+				$this->video_url = rex_url::media($this->redaxo_file);
+			}
+		}
+		return $this->video_url;
+	}
+	
+	/**
+	 * Updates or inserts the object into database.
+	 * @return boolean TRUE if successful
+	 */
+	public function save() {
+		$error = 0;
+
+		// Save the not language specific part
+		$pre_save_video = new Video($this->video_id, $this->clang_id);
+
+		// save priority, but only if new or changed
+		if($this->priority != $pre_save_video->priority || $this->video_id == 0) {
+			$this->setPriority();
+		}
+	
+		if($this->video_id == 0 || $pre_save_video != $this) {
+			$query = rex::getTablePrefix() ."d2u_videos_videos SET "
+					."picture = '". $this->picture ."', "
+					."priority = ". $this->priority .", "
+					."youtube_video_id = '". $this->youtube_video_id ."', "
+					."redaxo_file = '". $this->redaxo_file ."' ";
+
+			if($this->video_id == 0) {
+				$query = "INSERT INTO ". $query;
+			}
+			else {
+				$query = "UPDATE ". $query ." WHERE video_id = ". $this->video_id;
+			}
+
+			$result = rex_sql::factory();
+			$result->setQuery($query);
+			if($this->video_id == 0) {
+				$this->video_id = $result->getLastId();
+				$error = $result->hasError();
+			}
+		}
+		
+		if($error == 0) {
+			// Save the language specific part
+			$pre_save_video = new Video($this->video_id, $this->clang_id);
+			if($pre_save_video != $this) {
+				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_videos_videos_lang SET "
+						."video_id = '". $this->video_id ."', "
+						."clang_id = '". $this->clang_id ."', "
+						."name = '". $this->name ."', "
+						."teaser = '". $this->teaser ."', "
+						."youtube_video_id = '". $this->youtube_video_id ."', "
+						."redaxo_file = '". $this->redaxo_file ."', "
+						."translation_needs_update = '". $this->translation_needs_update ."', "
+						."updatedate = ". time() .", "
+						."updateuser = '". rex::getUser()->getLogin() ."' ";
+
+				$result = rex_sql::factory();
+				$result->setQuery($query);
+				$error = $result->hasError();
+			}
+		}
+		
+		return $error;
+	}
+	
+	/**
+	 * Reassigns priority to all Machines in database.
+	 */
+	private function setPriority() {
+		// Pull prios from database
+		$query = "SELECT video_id, priority FROM ". rex::getTablePrefix() ."d2u_videos_videos "
+			."WHERE video_id <> ". $this->video_id ." ORDER BY priority";
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		// When priority is too small, set at beginning
+		if($this->priority <= 0) {
+			$this->priority = 1;
+		}
+		
+		// When prio is too high, simply add at end 
+		if($this->priority > $result->getRows()) {
+			$this->priority = $result->getRows() + 1;
+		}
+
+		$videos = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$videos[$result->getValue("priority")] = $result->getValue("video_id");
+			$result->next();
+		}
+		array_splice($videos, ($this->priority - 1), 0, array($this->video_id));
+
+		// Save all prios
+		foreach($videos as $prio => $video_id) {
+			$query = "UPDATE ". rex::getTablePrefix() ."d2u_videos_videos "
+					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."WHERE video_id = ". $video_id;
+			$result = rex_sql::factory();
+			$result->setQuery($query);
+		}
+	}
+}
