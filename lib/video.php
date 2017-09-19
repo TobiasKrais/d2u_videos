@@ -73,8 +73,9 @@ class Video {
 	 * Constructor
 	 * @param int $video_id Video ID.
 	 * @param int $clang_id Redaxo language ID
+	 * @param boolean $fallback Fallback to default lang if no localization is available
 	 */
-	public function __construct($video_id, $clang_id) {
+	public function __construct($video_id, $clang_id, $fallback = TRUE) {
 		$this->clang_id = $clang_id;
 		
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_videos_videos AS videos "
@@ -97,9 +98,8 @@ class Video {
 			$this->priority = $result->getValue("priority");
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
 		}
-		
-		// If no name is available, fallback to default lang
-		if($this->video_id > 0 && $this->name == "") {
+		else if($fallback) {
+			// fallback to default lang
 			$d2u_videos = rex_addon::get('d2u_videos');
 			$query_fallback = "SELECT * FROM ". rex::getTablePrefix() ."d2u_videos_videos AS videos "
 					."LEFT JOIN ". rex::getTablePrefix() ."d2u_videos_videos_lang AS lang "
@@ -110,7 +110,17 @@ class Video {
 			$result_fallback->setQuery($query_fallback);
 
 			if ($result_fallback->getRows() > 0) {
+				$this->video_id = $video_id;
 				$this->name = $result_fallback->getValue("name");
+				$this->teaser = $result_fallback->getValue("teaser");
+				$this->picture = $result_fallback->getValue("picture");
+				$this->priority = $result_fallback->getValue("priority");
+				if($this->redaxo_file == "" && $this->redaxo_file_lang == "" && $this->youtube_video_id == "" && $this->youtube_video_id_lang == "") {
+					$this->redaxo_file = $result_fallback->getValue("videos.redaxo_file");
+					$this->redaxo_file_lang = $result_fallback->getValue("lang.redaxo_file");
+					$this->youtube_video_id = $result_fallback->getValue("videos.youtube_video_id");
+					$this->youtube_video_id_lang = $result_fallback->getValue("lang.youtube_video_id");
+				}
 			}
 		}
 	}

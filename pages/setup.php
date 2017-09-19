@@ -2,7 +2,7 @@
 /*
  * Modules
  */
-$d2u_module_manager = new D2UModuleManager(D2UVideosModules::getD2UVideosModules(), "modules/", "d2u_videos");
+$d2u_module_manager = new D2UModuleManager(D2UVideosModules::getModules(), "modules/", "d2u_videos");
 
 // D2UModuleManager actions
 $d2u_module_id = rex_request('d2u_module_id', 'string');

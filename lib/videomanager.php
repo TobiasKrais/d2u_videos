@@ -10,6 +10,16 @@
  */
 class Videomanager {
 	/**
+	 * @var int maximale Höhe des Playerfensters
+	 */
+	var $max_height = 440;
+	
+	/**
+	 * @var int maximale Breite des Playerfensters
+	 */
+	var $max_width = 1180;
+
+	/**
 	 * @var String Playlist position ("left" or "right")
 	 */
 	var $playlist_position = "right";
@@ -29,6 +39,15 @@ class Videomanager {
 	 */
 	var $video_preview_type = "d2u_videos_preview";
 
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		$d2u_videos = rex_addon::get('d2u_videos');
+		$this->max_height = $d2u_videos->getConfig('max_height');
+		$this->max_width = $d2u_videos->getConfig('max_width');
+	}
+	
 	/**
 	 * Prints single video
 	 * @param Video $video Video Objekt
@@ -97,8 +116,8 @@ class Videomanager {
 				autoPlay:"no",
 				loop:"no",
 				shuffle:"no",
-				maxWidth:<?php print $d2u_videos->getConfig('max_width'); ?>,
-				maxHeight:<?php print $d2u_videos->getConfig('max_height'); ?>,
+				maxWidth:<?php print $this->max_width; ?>,
+				maxHeight:<?php print $this->max_height; ?>,
 				buttonsToolTipHideDelay:1.5,
 				volume:.8,
 				backgroundColor:"#000",
@@ -223,7 +242,7 @@ class Videomanager {
 
 			// Standard URLs für Bilder
 			$bild_filename_thumb = 'index.php?rex_media_type='. $this->video_thumb_type .'&rex_media_file='. $video->picture;
-			$bild_filename_preview = 'index.php?rex_media_type='. $this->video_preview_type .'&amp;rex_media_file='. $video->picture;
+			$bild_filename_preview = 'index.php?rex_media_type='. $this->video_preview_type .'&rex_media_file='. $video->picture;
 
 			if($videocounter == 0) {
 				$playlist_start .= '<li data-source="'. $playerID .'" data-playlist-name="'. $video->teaser .'" data-thumbnail-path="'. $bild_filename_preview .'">';
