@@ -1,7 +1,4 @@
 <?php
-// Update language replacements
-d2u_references_lang_helper::factory()->install();
-
 // Update modules
 if(class_exists(D2UModuleManager)) {
 	$modules = [];
