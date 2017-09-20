@@ -18,4 +18,4 @@ requires:
     php:
         version: '>=7.0'
     packages:
-        d2u_helper: '>=1.2.1'
+        d2u_helper: '>=1.2.4'

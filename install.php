@@ -52,7 +52,6 @@ if($sql->getRows() == 0) {
 
 // Standard settings
 if (!$this->hasConfig()) {
-	$this->setConfig('default_lang', rex_clang::getStartId());
 	$this->setConfig('max_height', '440');
 	$this->setConfig('max_width', '1180');
 	$this->setConfig('preferred_video_type', 'local');

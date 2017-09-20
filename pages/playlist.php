@@ -19,7 +19,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$playlist->name = $form['name'];
 	$video_ids = isset($form['video_ids']) ? $form['video_ids'] : [];
 	foreach($video_ids as $video_id) {
-		$playlist->videos[$video_id] = new Video($video_id, rex_config::get("d2u_videos", "default_lang"));
+		$playlist->videos[$video_id] = new Video($video_id, rex_config::get("d2u_helper", "default_lang"));
 	}
 	
 	// message output
@@ -44,7 +44,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', array());
 		$playlist_id = $form['playlist_id'];
 	}
-	$playlist = new Playlist($playlist_id, rex_config::get("d2u_videos", "default_lang"));
+	$playlist = new Playlist($playlist_id, rex_config::get("d2u_helper", "default_lang"));
 	$playlist->delete();
 	
 	$func = '';
@@ -62,7 +62,7 @@ if ($func == 'edit' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_helper_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							$playlist = new Playlist($entry_id, rex_config::get("d2u_videos", "default_lang"));
+							$playlist = new Playlist($entry_id, rex_config::get("d2u_helper", "default_lang"));
 							$readonly = TRUE;
 							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_videos[edit_data]')) {
 								$readonly = FALSE;
@@ -70,7 +70,7 @@ if ($func == 'edit' || $func == 'add') {
 
 							d2u_addon_backend_helper::form_input('d2u_videos_name', "form[name]", $playlist->name, TRUE, $readonly, "text");
 							$options_videos = [];
-							foreach(Video::getAll(rex_config::get("d2u_videos", "default_lang")) as $video) {
+							foreach(Video::getAll(rex_config::get("d2u_helper", "default_lang")) as $video) {
 								$options_videos[$video->video_id] = $video->name;
 							}
 							d2u_addon_backend_helper::form_select('d2u_videos_videos', 'form[video_ids][]', $options_videos, array_keys($playlist->videos), 20, TRUE, $readonly);

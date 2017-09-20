@@ -105,7 +105,7 @@ class Video {
 					."LEFT JOIN ". rex::getTablePrefix() ."d2u_videos_videos_lang AS lang "
 						."ON lang.video_id = videos.video_id "
 					."WHERE videos.video_id = ". $video_id ." "
-						."AND clang_id = ". $d2u_videos->getConfig('default_lang');
+						."AND clang_id = ". rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId());
 			$result_fallback = rex_sql::factory();
 			$result_fallback->setQuery($query_fallback);
 
