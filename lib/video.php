@@ -192,9 +192,11 @@ class Video {
 	 */
 	public function getVideoURL() {
 		if($this->video_url == "") {
-			$d2u_videos = rex_addon::get('d2u_videos');
-			if(($this->youtube_video_id != "" && ($d2u_videos->getConfig('preferred_video_type') == 'youtube') || $this->redaxo_file == "")) {
+			if(($this->youtube_video_id != "" && (rex_config::get('d2u_videos', 'preferred_video_type') == 'youtube') || ($this->redaxo_file == "" && $this->redaxo_file_lang == ""))) {
 				$this->video_url = $this->youtube_video_id;				
+			}
+			else if($this->redaxo_file_lang != "") {
+				$this->video_url = rex_url::media($this->redaxo_file_lang);
 			}
 			else if($this->redaxo_file != "") {
 				$this->video_url = rex_url::media($this->redaxo_file);
