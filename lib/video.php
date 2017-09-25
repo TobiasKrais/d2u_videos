@@ -250,7 +250,7 @@ class Video {
 						."name = '". $this->name ."', "
 						."teaser = '". $this->teaser ."', "
 						."youtube_video_id = '". $this->youtube_video_id ."', "
-						."redaxo_file = '". $this->redaxo_file ."', "
+						."redaxo_file = '". $this->redaxo_file_lang ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
 						."updateuser = '". rex::getUser()->getLogin() ."' ";

@@ -10,7 +10,7 @@ if($message != "") {
 
 // save settings
 if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
-	$form = (array) rex_post('form', 'array', array());
+	$form = (array) rex_post('form', 'array', []);
 
 	$success = TRUE;
 	$playlist = FALSE;
@@ -41,7 +41,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$playlist_id = $entry_id;
 	if($playlist_id == 0) {
-		$form = (array) rex_post('form', 'array', array());
+		$form = (array) rex_post('form', 'array', []);
 		$playlist_id = $form['playlist_id'];
 	}
 	$playlist = new Playlist($playlist_id, rex_config::get("d2u_helper", "default_lang"));

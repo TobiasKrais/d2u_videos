@@ -6,13 +6,23 @@
 		$playlist_id = "REX_VALUE[2]";
 		$playlist = new Playlist($playlist_id);
 		
-		$videomanager = new Videomanager();
-		$videomanager->printPlaylist($playlist);
+		if(rex::isBackend()) {
+			print '<p>Gewählte Plalist: '. $playlist->name .'</p>';
+		}
+		else {
+			$videomanager = new Videomanager();
+			$videomanager->printPlaylist($playlist);
+		}
 	}
 	else if($type == "video") {
 		$video = new Video($video_id, rex_clang::getCurrentId());
-		$videomanager = new Videomanager();
-		$videomanager->printVideo($video);
+		if(rex::isBackend()) {
+			print '<p>Gewähltes Video: '. $video->name .'</p>';
+		}
+		else {
+			$videomanager = new Videomanager();
+			$videomanager->printVideo($video);
+		}
 	}
 	print '</div>';
 ?>

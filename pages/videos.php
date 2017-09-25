@@ -10,17 +10,18 @@ if($message != "") {
 
 // save settings
 if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
-	$form = (array) rex_post('form', 'array', array());
+	$form = (array) rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
 	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
-
+print_r($input_media);
 	$success = TRUE;
 	$video = FALSE;
 	$video_id = $form['video_id'];
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($video === FALSE) {
 			$video = new Video($video_id, $rex_clang->getId(), FALSE);
+			$video->video_id = $video_id; // Ensure correct ID in case first language has no object
 			$video->picture = $input_media[1];
 			$video->priority = $form['priority'];
 			$video->redaxo_file = $input_media[2];
@@ -66,7 +67,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$video_id = $entry_id;
 	if($video_id == 0) {
-		$form = (array) rex_post('form', 'array', array());
+		$form = (array) rex_post('form', 'array', []);
 		$video_id = $form['video_id'];
 	}
 	$video = new Video($video_id, rex_config::get("d2u_helper", "default_lang"), FALSE);
@@ -78,7 +79,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		}
 		$message .= '</ul>';
 
-		print rex_view::error(rex_i18n::msg('d2u_videos_could_not_delete') . $message);
+		print rex_view::error(rex_i18n::msg('d2u_helper_could_not_delete') . $message);
 	}
 	else {
 		$video->delete();
@@ -171,7 +172,7 @@ if ($func == '') {
 	$query = 'SELECT videos.video_id, name, priority '
 		. 'FROM '. rex::getTablePrefix() .'d2u_videos_videos AS videos '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_videos_videos_lang AS lang '
-			. 'ON videos.video_id = lang.video_id AND lang.clang_id = '. rex_config::get("d2u_videos", "default_lang") .' '
+			. 'ON videos.video_id = lang.video_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
 		.'ORDER BY `priority`';
     $list = rex_list::factory($query);
 
