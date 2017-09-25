@@ -61,7 +61,7 @@ class Playlist {
 	 * @return Playlist[] Array with Playlist objects.
 	 */
 	public static function getAll($clang_id) {
-		$query = "SELECT playlist_id FROM ". rex::getTablePrefix() ."d2u_videos_playlist";
+		$query = "SELECT playlist_id FROM ". rex::getTablePrefix() ."d2u_videos_playlists";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
