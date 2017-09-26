@@ -21,7 +21,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 		<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_helper_settings'); ?></div></header>
 		<div class="panel-body">
 			<fieldset>
-				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?php echo rex_i18n::msg('d2u_helper_lang_replacements'); ?></legend>
+				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?php echo rex_i18n::msg('d2u_helper_settings'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
 						d2u_addon_backend_helper::form_mediafield('d2u_videos_player_file', 'player_js', $this->getConfig('player_js'));
