@@ -14,7 +14,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 
 	// Media fields and links need special treatment
 	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
-print_r($input_media);
+
 	$success = TRUE;
 	$video = FALSE;
 	$video_id = $form['video_id'];
@@ -71,6 +71,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$video_id = $form['video_id'];
 	}
 	$video = new Video($video_id, rex_config::get("d2u_helper", "default_lang"), FALSE);
+	$video->video_id = $video_id; // Ensure correct ID in case first language has no object
 	$playlists = $video->getPlaylists();
 	if(count($playlists) > 0) {
 		$message = '<ul>';
