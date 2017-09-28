@@ -7,7 +7,27 @@ if(rex::isBackend() && is_object(rex::getUser())) {
 }
 
 if(rex::isBackend()) {
+	rex_extension::register('CLANG_DELETED', 'rex_d2u_videos_clang_deleted');
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_videos_media_is_in_use');
+}
+
+/**
+ * Deletes language specific configurations and objects
+ * @param rex_extension_point $ep Redaxo extension point
+ * @return string[] Warning message as array
+ */
+function rex_d2u_videos_clang_deleted(rex_extension_point $ep) {
+	$warning = $ep->getSubject();
+	$params = $ep->getParams();
+	$clang_id = $params['id'];
+
+	// Delete
+	$videos = Video::getAll($clang_id);
+	foreach ($videos as $video) {
+		$video->delete(FALSE);
+	}
+
+	return $warning;
 }
 
 /**

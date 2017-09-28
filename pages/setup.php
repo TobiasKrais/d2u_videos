@@ -30,6 +30,7 @@ $d2u_module_manager->showManagerList();
 <p>1.0.1 (NEXT):</p>
 <ul>
 	<li>Bugfix: Speichern wenn zweite Sprache Standardsprache ist schlug fehl.</li>
+	<li>Bugfix: Beim Löschen einer Sprache wurden Objekte nicht gelöscht.</li>
 	<li>Bugfix: Speichern Sprachbezogener Videos schlug fehl.</li>
 	<li>Bugfix: Module im Backend verhinderten editieren des Moduls.</li>
 	<li>Bugfix: Wenn nur sprachspezfisches Video verfügbar war wurde es nicht abgespielt.</li>
