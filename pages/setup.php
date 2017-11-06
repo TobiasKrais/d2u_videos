@@ -24,17 +24,18 @@ $d2u_module_manager->showManagerList();
 	<li>Videos Addon: <a href="https://www.kaltenbach.com/de/medien/videos/" target="_blank">
 		https://www.kaltenbach.com/de/medien/videos/</a>.</li>
 </ul>
+<h2>Fremdcode</h2>
+<p>Für den Videoplayer braucht es den Ultimate Video Player, der hier erworben
+	werden kann: <a href="http://codecanyon.net/item/ultimate-video-player/7694071">
+	http://codecanyon.net/item/ultimate-video-player/7694071</a>. Aus dem gekauften
+	Archiv muss die fwduvplayer.js in den Medienpool hochgeladen werden und
+	in den Einstellungen dieses Addons gespeichert werden.</p>
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_videos" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
 <p>1.0.1 (NEXT):</p>
 <ul>
-	<li>Bugfix: Speichern wenn zweite Sprache Standardsprache ist schlug fehl.</li>
-	<li>Bugfix: Beim Löschen einer Sprache wurden Objekte nicht gelöscht.</li>
-	<li>Bugfix: Speichern Sprachbezogener Videos schlug fehl.</li>
-	<li>Bugfix: Module im Backend verhinderten editieren des Moduls.</li>
-	<li>Bugfix: Wenn nur sprachspezfisches Video verfügbar war wurde es nicht abgespielt.</li>
-	<li>Bugfix: Modul konnte nicht alle Playlists abrufen.</li>
+	<li>Editierrechte für Übersetzer eingeschränkt.</li>
 </ul>
 <p>1.0.0:</p>
 <ul>
