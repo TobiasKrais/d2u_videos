@@ -8,7 +8,7 @@
 /**
  * class representing database video object
  */
-class Video {
+class Video implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Video ID.
 	 */
@@ -78,8 +78,8 @@ class Video {
 	public function __construct($video_id, $clang_id, $fallback = TRUE) {
 		$this->clang_id = $clang_id;
 		
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_videos_videos AS videos "
-				."LEFT JOIN ". rex::getTablePrefix() ."d2u_videos_videos_lang AS lang "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_videos_videos AS videos "
+				."LEFT JOIN ". \rex::getTablePrefix() ."d2u_videos_videos_lang AS lang "
 					."ON lang.video_id = videos.video_id "
 				."WHERE videos.video_id = ". $video_id ." "
 					."AND clang_id = ". $this->clang_id;
@@ -101,8 +101,8 @@ class Video {
 		else if($fallback) {
 			// fallback to default lang
 			$d2u_videos = rex_addon::get('d2u_videos');
-			$query_fallback = "SELECT * FROM ". rex::getTablePrefix() ."d2u_videos_videos AS videos "
-					."LEFT JOIN ". rex::getTablePrefix() ."d2u_videos_videos_lang AS lang "
+			$query_fallback = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_videos_videos AS videos "
+					."LEFT JOIN ". \rex::getTablePrefix() ."d2u_videos_videos_lang AS lang "
 						."ON lang.video_id = videos.video_id "
 					."WHERE videos.video_id = ". $video_id ." "
 						."AND clang_id = ". rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId());
@@ -131,19 +131,19 @@ class Video {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_videos_videos_lang "
+		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_videos_videos_lang "
 			."WHERE video_id = ". $this->video_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
 		$result_lang = rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
-		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_videos_videos_lang "
+		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_videos_videos_lang "
 			."WHERE video_id = ". $this->video_id;
 		$result_main = rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
-			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_videos_videos "
+			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_videos_videos "
 				."WHERE video_id = ". $this->video_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
@@ -156,7 +156,7 @@ class Video {
 	 * @return Video[] Array with Video objects.
 	 */
 	public static function getAll($clang_id) {
-		$query = "SELECT video_id FROM ". rex::getTablePrefix() ."d2u_videos_videos "
+		$query = "SELECT video_id FROM ". \rex::getTablePrefix() ."d2u_videos_videos "
 			."ORDER BY priority";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -174,7 +174,7 @@ class Video {
 	 * @return Playlist[] Array with playlists objects.
 	 */
 	public function getPlaylists() {
-		$query = "SELECT playlist_id FROM ". rex::getTablePrefix() ."d2u_videos_playlists "
+		$query = "SELECT playlist_id FROM ". \rex::getTablePrefix() ."d2u_videos_playlists "
 			."WHERE video_ids = '". $this->video_id ."' OR video_ids LIKE '%,". $this->video_id ."%' OR video_ids LIKE '%". $this->video_id .",%'";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -186,6 +186,38 @@ class Video {
 		}
 		return $playlists;
 	}
+	
+	/**
+	 * Get objects concerning translation updates
+	 * @param int $clang_id Redaxo language ID
+	 * @param string $type 'update' or 'missing'
+	 * @return Video[] Array with Video objects.
+	 */
+	public static function getTranslationHelperObjects($clang_id, $type) {
+		$query = 'SELECT video_id FROM '. \rex::getTablePrefix() .'d2u_videos_videos_lang '
+				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
+				.'ORDER BY name';
+		if($type == 'missing') {
+			$query = 'SELECT main.video_id FROM '. \rex::getTablePrefix() .'d2u_videos_videos AS main '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_videos_videos_lang AS target_lang '
+						.'ON main.video_id = target_lang.video_id AND target_lang.clang_id = '. $clang_id .' '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_videos_videos_lang AS default_lang '
+						.'ON main.video_id = default_lang.video_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
+					."WHERE target_lang.video_id IS NULL "
+					.'ORDER BY default_lang.name';
+			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+		}
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+
+		$objects = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$objects[] = new Video($result->getValue("video_id"), $clang_id);
+			$result->next();
+		}
+		
+		return $objects;
+    }
 
 	/**
 	 * Gibt die URL des Videos zurück.
@@ -221,7 +253,7 @@ class Video {
 		}
 	
 		if($this->video_id == 0 || $pre_save_video != $this) {
-			$query = rex::getTablePrefix() ."d2u_videos_videos SET "
+			$query = \rex::getTablePrefix() ."d2u_videos_videos SET "
 					."picture = '". $this->picture ."', "
 					."priority = ". $this->priority .", "
 					."youtube_video_id = '". $this->youtube_video_id ."', "
@@ -246,7 +278,7 @@ class Video {
 			// Save the language specific part
 			$pre_save_video = new Video($this->video_id, $this->clang_id);
 			if($pre_save_video != $this) {
-				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_videos_videos_lang SET "
+				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_videos_videos_lang SET "
 						."video_id = '". $this->video_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". $this->name ."', "
@@ -255,7 +287,7 @@ class Video {
 						."redaxo_file = '". $this->redaxo_file_lang ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
-						."updateuser = '". rex::getUser()->getLogin() ."' ";
+						."updateuser = '". \rex::getUser()->getLogin() ."' ";
 
 				$result = rex_sql::factory();
 				$result->setQuery($query);
@@ -271,7 +303,7 @@ class Video {
 	 */
 	private function setPriority() {
 		// Pull prios from database
-		$query = "SELECT video_id, priority FROM ". rex::getTablePrefix() ."d2u_videos_videos "
+		$query = "SELECT video_id, priority FROM ". \rex::getTablePrefix() ."d2u_videos_videos "
 			."WHERE video_id <> ". $this->video_id ." ORDER BY priority";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -295,7 +327,7 @@ class Video {
 
 		// Save all prios
 		foreach($videos as $prio => $video_id) {
-			$query = "UPDATE ". rex::getTablePrefix() ."d2u_videos_videos "
+			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_videos_videos "
 					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE video_id = ". $video_id;
 			$result = rex_sql::factory();

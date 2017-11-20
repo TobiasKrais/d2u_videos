@@ -16,7 +16,7 @@
 		$playlist_id = "REX_VALUE[2]";
 		$playlist = new Playlist($playlist_id);
 		
-		if(rex::isBackend()) {
+		if(\rex::isBackend()) {
 			print '<p>Gewählte Plalist: '. $playlist->name .'</p>';
 		}
 		else {
@@ -27,7 +27,7 @@
 	else if($type == "video") {
 		$video_id = "REX_VALUE[3]";
 		$video = new Video($video_id, rex_clang::getCurrentId(), TRUE);
-		if(rex::isBackend()) {
+		if(\rex::isBackend()) {
 			print '<p>Gewähltes Video: '. $video->name .'</p>';
 		}
 		else {

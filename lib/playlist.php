@@ -29,7 +29,7 @@ class Playlist {
 	 * @param int $playlist_id Playlist ID.
 	 */
 	 public function __construct($playlist_id) {
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_videos_playlists "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_videos_playlists "
 				."WHERE playlist_id = ". $playlist_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -49,7 +49,7 @@ class Playlist {
 	 * Deletes the object in all languages.
 	 */
 	public function delete() {
-		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_videos_playlists "
+		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_videos_playlists "
 			."WHERE playlist_id = ". $this->playlist_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -61,7 +61,7 @@ class Playlist {
 	 * @return Playlist[] Array with Playlist objects.
 	 */
 	public static function getAll($clang_id) {
-		$query = "SELECT playlist_id FROM ". rex::getTablePrefix() ."d2u_videos_playlists";
+		$query = "SELECT playlist_id FROM ". \rex::getTablePrefix() ."d2u_videos_playlists";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
@@ -80,7 +80,7 @@ class Playlist {
 	public function save() {
 		$error = 0;
 
-		$query = rex::getTablePrefix() ."d2u_videos_playlists SET "
+		$query = \rex::getTablePrefix() ."d2u_videos_playlists SET "
 				."name = '". $this->name ."', "
 				."video_ids = '". implode('|', array_keys($this->videos)) ."' ";
 

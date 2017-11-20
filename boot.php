@@ -1,12 +1,12 @@
 <?php
-if(rex::isBackend() && is_object(rex::getUser())) {
+if(\rex::isBackend() && is_object(\rex::getUser())) {
 	rex_perm::register('d2u_videos[]', rex_i18n::msg('d2u_videos_rights'));
 	rex_perm::register('d2u_videos[edit_data]', rex_i18n::msg('d2u_videos_rights_edit_data'), rex_perm::OPTIONS);
 	rex_perm::register('d2u_videos[edit_lang]', rex_i18n::msg('d2u_videos_rights_edit_lang'), rex_perm::OPTIONS);
 	rex_perm::register('d2u_videos[settings]', rex_i18n::msg('d2u_videos_rights_settings'), rex_perm::OPTIONS);
 }
 
-if(rex::isBackend()) {
+if(\rex::isBackend()) {
 	rex_extension::register('CLANG_DELETED', 'rex_d2u_videos_clang_deleted');
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_videos_media_is_in_use');
 }
