@@ -54,14 +54,14 @@ class Videomanager {
 	 */
 	function printVideo($video) {
 		if($video->video_id > 0) {
-			$useYoutube = $this->useYoutube(array($video));
-			$this->printVideoplayer(array($video), "no", $useYoutube);
+			$useYoutube = $this->useYoutube([$video]);
+			$this->printVideoplayer([$video], "no", $useYoutube);
 		}
 	}
 
 	/**
 	 * Prints multiple videos
-	 * @param Array() $videos Video Objekte
+	 * @param Video[] $videos Video Objekte
 	 */
 	function printVideos($videos) {
 		if(count($videos) > 0) {
@@ -219,7 +219,7 @@ class Videomanager {
 	
 	/**
 	 * Gibt die Videos im Array aus.
-	 * @param Array $videos Auszugebende Videos.
+	 * @param Video[] $videos Auszugebende Videos.
 	 * @param String $showPlaylist "yes" = Playlist wird angezeigt, "no" = Playlist wird nicht angezeigt
 	 * @param String $useYoutube "yes" wenn Youtube eingebunden werden soll, "no" wenn nicht. Default: "no"
 	 */
@@ -237,6 +237,21 @@ class Videomanager {
 		foreach ($videos as $video) {
 			// Videoobjekt initialisieren
 			if($video->video_id == 0) {
+				continue;
+			}
+			
+			// ycom/auth_media permissions
+			$rex_video = FALSE;
+			if(($this->youtube_video_id != "" && (rex_config::get('d2u_videos', 'preferred_video_type') == 'youtube') || ($this->redaxo_file == "" && $this->redaxo_file_lang == ""))) {
+				$rex_video = FALSE;
+			}
+			else if($this->redaxo_file_lang != "") {
+				$rex_video = rex_media::get($video->redaxo_file_lang);
+			}
+			else if($this->redaxo_file != "") {
+				$rex_video = rex_url::media($this->redaxo_file);
+			}
+			if($rex_video instanceof rex_media && rex_plugin::get('ycom', 'auth_media')->isAvailable() && !rex_ycom_auth_media::checkPerm($rex_video)) {
 				continue;
 			}
 
@@ -274,7 +289,7 @@ class Videomanager {
 	
 	/**
 	 * Gibt an, ob sich in dem Videoarray ein Video von YouTube befindet.
-	 * @param array $videos Array mit Video Objekten
+	 * @param Video[] $videos Array mit Video Objekten
 	 * @return String "no", wenn kein Youtube Video im Array ist, "yes" wenn
 	 * mindestens ein Youtube Video im Array ist.
 	 */

@@ -33,6 +33,10 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_videos" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
+<p>1.0.2 (NEXT):</p>
+<ul>
+	<li>ycom/auth_media Rechte werden geprüft und Video im Fall nicht ausgegeben</li>
+</ul>
 <p>1.0.1:</p>
 <ul>
 	<li>D2U Helper Übersetzungshilfe integriert.</li>
