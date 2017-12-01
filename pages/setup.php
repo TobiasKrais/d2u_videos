@@ -35,6 +35,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.2 (NEXT):</p>
 <ul>
+	<li>Englische Übersetzung des Backends hinzugefügt.</li>
 	<li>ycom/auth_media Rechte werden geprüft und Video im Fall nicht ausgegeben</li>
 </ul>
 <p>1.0.1:</p>
