@@ -28,13 +28,15 @@ $d2u_module_manager->showManagerList();
 <p>Für den Videoplayer braucht es den Ultimate Video Player, der hier erworben
 	werden kann: <a href="http://codecanyon.net/item/ultimate-video-player/7694071">
 	http://codecanyon.net/item/ultimate-video-player/7694071</a>. Aus dem gekauften
-	Archiv muss die fwduvplayer.js in den Medienpool hochgeladen werden und
+	Archiv muss die start/java/fwduvplayer.js in den Medienpool hochgeladen werden und
 	in den Einstellungen dieses Addons gespeichert werden.</p>
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_videos" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.0.2 (NEXT):</p>
+<p>1.0.2:</p>
 <ul>
+	<li>Bugfix: Preview Image Type war zu klein.</li>
+	<li>Update für Ultimate Video Player 4.6.</li>
 	<li>Englische Übersetzung des Backends hinzugefügt.</li>
 	<li>ycom/auth_media Rechte werden geprüft und Video im Fall nicht ausgegeben</li>
 </ul>

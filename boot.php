@@ -40,6 +40,22 @@ function rex_d2u_videos_media_is_in_use(rex_extension_point $ep) {
 	$params = $ep->getParams();
 	$filename = addslashes($params['filename']);
 
+	// News
+	$sql_videos = rex_sql::factory();
+	$sql_videos->setQuery('SELECT lang.video_id, name FROM `' . rex::getTablePrefix() . 'd2u_videos_videos_lang` AS lang '
+		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_videos_videos` AS videos ON lang.video_id = videos.video_id '
+		.'WHERE picture = "'. $filename .'" OR lang.redaxo_file = "'. $filename .'" OR videos.redaxo_file = "'. $filename .'"');  
+
+	// Prepare warnings
+	// News
+	for($i = 0; $i < $sql_videos->getRows(); $i++) {
+		$message = '<a href="javascript:openPage(\'index.php?page=d2u_videos/videos&func=edit&entry_id='.
+			$sql_videos->getValue('video_id') .'\')">'. rex_i18n::msg('d2u_videos') .': '. $sql_videos->getValue('name') .'</a>';
+		if(!in_array($message, $warning)) {
+			$warning[] = $message;
+		}
+    }
+
 	// Settings
 	$addon = rex_addon::get("d2u_videos");
 	if($addon->hasConfig("player_js") && $addon->getConfig("player_js") == $filename) {
