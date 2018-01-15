@@ -78,8 +78,6 @@ class Playlist {
 	 * @return boolean TRUE if successful
 	 */
 	public function save() {
-		$error = 0;
-
 		$query = \rex::getTablePrefix() ."d2u_videos_playlists SET "
 				."name = '". $this->name ."', "
 				."video_ids = '". implode('|', array_keys($this->videos)) ."' ";
@@ -95,9 +93,8 @@ class Playlist {
 		$result->setQuery($query);
 		if($this->playlist_id == 0) {
 			$this->playlist_id = $result->getLastId();
-			$error = $result->hasError();
 		}
 		
-		return $error;
+		return !$result->hasError();
 	}
 }

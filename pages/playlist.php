@@ -13,18 +13,18 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$form = (array) rex_post('form', 'array', []);
 
 	$success = TRUE;
-	$playlist = FALSE;
 	$playlist_id = $form['playlist_id'];
 	$playlist = new Playlist( $form['playlist_id']);
 	$playlist->name = $form['name'];
 	$video_ids = isset($form['video_ids']) ? $form['video_ids'] : [];
+	$playlist->videos = [];
 	foreach($video_ids as $video_id) {
 		$playlist->videos[$video_id] = new Video($video_id, rex_config::get("d2u_helper", "default_lang"));
 	}
 	
 	// message output
 	$message = 'form_save_error';
-	if($playlist->save() > 0) {
+	if($playlist->save()) {
 		$message = 'form_saved';
 	}
 	

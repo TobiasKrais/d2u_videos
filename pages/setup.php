@@ -33,12 +33,16 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_videos" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
+<p>1.0.3-DEV:</p>
+<ul>
+	<li>Bugfix: Änderungen in der Playlist wurde nicht richtig gespeichert.</li>
+</ul>
 <p>1.0.2:</p>
 <ul>
 	<li>Bugfix: Preview Image Type war zu klein.</li>
 	<li>Update für Ultimate Video Player 4.6.</li>
 	<li>Englische Übersetzung des Backends hinzugefügt.</li>
-	<li>ycom/auth_media Rechte werden geprüft und Video im Fall nicht ausgegeben</li>
+	<li>ycom/auth_media Rechte werden geprüft und Video im Fall nicht ausgegeben.</li>
 </ul>
 <p>1.0.1:</p>
 <ul>
