@@ -68,7 +68,7 @@ if ($func == 'edit' || $func == 'add') {
 								$readonly = FALSE;
 							}
 
-							d2u_addon_backend_helper::form_input('d2u_videos_name', "form[name]", $playlist->name, TRUE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_helper_name', "form[name]", $playlist->name, TRUE, $readonly, "text");
 							$options_videos = [];
 							foreach(Video::getAll(rex_config::get("d2u_helper", "default_lang")) as $video) {
 								$options_videos[$video->video_id] = $video->name;
@@ -119,7 +119,7 @@ if ($func == '') {
     $list->setColumnLabel('playlist_id', rex_i18n::msg('id'));
     $list->setColumnLayout('playlist_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('name', rex_i18n::msg('d2u_videos_name'));
+    $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###playlist_id###']);
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));

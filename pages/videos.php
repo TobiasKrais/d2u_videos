@@ -140,7 +140,7 @@ if ($func == 'edit' || $func == 'add') {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
 								
-								d2u_addon_backend_helper::form_input('d2u_videos_name', "form[lang][". $rex_clang->getId() ."][name]", $video->name, $required, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $video->name, $required, $readonly_lang, "text");
 								d2u_addon_backend_helper::form_textarea('d2u_videos_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $video->teaser, 5, $required, $readonly_lang, FALSE);
 								d2u_addon_backend_helper::form_mediafield('d2u_videos_redaxo_file_lang', '1'. $rex_clang->getId(), $video->redaxo_file_lang, $readonly_lang);
 								d2u_addon_backend_helper::form_input('d2u_videos_youtube_video_id_lang', "form[lang][". $rex_clang->getId() ."][youtube_video_id_lang]", $video->youtube_video_id_lang, FALSE, $readonly_lang, "text");
@@ -194,7 +194,7 @@ if ($func == '') {
     $list->setColumnLabel('video_id', rex_i18n::msg('id'));
     $list->setColumnLayout('video_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('name', rex_i18n::msg('d2u_videos_name'));
+    $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###video_id###']);
 
  	$list->setColumnLabel('priority', rex_i18n::msg('header_priority'));

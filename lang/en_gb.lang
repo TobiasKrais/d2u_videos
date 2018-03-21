@@ -5,7 +5,6 @@ d2u_videos_import = Import MP4 files from media pool
 d2u_videos_importiert = Import completed
 d2u_videos_keine = No fallback
 d2u_videos_keine_neuen_dateien = No new MP4 files in media pool found.
-d2u_videos_name = Name
 d2u_videos_max_height = Max. height player window
 d2u_videos_max_width = Max. width player window
 d2u_videos_no_playlists_found = No playlists found.
