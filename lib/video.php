@@ -88,7 +88,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 
 		if ($result->getRows() > 0) {
 			$this->video_id = $video_id;
-			$this->name = $result->getValue("name");
+			$this->name = stripslashes($result->getValue("name"));
 			$this->teaser = $result->getValue("teaser");
 			$this->youtube_video_id = $result->getValue("videos.youtube_video_id");
 			$this->youtube_video_id_lang = $result->getValue("lang.youtube_video_id");
@@ -111,7 +111,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 
 			if ($result_fallback->getRows() > 0) {
 				$this->video_id = $video_id;
-				$this->name = $result_fallback->getValue("name");
+				$this->name = stripslashes($result_fallback->getValue("name"));
 				$this->teaser = $result_fallback->getValue("teaser");
 				$this->picture = $result_fallback->getValue("picture");
 				$this->priority = $result_fallback->getValue("priority");
@@ -281,7 +281,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_videos_videos_lang SET "
 						."video_id = '". $this->video_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."name = '". $this->name ."', "
+						."name = '". addslashes($this->name) ."', "
 						."teaser = '". $this->teaser ."', "
 						."youtube_video_id = '". $this->youtube_video_id ."', "
 						."redaxo_file = '". $this->redaxo_file_lang ."', "

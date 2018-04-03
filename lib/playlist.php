@@ -37,7 +37,7 @@ class Playlist {
 
 		if ($num_rows > 0) {
 			$this->playlist_id = $playlist_id;
-			$this->name = $result->getValue("name");
+			$this->name = stripslashes($result->getValue("name"));
 			$video_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("video_ids")), PREG_GREP_INVERT);
 			foreach ($video_ids as $video_id) {
 				$this->videos[$video_id] = new Video($video_id, rex_clang::getCurrentId());
@@ -79,7 +79,7 @@ class Playlist {
 	 */
 	public function save() {
 		$query = \rex::getTablePrefix() ."d2u_videos_playlists SET "
-				."name = '". $this->name ."', "
+				."name = '". addslashes($this->name) ."', "
 				."video_ids = '". implode('|', array_keys($this->videos)) ."' ";
 
 		if($this->playlist_id == 0) {

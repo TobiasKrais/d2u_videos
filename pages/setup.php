@@ -35,6 +35,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.3-DEV:</p>
 <ul>
+	<li>Bugfix: Speichern von Namen mit einfachem Anführungszeichen führte zu Fehler.</li>
 	<li>Bugfix: Änderungen in der Playlist wurde nicht richtig gespeichert.</li>
 </ul>
 <p>1.0.2:</p>
