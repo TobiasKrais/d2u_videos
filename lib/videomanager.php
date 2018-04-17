@@ -66,7 +66,7 @@ class Videomanager {
 	function printVideos($videos) {
 		if(count($videos) > 0) {
 			$useYoutube = $this->useYoutube($videos);
-			$this->printVideoplayer($videos, "yes", $useYoutube);
+			$this->printVideoplayer($videos, (count($videos) > 1 ? "yes" : "no"), $useYoutube);
 		}
 	}
 
@@ -77,7 +77,7 @@ class Videomanager {
 	function printPlaylist($playlist) {
 		if(count($playlist->videos) > 0) {
 			$useYoutube = $this->useYoutube($playlist->videos);
-			$this->printVideoplayer($playlist->videos, "yes", $useYoutube);
+			$this->printVideoplayer($playlist->videos, (count($playlist->videos) > 1 ? "yes" : "no"), $useYoutube);
 		}
 	}
 
