@@ -214,7 +214,7 @@ class Videomanager {
 	 * mehrere Instanzen des Player betreiben zu können.
 	 */
 	private function printPlayerDiv($playerID) {
-		print '<div id="videoplayer'. $playerID .'" style="position:relative; left:0px; top:0px;"></div>';
+		print '<div id="videoplayer'. $playerID .'" style="position:relative; left:0px; top:0px;"></div>'. PHP_EOL;
 	}
 	
 	/**
@@ -230,8 +230,8 @@ class Videomanager {
 		$this->printJS($playerID, $showPlaylist, $useYoutube);
 		$this->printPlayerDiv($playerID);
 
-		$playlist_start = '<ul id="playlists'. $playerID .'" style="display:none;">';
-		$playlist_inhalt = '<ul id="'. $playerID .'" style="display:none;">';
+		$playlist_start = '<ul id="playlists'. $playerID .'" style="display:none;">'. PHP_EOL;
+		$playlist_inhalt = '<ul id="'. $playerID .'" style="display:none;">'. PHP_EOL;
 
 		$videocounter = 0;
 		foreach ($videos as $video) {
@@ -256,20 +256,18 @@ class Videomanager {
 			}
 
 			// Standard URLs für Bilder
-			$bild_filename_thumb = 'index.php?rex_media_type='. $this->video_thumb_type .'&rex_media_file='. $video->picture;
-			$bild_filename_preview = 'index.php?rex_media_type='. $this->video_preview_type .'&rex_media_file='. $video->picture;
+			$picture_thumb = $video->picture != '' ? 'index.php?rex_media_type='. $this->video_thumb_type .'&rex_media_file='. $video->picture : '';
+			$picture_preview = $video->picture != '' ? 'index.php?rex_media_type='. $this->video_preview_type .'&rex_media_file='. $video->picture : '';
 
 			if($videocounter == 0) {
-				$playlist_start .= '<li data-source="'. $playerID .'" data-playlist-name="'. $video->teaser .'" data-thumbnail-path="'. $bild_filename_preview .'">';
+				$playlist_start .= '<li data-source="'. $playerID .'" data-playlist-name="'. $video->teaser .'" data-thumbnail-path="'. ($video->picture != '' ? $picture_preview : '') .'">';
 			}
-			$playlist_inhalt .=  '<li data-thumb-source="'. $bild_filename_thumb
-				.'" data-video-source="'. $video->getVideoURL() .'" data-poster-source="'.
-				$bild_filename_preview .'" data-downloadable="yes">';
+			$playlist_inhalt .=  '<li  data-thumb-source="'. $picture_thumb .'" data-video-source="'. $video->getVideoURL() .'" data-poster-source="'. ($video->picture != '' ? $picture_preview : '') .'" data-downloadable="yes">';
 
 			// Rest der Ausgabe
 			if($videocounter == 0) {
 				$playlist_start .= '<p class="minimalDarkCategoriesTitle"><span class="minimalDarkBold">'. $video->teaser .'</span></p>';
-				$playlist_start .= '</li>';
+				$playlist_start .= '</li>'. PHP_EOL;
 			}
 
 			$playlist_inhalt .=  '<div data-video-short-description="">';
@@ -278,11 +276,11 @@ class Videomanager {
 			$playlist_inhalt .=  '<p class="minimalDarkThumbnailDesc">'. $video->teaser .'</p>';
 			$playlist_inhalt .=  '</div>';
 			$playlist_inhalt .=  '</div>';
-			$playlist_inhalt .=  '</li>';
+			$playlist_inhalt .=  '</li>'. PHP_EOL;
 			$videocounter++;
 		}
-		$playlist_start .= '</ul>';
-		$playlist_inhalt .= '</ul>';
+		$playlist_start .= '</ul>'. PHP_EOL;
+		$playlist_inhalt .= '</ul>'. PHP_EOL;
 
 		print $playlist_start . $playlist_inhalt;
 	}
