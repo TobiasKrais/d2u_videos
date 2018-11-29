@@ -98,7 +98,7 @@ class Videomanager {
 		}
 
 	?>
-		<script type="text/javascript">
+		<script>
 		FWDUVPUtils.onReady(function(){
 			FWDUVPlayer.useYoutube = "<?php print $useYoutube; ?>";
 			new FWDUVPlayer({		

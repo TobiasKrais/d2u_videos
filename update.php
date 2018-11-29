@@ -1,6 +1,6 @@
 <?php
 // Update modules
-if(class_exists(D2UModuleManager)) {
+if(class_exists('D2UModuleManager')) {
 	$modules = [];
 	$modules[] = new D2UModule("30-1",
 		"D2U Videomanager - Video / Playlist",
