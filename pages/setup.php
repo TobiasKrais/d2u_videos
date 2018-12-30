@@ -33,9 +33,9 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_videos" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.0.5-DEV:</p>
+<p>1.0.5:</p>
 <ul>
-	<li>...</li>
+	<li>Bilder für die aktuelle Upstream Version hinzugefügt.</li>
 </ul>
 <p>1.0.4:</p>
 <ul>
