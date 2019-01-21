@@ -139,12 +139,26 @@ if ($func == 'edit' || $func == 'add') {
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
-								
-								d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $video->name, $required, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_textarea('d2u_videos_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $video->teaser, 5, $required, $readonly_lang, FALSE);
-								d2u_addon_backend_helper::form_mediafield('d2u_videos_redaxo_file_lang', '1'. $rex_clang->getId(), $video->redaxo_file_lang, $readonly_lang);
-								d2u_addon_backend_helper::form_input('d2u_videos_youtube_video_id_lang', "form[lang][". $rex_clang->getId() ."][youtube_video_id_lang]", $video->youtube_video_id_lang, FALSE, $readonly_lang, "text");
 							?>
+							<script>
+								// Hide on document load
+								$(document).ready(function() {
+									toggleClangDetailsView(<?php print $rex_clang->getId(); ?>);
+								});
+
+								// Hide on selection change
+								$("select[name='form[lang][1][translation_needs_update]']").on('change', function(e) {
+									toggleClangDetailsView(<?php print $rex_clang->getId(); ?>);
+								});
+							</script>
+							<div id="details_clang_<?php print $rex_clang->getId(); ?>">
+								<?php
+									d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $video->name, $required, $readonly_lang, "text");
+									d2u_addon_backend_helper::form_textarea('d2u_videos_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $video->teaser, 5, $required, $readonly_lang, FALSE);
+									d2u_addon_backend_helper::form_mediafield('d2u_videos_redaxo_file_lang', '1'. $rex_clang->getId(), $video->redaxo_file_lang, $readonly_lang);
+									d2u_addon_backend_helper::form_input('d2u_videos_youtube_video_id_lang', "form[lang][". $rex_clang->getId() ."][youtube_video_id_lang]", $video->youtube_video_id_lang, FALSE, $readonly_lang, "text");
+								?>
+							</div>
 						</div>
 					</fieldset>
 				<?php
