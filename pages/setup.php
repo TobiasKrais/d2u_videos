@@ -33,7 +33,7 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_videos" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.0.6-DEV:</p>
+<p>1.0.6:</p>
 <ul>
 	<li>Sprachdetails werden ausgeblendet, wenn Speicherung der Sprache nicht vorgesehen ist.</li>
 	<li>Bugfix: YouTube Videos wurden mit aktuellen Player nicht mehr dargestellt, wenn nur die YouTube Video ID angegeben war.</li>
