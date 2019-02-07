@@ -36,6 +36,8 @@ $d2u_module_manager->showManagerList();
 <p>1.0.6-DEV:</p>
 <ul>
 	<li>Sprachdetails werden ausgeblendet, wenn Speicherung der Sprache nicht vorgesehen ist.</li>
+	<li>Bugfix: YouTube Videos wurden mit aktuellen Player nicht mehr dargestellt, wenn nur die YouTube Video ID angegeben war.</li>
+	<li>Bugfix: Sprachspezifische YouTube Video ID wurde nicht korrekt gespeichert.</li>
 	<li>Bugfix: Prioritäten wurden beim Löschen nicht reorganisiert.</li>
 </ul>
 <p>1.0.5:</p>

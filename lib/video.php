@@ -228,7 +228,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 	public function getVideoURL() {
 		if($this->video_url == "") {
 			if(($this->youtube_video_id != "" && (rex_config::get('d2u_videos', 'preferred_video_type') == 'youtube') || ($this->redaxo_file == "" && $this->redaxo_file_lang == ""))) {
-				$this->video_url = $this->youtube_video_id;				
+				$this->video_url = (strlen($this->youtube_video_id) < 15 ? "https://www.youtube.com/watch?v=" : "") . $this->youtube_video_id;				
 			}
 			else if($this->redaxo_file_lang != "") {
 				$this->video_url = rex_url::media($this->redaxo_file_lang);
@@ -286,7 +286,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". addslashes($this->name) ."', "
 						."teaser = '". $this->teaser ."', "
-						."youtube_video_id = '". $this->youtube_video_id ."', "
+						."youtube_video_id = '". $this->youtube_video_id_lang ."', "
 						."redaxo_file = '". $this->redaxo_file_lang ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
