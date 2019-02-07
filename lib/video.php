@@ -227,8 +227,12 @@ class Video implements \D2U_Helper\ITranslationHelper {
 	 */
 	public function getVideoURL() {
 		if($this->video_url == "") {
-			if(($this->youtube_video_id != "" && (rex_config::get('d2u_videos', 'preferred_video_type') == 'youtube') || ($this->redaxo_file == "" && $this->redaxo_file_lang == ""))) {
-				$this->video_url = (strlen($this->youtube_video_id) < 15 ? "https://www.youtube.com/watch?v=" : "") . $this->youtube_video_id;				
+			if((($this->youtube_video_id_lang != "" || $this->youtube_video_id != "")  && (rex_config::get('d2u_videos', 'preferred_video_type') == 'youtube')
+					|| ($this->redaxo_file == "" && $this->redaxo_file_lang == ""))) {
+				$video_id = $this->youtube_video_id_lang != "" ? $this->youtube_video_id_lang : $this->youtube_video_id;
+				if($video_id != "") {
+					$this->video_url = (strlen($video_id) < 15 ? "https://www.youtube.com/watch?v=" : "") . $video_id;
+				}
 			}
 			else if($this->redaxo_file_lang != "") {
 				$this->video_url = rex_url::media($this->redaxo_file_lang);

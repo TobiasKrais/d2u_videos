@@ -53,7 +53,7 @@ class Videomanager {
 	 * @param Video $video Video Objekt
 	 */
 	function printVideo($video) {
-		if($video->video_id > 0) {
+		if($video->video_id > 0 && $video->getVideoURL() != "") {
 			$useYoutube = $this->useYoutube([$video]);
 			$this->printVideoplayer([$video], "no", $useYoutube);
 		}
@@ -64,9 +64,15 @@ class Videomanager {
 	 * @param Video[] $videos Video Objekte
 	 */
 	function printVideos($videos) {
-		if(count($videos) > 0) {
-			$useYoutube = $this->useYoutube($videos);
-			$this->printVideoplayer($videos, (count($videos) > 1 ? "yes" : "no"), $useYoutube);
+		$proved_videos = [];
+		foreach ($videos as $video) {
+			if($video->video_id > 0 && $video->getVideoURL() != "") {
+				$proved_videos[] = $video;
+			}
+		}
+		if(count($proved_videos) > 0) {
+			$useYoutube = $this->useYoutube($proved_videos);
+			$this->printVideoplayer($proved_videos, (count($proved_videos) > 1 ? "yes" : "no"), $useYoutube);
 		}
 	}
 
@@ -236,13 +242,13 @@ class Videomanager {
 		$videocounter = 0;
 		foreach ($videos as $video) {
 			// Videoobjekt initialisieren
-			if($video->video_id == 0) {
+			if($video->video_id == 0 || $video->getVideoURL() == "") {
 				continue;
 			}
 			
 			// ycom/auth_media permissions
 			$rex_video = FALSE;
-			if(($this->youtube_video_id != "" && (rex_config::get('d2u_videos', 'preferred_video_type') == 'youtube') || ($this->redaxo_file == "" && $this->redaxo_file_lang == ""))) {
+			if((($this->youtube_video_id_lang != "" || $this->youtube_video_id != "") && (rex_config::get('d2u_videos', 'preferred_video_type') == 'youtube') || ($this->redaxo_file == "" && $this->redaxo_file_lang == ""))) {
 				$rex_video = FALSE;
 			}
 			else if($this->redaxo_file_lang != "") {
@@ -293,7 +299,7 @@ class Videomanager {
 	 */
 	private function useYoutube($videos) {
 		foreach($videos as $video) {
-			if($video->youtube_video_id != "") {
+			if($video->youtube_video_id_lang != "" || $video->youtube_video_id != "") {
 				return "yes";
 			}
 		}
