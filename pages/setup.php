@@ -35,6 +35,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.7-DEV:</p>
 <ul>
+	<li>Konvertierung der Datenbanktabellen zu utf8mb4.</li>
 	<li>Bugfix: Videos ohne Video-URL in einer Sprache konnten in Videoliste gelangen und verursachten Fehler.</li>
 </ul>
 <p>1.0.6:</p>

@@ -4,31 +4,31 @@ $sql = rex_sql::factory();
 $sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_videos_videos` (
     `video_id` int(11) NOT NULL auto_increment,
 	`priority` int(10) default NULL,
-    `picture` varchar(255) collate utf8_general_ci default NULL,
-    `youtube_video_id` varchar(255) collate utf8_general_ci default NULL,
-    `redaxo_file` varchar(255) collate utf8_general_ci default NULL,
+    `picture` varchar(255) collate utf8mb4_unicode_ci default NULL,
+    `youtube_video_id` varchar(255) collate utf8mb4_unicode_ci default NULL,
+    `redaxo_file` varchar(255) collate utf8mb4_unicode_ci default NULL,
     PRIMARY KEY (`video_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
 
 $sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_videos_videos_lang` (
     `video_id` int(10) NOT NULL,
     `clang_id` int(10) NOT NULL,
-    `name` varchar(255) collate utf8_general_ci default NULL,
-    `teaser` varchar(255) collate utf8_general_ci default NULL,
-    `youtube_video_id` varchar(255) collate utf8_general_ci default NULL,
-    `redaxo_file` varchar(255) collate utf8_general_ci default NULL,
-	`translation_needs_update` varchar(7) collate utf8_general_ci default NULL,
+    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+    `teaser` varchar(255) collate utf8mb4_unicode_ci default NULL,
+    `youtube_video_id` varchar(255) collate utf8mb4_unicode_ci default NULL,
+    `redaxo_file` varchar(255) collate utf8mb4_unicode_ci default NULL,
+	`translation_needs_update` varchar(7) collate utf8mb4_unicode_ci default NULL,
 	`updatedate` int(11) default NULL,
-	`updateuser` varchar(255) collate utf8_general_ci default NULL,
+	`updateuser` varchar(255) collate utf8mb4_unicode_ci default NULL,
     PRIMARY KEY (`video_id`, `clang_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
 
 $sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_videos_playlists` (
     `playlist_id` int(11) NOT NULL auto_increment,
-    `name` varchar(255) collate utf8_general_ci default NULL,
-    `video_ids` varchar(255) collate utf8_general_ci default NULL,
+    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+    `video_ids` varchar(255) collate utf8mb4_unicode_ci default NULL,
     PRIMARY KEY (`playlist_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
 
 // Media Manager media types
 $sql->setQuery("SELECT * FROM ". \rex::getTablePrefix() ."media_manager_type WHERE name = 'd2u_videos_preview'");
