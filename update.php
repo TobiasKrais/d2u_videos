@@ -13,3 +13,9 @@ if(class_exists('D2UModuleManager')) {
 if (!$this->hasConfig()) {
 	$this->removeConfig('default_lang');
 }
+
+$sql = rex_sql::factory();
+// Update database to 1.0.7
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_videos_videos` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_videos_videos_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_videos_playlists` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
