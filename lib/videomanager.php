@@ -10,12 +10,12 @@
  */
 class Videomanager {
 	/**
-	 * @var int maximale Höhe des Playerfensters
+	 * @var int Max. player window height 
 	 */
 	var $max_height = 440;
 	
 	/**
-	 * @var int maximale Breite des Playerfensters
+	 * @var int Max. player window width including playlist width
 	 */
 	var $max_width = 1180;
 
@@ -102,7 +102,6 @@ class Videomanager {
 		else {
 			print '<p>D2U Videos settings incomplete. Please upload FWDUVPlayer.js to media pool and complete settings.</p>';
 		}
-
 	?>
 		<script>
 		FWDUVPUtils.onReady(function(){
@@ -122,7 +121,7 @@ class Videomanager {
 				autoPlay:"no",
 				loop:"no",
 				shuffle:"no",
-				maxWidth:<?php print $this->max_width; ?>,
+				maxWidth:<?php print ($showPlaylist == "yes" ? $this->max_width : $this->max_width - $this->playlist_width); ?>,
 				maxHeight:<?php print $this->max_height; ?>,
 				buttonsToolTipHideDelay:1.5,
 				volume:.8,
@@ -262,13 +261,14 @@ class Videomanager {
 			}
 
 			// Standard URLs für Bilder
-			$picture_thumb = $video->picture != '' ? 'index.php?rex_media_type='. $this->video_thumb_type .'&rex_media_file='. $video->picture : '';
-			$picture_preview = $video->picture != '' ? 'index.php?rex_media_type='. $this->video_preview_type .'&rex_media_file='. $video->picture : '';
+			$fallback_background = rex_url::addonAssets('d2u_videos', 'minimal_skin_dark/thumbnail-background.png');
+			$picture_thumb = $video->picture != '' ? 'index.php?rex_media_type='. $this->video_thumb_type .'&rex_media_file='. $video->picture : $fallback_background;
+			$picture_preview = $video->picture != '' ? 'index.php?rex_media_type='. $this->video_preview_type .'&rex_media_file='. $video->picture : $fallback_background;
 
 			if($videocounter == 0) {
-				$playlist_start .= '<li data-source="'. $playerID .'" data-playlist-name="'. $video->teaser .'" data-thumbnail-path="'. ($video->picture != '' ? $picture_preview : '') .'">';
+				$playlist_start .= '<li data-source="'. $playerID .'" data-playlist-name="'. $video->teaser .'" data-thumbnail-path="'. $picture_preview .'">';
 			}
-			$playlist_inhalt .=  '<li  data-thumb-source="'. $picture_thumb .'" data-video-source="'. $video->getVideoURL() .'" data-poster-source="'. ($video->picture != '' ? $picture_preview : '') .'" data-downloadable="yes">';
+			$playlist_inhalt .=  '<li data-thumb-source="'. $picture_thumb .'" data-video-source="'. $video->getVideoURL() .'" data-poster-source="'. $picture_preview .'" data-downloadable="yes">';
 
 			// Rest der Ausgabe
 			if($videocounter == 0) {

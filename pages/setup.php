@@ -36,6 +36,8 @@ $d2u_module_manager->showManagerList();
 <p>1.0.7-DEV:</p>
 <ul>
 	<li>Konvertierung der Datenbanktabellen zu utf8mb4.</li>
+	<li>Bugfix: bei Videosplayer ohne Playlist wurde unterer Teil des Videos vom Player abgeschnitten.</li>
+	<li>Bugfix: Videos ohne Vorschaubild konnten nicht abgespielt werden.</li>
 	<li>Bugfix: Videos ohne Video-URL in einer Sprache konnten in Videoliste gelangen und verursachten Fehler.</li>
 </ul>
 <p>1.0.6:</p>
