@@ -104,7 +104,7 @@ if ($func == 'edit' || $func == 'add') {
 if ($func == '') {
 	$query = 'SELECT playlist_id, name FROM '. \rex::getTablePrefix() .'d2u_videos_playlists '
 		.'ORDER BY `name`';
-    $list = rex_list::factory($query);
+    $list = rex_list::factory($query, 1000);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 

@@ -35,6 +35,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.7-DEV:</p>
 <ul>
+	<li>Listen im Backend werden jetzt nicht mehr in Seiten unterteilt.</li>
 	<li>Konvertierung der Datenbanktabellen zu utf8mb4.</li>
 	<li>Bugfix: bei Videosplayer ohne Playlist wurde unterer Teil des Videos vom Player abgeschnitten.</li>
 	<li>Bugfix: Videos ohne Vorschaubild konnten nicht abgespielt werden.</li>
