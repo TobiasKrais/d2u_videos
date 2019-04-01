@@ -37,6 +37,7 @@ $d2u_module_manager->showManagerList();
 <ul>
 	<li>Listen im Backend werden jetzt nicht mehr in Seiten unterteilt.</li>
 	<li>Konvertierung der Datenbanktabellen zu utf8mb4.</li>
+	<li>Bugfix: Safari meldete "Undefined Property".</li>
 	<li>Bugfix: bei Videosplayer ohne Playlist wurde unterer Teil des Videos vom Player abgeschnitten.</li>
 	<li>Bugfix: Videos ohne Vorschaubild konnten nicht abgespielt werden.</li>
 	<li>Bugfix: Videos ohne Video-URL in einer Sprache konnten in Videoliste gelangen und verursachten Fehler.</li>

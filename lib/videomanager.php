@@ -247,14 +247,14 @@ class Videomanager {
 			
 			// ycom/auth_media permissions
 			$rex_video = FALSE;
-			if((($this->youtube_video_id_lang != "" || $this->youtube_video_id != "") && (rex_config::get('d2u_videos', 'preferred_video_type') == 'youtube') || ($this->redaxo_file == "" && $this->redaxo_file_lang == ""))) {
+			if((($video->youtube_video_id_lang != "" || $video->youtube_video_id != "") && (rex_config::get('d2u_videos', 'preferred_video_type') == 'youtube') || ($video->redaxo_file == "" && $video->redaxo_file_lang == ""))) {
 				$rex_video = FALSE;
 			}
-			else if($this->redaxo_file_lang != "") {
+			else if($video->redaxo_file_lang != "") {
 				$rex_video = rex_media::get($video->redaxo_file_lang);
 			}
-			else if($this->redaxo_file != "") {
-				$rex_video = rex_url::media($this->redaxo_file);
+			else if($video->redaxo_file != "") {
+				$rex_video = rex_url::media($video->redaxo_file);
 			}
 			if($rex_video instanceof rex_media && rex_plugin::get('ycom', 'auth_media')->isAvailable() && !rex_ycom_auth_media::checkPerm($rex_video)) {
 				continue;
@@ -262,8 +262,8 @@ class Videomanager {
 
 			// Standard URLs für Bilder
 			$fallback_background = rex_url::addonAssets('d2u_videos', 'minimal_skin_dark/thumbnail-background.png');
-			$picture_thumb = $video->picture != '' ? 'index.php?rex_media_type='. $this->video_thumb_type .'&rex_media_file='. $video->picture : $fallback_background;
-			$picture_preview = $video->picture != '' ? 'index.php?rex_media_type='. $this->video_preview_type .'&rex_media_file='. $video->picture : $fallback_background;
+			$picture_thumb = $video->picture != '' ? 'index.php?rex_media_type='. $video->video_thumb_type .'&rex_media_file='. $video->picture : $fallback_background;
+			$picture_preview = $video->picture != '' ? 'index.php?rex_media_type='. $video->video_preview_type .'&rex_media_file='. $video->picture : $fallback_background;
 
 			if($videocounter == 0) {
 				$playlist_start .= '<li data-source="'. $playerID .'" data-playlist-name="'. $video->teaser .'" data-thumbnail-path="'. $picture_preview .'">';
