@@ -35,7 +35,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.8-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Nicht benötigte Felder "updatedate" und "updateuser" entfernt</li>
 </ul>
 <p>1.0.7:</p>
 <ul>

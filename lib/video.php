@@ -292,9 +292,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 						."teaser = '". $this->teaser ."', "
 						."youtube_video_id = '". $this->youtube_video_id_lang ."', "
 						."redaxo_file = '". $this->redaxo_file_lang ."', "
-						."translation_needs_update = '". $this->translation_needs_update ."', "
-						."updatedate = ". time() .", "
-						."updateuser = '". \rex::getUser()->getLogin() ."' ";
+						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
 				$result = rex_sql::factory();
 				$result->setQuery($query);
