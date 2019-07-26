@@ -24,6 +24,12 @@ $d2u_module_manager->showManagerList();
 	<li>Videos Addon: <a href="https://www.kaltenbach.com/de/medien/videos/" target="_blank">
 		https://www.kaltenbach.com/de/medien/videos/</a>.</li>
 </ul>
+<h2>FAQ</h2>
+<ul>
+	<li><b>Videos werden in Safari nicht angezeigt, anderen Browsern aber schon.</b><br>
+		In der .htaccess Datei muss folgender Wert eingetragen werden:<br>
+		<pre>Header set Accept-Ranges bytes</pre></li>
+</ul>
 <h2>Fremdcode</h2>
 <p>Für den Videoplayer braucht es den Ultimate Video Player, der hier erworben
 	werden kann: <a href="http://codecanyon.net/item/ultimate-video-player/7694071">
