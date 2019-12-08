@@ -254,8 +254,10 @@ class Videomanager {
 				$rex_video = rex_media::get($video->redaxo_file_lang);
 			}
 			else if($video->redaxo_file != "") {
-				$rex_video = rex_url::media($video->redaxo_file);
+				$rex_video = rex_media::get($video->redaxo_file);
 			}
+
+			// Check media permissions
 			if($rex_video instanceof rex_media && rex_plugin::get('ycom', 'media_auth')->isAvailable() && !rex_ycom_media_auth::checkPerm(rex_media_manager::create("", $rex_video->getFileName()))) {
 				continue;
 			}
