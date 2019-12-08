@@ -234,11 +234,14 @@ class Video implements \D2U_Helper\ITranslationHelper {
 					$this->video_url = (strlen($video_id) < 15 ? "https://www.youtube.com/watch?v=" : "") . $video_id;
 				}
 			}
-			else if($this->redaxo_file_lang != "") {
-				$this->video_url = rex_url::media($this->redaxo_file_lang);
-			}
-			else if($this->redaxo_file != "") {
-				$this->video_url = rex_url::media($this->redaxo_file);
+			else {
+				$media_domain = trim(\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer(), "/");
+				if($this->redaxo_file_lang != "") {
+					$this->video_url = $media_domain . rex_url::media($this->redaxo_file_lang);
+				}
+				else if($this->redaxo_file != "") {
+					$this->video_url = $media_domain . rex_url::media($this->redaxo_file);
+				}
 			}
 		}
 		return $this->video_url;
