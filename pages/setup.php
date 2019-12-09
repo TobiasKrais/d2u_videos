@@ -39,6 +39,10 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_videos" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
+<p>1.0.9-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.0.8:</p>
 <ul>
 	<li>Anpassungen an aktuelles Upstream Release: aufgrund eines Fehlers im Upstream Release funktionieren bisher genutzte relative URLs für Dateien aus dem Medienpool nicht mehr. Deshalb werden jetzt auch für Videos aus dem Medienpool absolute URLs ausgegeben.</li>
