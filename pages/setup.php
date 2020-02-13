@@ -41,7 +41,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.9-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Bugfix speichern von einfachen Anführungszeichen in der Video Beschreibung.</li>
 </ul>
 <p>1.0.8:</p>
 <ul>

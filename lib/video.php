@@ -112,7 +112,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 			if ($result_fallback->getRows() > 0) {
 				$this->video_id = $video_id;
 				$this->name = stripslashes($result_fallback->getValue("name"));
-				$this->teaser = $result_fallback->getValue("teaser");
+				$this->teaser = stripslashes($result_fallback->getValue("teaser"));
 				$this->picture = $result_fallback->getValue("picture");
 				$this->priority = $result_fallback->getValue("priority");
 				if($this->redaxo_file == "" && $this->redaxo_file_lang == "" && $this->youtube_video_id == "" && $this->youtube_video_id_lang == "") {
@@ -292,7 +292,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 						."video_id = '". $this->video_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". addslashes($this->name) ."', "
-						."teaser = '". $this->teaser ."', "
+						."teaser = '". addslashes($this->teaser) ."', "
 						."youtube_video_id = '". $this->youtube_video_id_lang ."', "
 						."redaxo_file = '". $this->redaxo_file_lang ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
