@@ -20,7 +20,7 @@ $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_videos_videos` CONVE
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_videos_videos_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_videos_playlists` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
-if (rex_string::versionCompare($this->getVersion(), '1.0.8', '<')) {
+if (rex_version::compare($this->getVersion(), '1.0.8', '<')) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_videos_videos_lang DROP updatedate;");
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_videos_videos_lang DROP updateuser;");
 }
