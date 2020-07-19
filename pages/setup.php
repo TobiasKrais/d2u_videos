@@ -41,8 +41,8 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.9:</p>
 <ul>
-	<li>Benötigt Redaxo >= 5.10, da die neue Klasse rex_version verwendet wird.</li>
-	<li>Bugfix speichern von einfachen Anführungszeichen in der Video Beschreibung.</li>
+	<li>Benötigt Redaxo >= 5.10, da die neue Klasse rex_version verwendet.</li>
+	<li>Bugfix: Speichern von einfachen Anführungszeichen in der Video Beschreibung.</li>
 </ul>
 <p>1.0.8:</p>
 <ul>
