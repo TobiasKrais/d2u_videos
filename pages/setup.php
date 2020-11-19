@@ -41,7 +41,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.1.0-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Anpassung auf aktuelle Upstream Version: breite des Videos wurde bei einzelnen Video nicht mehr korrekt gesetzt.</li>
 </ul>
 <p>1.0.9:</p>
 <ul>

@@ -121,7 +121,7 @@ class Videomanager {
 				autoPlay:"no",
 				loop:"no",
 				shuffle:"no",
-				maxWidth:<?php print ($showPlaylist == "yes" ? $this->max_width : $this->max_width - $this->playlist_width); ?>,
+				maxWidth:<?php print $this->max_width; ?>,
 				maxHeight:<?php print $this->max_height; ?>,
 				buttonsToolTipHideDelay:1.5,
 				volume:.8,
