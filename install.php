@@ -5,7 +5,8 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_vide
     `video_id` int(11) NOT NULL auto_increment,
 	`priority` int(10) default NULL,
     `picture` varchar(255) collate utf8mb4_unicode_ci default NULL,
-    `youtube_video_id` varchar(255) collate utf8mb4_unicode_ci default NULL,
+    `video_type` varchar(10) collate utf8mb4_unicode_ci default NULL,
+    `youtube_video_id` varchar(50) collate utf8mb4_unicode_ci default NULL,
     `redaxo_file` varchar(255) collate utf8mb4_unicode_ci default NULL,
     PRIMARY KEY (`video_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
@@ -15,6 +16,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_vide
     `clang_id` int(10) NOT NULL,
     `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
     `teaser` varchar(255) collate utf8mb4_unicode_ci default NULL,
+    `video_type` varchar(10) collate utf8mb4_unicode_ci default NULL,
     `youtube_video_id` varchar(255) collate utf8mb4_unicode_ci default NULL,
     `redaxo_file` varchar(255) collate utf8mb4_unicode_ci default NULL,
 	`translation_needs_update` varchar(7) collate utf8mb4_unicode_ci default NULL,
@@ -52,5 +54,4 @@ if($sql->getRows() == 0) {
 if (!$this->hasConfig()) {
 	$this->setConfig('max_height', '440');
 	$this->setConfig('max_width', '1180');
-	$this->setConfig('preferred_video_type', 'local');
 }

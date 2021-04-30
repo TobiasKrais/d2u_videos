@@ -247,7 +247,7 @@ class Videomanager {
 			
 			// ycom/auth_media permissions
 			$rex_video = FALSE;
-			if((($video->youtube_video_id_lang != "" || $video->youtube_video_id != "") && (rex_config::get('d2u_videos', 'preferred_video_type') == 'youtube') || ($video->redaxo_file == "" && $video->redaxo_file_lang == ""))) {
+			if(($this->video_type_lang == "youtube" && $this->youtube_video_id_lang != "") || ($this->video_type == "youtube" && $this->youtube_video_id != "")) {
 				$rex_video = FALSE;
 			}
 			else if($video->redaxo_file_lang != "") {

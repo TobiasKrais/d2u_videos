@@ -10,8 +10,11 @@ if(class_exists('D2UModuleManager')) {
 }
 
 // remove default lang setting
-if (!$this->hasConfig()) {
+if (!$this->hasConfig('default_lang')) {
 	$this->removeConfig('default_lang');
+}
+if (!$this->hasConfig('preferred_video_type')) {
+	$this->removeConfig('preferred_video_type');
 }
 
 $sql = rex_sql::factory();
@@ -20,7 +23,26 @@ $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_videos_videos` CONVE
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_videos_videos_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_videos_playlists` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
-if (rex_version::compare($this->getVersion(), '1.0.8', '<')) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_videos_videos_lang DROP updatedate;");
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_videos_videos_lang DROP updateuser;");
+// Remove old columns
+\rex_sql_table::get(
+    \rex::getTable('d2u_videos_videos_lang'))
+    ->removeColumn('updatedate')
+    ->removeColumn('updateuser')
+    ->ensure();
+
+// Add columns
+\rex_sql_table::get(
+    \rex::getTable('d2u_videos_videos'))
+    ->ensureColumn(new \rex_sql_column('video_type', 'VARCHAR(10)', TRUE))
+    ->alter();
+\rex_sql_table::get(
+    \rex::getTable('d2u_videos_videos'))
+    ->ensureColumn(new \rex_sql_column('video_type', 'VARCHAR(10)', TRUE))
+    ->alter();
+
+if (rex_version::compare($this->getVersion(), '1.1.0', '<')) {
+	$sql->setQuery("UPDATE ". \rex::getTablePrefix() ."d2u_videos_videos SET `video_type` = 'redaxo' WHERE `redaxo_file` <> '' AND `video_type` IS NULL;");
+	$sql->setQuery("UPDATE ". \rex::getTablePrefix() ."d2u_videos_videos SET `video_type` = 'youtube' WHERE `youtube_video_id` <> '' AND `video_type` IS NULL;");
+	$sql->setQuery("UPDATE ". \rex::getTablePrefix() ."d2u_videos_videos_lang SET `video_type` = 'redaxo' WHERE `redaxo_file` <> '' AND `video_type` IS NULL;");
+	$sql->setQuery("UPDATE ". \rex::getTablePrefix() ."d2u_videos_videos_lang SET `video_type` = 'youtube' WHERE `youtube_video_id` <> '' AND `video_type` IS NULL;");
 }

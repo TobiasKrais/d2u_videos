@@ -65,6 +65,18 @@ class Video implements \D2U_Helper\ITranslationHelper {
 	var $translation_needs_update = "delete";
 
 	/**
+	 * @var String Video type, either 'redaxo' for videos in redaxo media pool
+	 * or 'youtube' for YouTube video id
+	 */
+	var $video_type = "";
+
+	/**
+	 * @var String Video type, either 'redaxo' for videos in redaxo media pool
+	 * or 'youtube' for YouTube video id
+	 */
+	var $video_type_lang = "";
+
+	/**
 	 * @var String Video URL
 	 */
 	private $video_url = "";
@@ -90,6 +102,8 @@ class Video implements \D2U_Helper\ITranslationHelper {
 			$this->video_id = $video_id;
 			$this->name = stripslashes($result->getValue("name"));
 			$this->teaser = $result->getValue("teaser");
+			$this->video_type = $result->getValue("videos.video_type");
+			$this->video_type_lang = $result->getValue("lang.video_type");
 			$this->youtube_video_id = $result->getValue("videos.youtube_video_id");
 			$this->youtube_video_id_lang = $result->getValue("lang.youtube_video_id");
 			$this->redaxo_file = $result->getValue("videos.redaxo_file");
@@ -100,7 +114,6 @@ class Video implements \D2U_Helper\ITranslationHelper {
 		}
 		else if($fallback) {
 			// fallback to default lang
-			$d2u_videos = rex_addon::get('d2u_videos');
 			$query_fallback = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_videos_videos AS videos "
 					."LEFT JOIN ". \rex::getTablePrefix() ."d2u_videos_videos_lang AS lang "
 						."ON lang.video_id = videos.video_id "
@@ -116,6 +129,8 @@ class Video implements \D2U_Helper\ITranslationHelper {
 				$this->picture = $result_fallback->getValue("picture");
 				$this->priority = $result_fallback->getValue("priority");
 				if($this->redaxo_file == "" && $this->redaxo_file_lang == "" && $this->youtube_video_id == "" && $this->youtube_video_id_lang == "") {
+					$this->video_type = $result->getValue("videos.video_type");
+					$this->video_type_lang = $result->getValue("lang.video_type");
 					$this->redaxo_file = $result_fallback->getValue("videos.redaxo_file");
 					$this->redaxo_file_lang = $result_fallback->getValue("lang.redaxo_file");
 					$this->youtube_video_id = $result_fallback->getValue("videos.youtube_video_id");
@@ -227,21 +242,18 @@ class Video implements \D2U_Helper\ITranslationHelper {
 	 */
 	public function getVideoURL() {
 		if($this->video_url == "") {
-			if((($this->youtube_video_id_lang != "" || $this->youtube_video_id != "")  && (rex_config::get('d2u_videos', 'preferred_video_type') == 'youtube')
-					|| ($this->redaxo_file == "" && $this->redaxo_file_lang == ""))) {
-				$video_id = $this->youtube_video_id_lang != "" ? $this->youtube_video_id_lang : $this->youtube_video_id;
-				if($video_id != "") {
-					$this->video_url = (strlen($video_id) < 15 ? "https://www.youtube.com/watch?v=" : "") . $video_id;
-				}
+			$media_domain = trim(\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer(), "/");
+			if($this->video_type_lang == "youtube" && $this->youtube_video_id_lang != "") {
+				$this->video_url = (strlen($this->youtube_video_id_lang) < 15 ? "https://www.youtube.com/watch?v=" : "") . $this->youtube_video_id_lang;
 			}
-			else {
-				$media_domain = trim(\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer(), "/");
-				if($this->redaxo_file_lang != "") {
-					$this->video_url = $media_domain . rex_url::media($this->redaxo_file_lang);
-				}
-				else if($this->redaxo_file != "") {
-					$this->video_url = $media_domain . rex_url::media($this->redaxo_file);
-				}
+			else if($this->video_type_lang == "redaxo" && $this->redaxo_file_lang != "") {
+				$this->video_url = $media_domain . rex_url::media($this->redaxo_file_lang);
+			}
+			else if($this->video_type == "youtube" && $this->youtube_video_id != "") {
+				$this->video_url = (strlen($this->youtube_video_id) < 15 ? "https://www.youtube.com/watch?v=" : "") . $this->youtube_video_id;
+			}
+			else if($this->redaxo_file != "") {
+				$this->video_url = $media_domain . rex_url::media($this->redaxo_file);
 			}
 		}
 		return $this->video_url;
@@ -266,6 +278,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 			$query = \rex::getTablePrefix() ."d2u_videos_videos SET "
 					."picture = '". $this->picture ."', "
 					."priority = ". $this->priority .", "
+					."video_type = '". $this->video_type ."', "
 					."youtube_video_id = '". $this->youtube_video_id ."', "
 					."redaxo_file = '". $this->redaxo_file ."' ";
 
@@ -293,6 +306,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". addslashes($this->name) ."', "
 						."teaser = '". addslashes($this->teaser) ."', "
+						."video_type = '". $this->video_type_lang ."', "
 						."youtube_video_id = '". $this->youtube_video_id_lang ."', "
 						."redaxo_file = '". $this->redaxo_file_lang ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";

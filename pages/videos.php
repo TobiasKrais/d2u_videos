@@ -24,6 +24,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$video->video_id = $video_id; // Ensure correct ID in case first language has no object
 			$video->picture = $input_media[1];
 			$video->priority = $form['priority'];
+			$video->video_type = $form['video_type'];
 			$video->redaxo_file = $input_media[2];
 			$video->youtube_video_id = $form['youtube_video_id'];
 		}
@@ -32,6 +33,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		}
 		$video->name = $form['lang'][$rex_clang->getId()]['name'];
 		$video->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
+		$video->video_type_lang = $form['video_type_lang'];
 		$video->redaxo_file_lang = $input_media['1'. $rex_clang->getId()];
 		$video->youtube_video_id_lang = $form['lang'][$rex_clang->getId()]['youtube_video_id_lang'];
 		$video->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
@@ -110,9 +112,33 @@ if ($func == 'edit' || $func == 'add') {
 							
 							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $video->priority, TRUE, $readonly, 'number');
 							d2u_addon_backend_helper::form_mediafield('d2u_videos_picture', '1', $video->picture, $readonly);
+							$options_link = [
+								"redaxo" => rex_i18n::msg('d2u_videos_videotype_mp4'),
+								"youtube" => rex_i18n::msg('d2u_videos_videotype_youtube'),
+							];
+							d2u_addon_backend_helper::form_select('d2u_videos_videotype', 'form[video_type]', $options_link, [$video->video_type], 1, FALSE, $readonly);
 							d2u_addon_backend_helper::form_mediafield('d2u_videos_redaxo_file', '2', $video->redaxo_file, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_videos_youtube_video_id', "form[youtube_video_id]", $video->youtube_video_id, FALSE, $readonly, "text");
 						?>
+						<script>
+							function changeType() {
+								if($('select[name="form\\[video_type\\]"]').val() === "youtube") {
+									$('#MEDIA_2').hide();
+									$('#form\\[youtube_video_id\\]').show();
+								}
+								else {
+									$('#MEDIA_2').show();
+									$('#form\\[youtube_video_id\\]').hide();
+								}
+							}
+
+							// On init
+							changeType();
+							// On change
+							$('select[name="form\\[video_type\\]"]').on('change', function() {
+								changeType();
+							});
+						</script>
 					</div>
 				</fieldset>
 				<?php
@@ -154,11 +180,43 @@ if ($func == 'edit' || $func == 'add') {
 							<div id="details_clang_<?php print $rex_clang->getId(); ?>">
 								<?php
 									d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $video->name, $required, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_textarea('d2u_videos_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $video->teaser, 5, $required, $readonly_lang, FALSE);
+									d2u_addon_backend_helper::form_textarea('d2u_videos_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $video->teaser, 5, FALSE, $readonly_lang, FALSE);
+									d2u_addon_backend_helper::form_select('d2u_videos_videotype', 'form[lang]['. $rex_clang->getId() .'][video_type_lang]', $options_link, [$video->video_type_lang], 1, FALSE, $readonly);
 									d2u_addon_backend_helper::form_mediafield('d2u_videos_redaxo_file_lang', '1'. $rex_clang->getId(), $video->redaxo_file_lang, $readonly_lang);
 									d2u_addon_backend_helper::form_input('d2u_videos_youtube_video_id_lang', "form[lang][". $rex_clang->getId() ."][youtube_video_id_lang]", $video->youtube_video_id_lang, FALSE, $readonly_lang, "text");
 								?>
 							</div>
+						<script>
+							function changeLangType() {
+								<?php
+								foreach(rex_clang::getAllIds() as $rex_clang_id) {
+								?>
+								if($('select[name="form\\[lang\\]\\[<?= $rex_clang_id ?>\\]\\[video_type_lang\\]"]').val() === "youtube") {
+									$('#MEDIA_1<?= $rex_clang_id ?>').hide();
+									$('#form\\[lang\\]\\[<?= $rex_clang_id ?>\\]\\[youtube_video_id_lang\\]').show();
+								}
+								else {
+									$('#MEDIA_1<?= $rex_clang_id ?>').show();
+									$('#form\\[lang\\]\\[<?= $rex_clang_id ?>\\]\\[youtube_video_id_lang\\]').hide();
+								}
+								<?php
+								}
+								?>
+							}
+
+							// On init
+							changeLangType();
+							// On change
+							<?php
+							foreach(rex_clang::getAllIds() as $rex_clang_id) {
+							?>
+								$('select[name="form\\[lang\\]\\[<?= $rex_clang_id ?>\\]\\[video_type_lang\\]"]').on('change', function() {
+									changeLangType();
+								});
+							<?php
+							}
+							?>
+						</script>
 						</div>
 					</fieldset>
 				<?php
