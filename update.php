@@ -36,7 +36,7 @@ $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_videos_playlists` CO
     ->ensureColumn(new \rex_sql_column('video_type', 'VARCHAR(10)', TRUE))
     ->alter();
 \rex_sql_table::get(
-    \rex::getTable('d2u_videos_videos'))
+    \rex::getTable('d2u_videos_videos_lang'))
     ->ensureColumn(new \rex_sql_column('video_type', 'VARCHAR(10)', TRUE))
     ->alter();
 
