@@ -129,8 +129,8 @@ class Video implements \D2U_Helper\ITranslationHelper {
 				$this->picture = $result_fallback->getValue("picture");
 				$this->priority = $result_fallback->getValue("priority");
 				if($this->redaxo_file == "" && $this->redaxo_file_lang == "" && $this->youtube_video_id == "" && $this->youtube_video_id_lang == "") {
-					$this->video_type = $result->getValue("videos.video_type");
-					$this->video_type_lang = $result->getValue("lang.video_type");
+					$this->video_type = $result_fallback->getValue("videos.video_type");
+					$this->video_type_lang = $result_fallback->getValue("lang.video_type");
 					$this->redaxo_file = $result_fallback->getValue("videos.redaxo_file");
 					$this->redaxo_file_lang = $result_fallback->getValue("lang.redaxo_file");
 					$this->youtube_video_id = $result_fallback->getValue("videos.youtube_video_id");
