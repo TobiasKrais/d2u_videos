@@ -41,6 +41,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.1.0-DEV:</p>
 <ul>
+	<li>Anpassungen an Publish Github Release to Redaxo.</li>
 	<li>Bugfix: Beim Löschen von Medien die vom Addon verlinkt werden wurde der Name der verlinkenden Quelle in der Warnmeldung nicht immer korrekt angegeben.</li>
 	<li>Auswahlfeld Videotyp für jeden Datensatz.</li>
 	<li>Anpassung auf aktuelle Upstream Version: breite des Videos wurde bei einzelnen Video nicht mehr korrekt gesetzt.</li>
