@@ -13,8 +13,8 @@ if(\rex::isBackend()) {
 
 /**
  * Deletes language specific configurations and objects
- * @param rex_extension_point $ep Redaxo extension point
- * @return string[] Warning message as array
+ * @param rex_extension_point<string> $ep Redaxo extension point
+ * @return mixed Warning message as array
  */
 function rex_d2u_videos_clang_deleted(rex_extension_point $ep) {
 	$warning = $ep->getSubject();
@@ -24,7 +24,7 @@ function rex_d2u_videos_clang_deleted(rex_extension_point $ep) {
 	// Delete
 	$videos = Video::getAll($clang_id);
 	foreach ($videos as $video) {
-		$video->delete(FALSE);
+		$video->delete(false);
 	}
 
 	return $warning;
@@ -32,11 +32,11 @@ function rex_d2u_videos_clang_deleted(rex_extension_point $ep) {
 
 /**
  * Checks if media is used by this addon
- * @param rex_extension_point $ep Redaxo extension point
+ * @param rex_extension_point<string> $ep Redaxo extension point
  * @return string[] Warning message as array
  */
 function rex_d2u_videos_media_is_in_use(rex_extension_point $ep) {
-	$warning = $ep->getSubject();
+	$warning = [$ep->getSubject()];
 	$params = $ep->getParams();
 	$filename = addslashes($params['filename']);
 
@@ -51,7 +51,7 @@ function rex_d2u_videos_media_is_in_use(rex_extension_point $ep) {
 	for($i = 0; $i < $sql_videos->getRows(); $i++) {
 		$message = '<a href="javascript:openPage(\'index.php?page=d2u_videos/videos&func=edit&entry_id='.
 			$sql_videos->getValue('video_id') .'\')">'. rex_i18n::msg('d2u_videos') .': '. $sql_videos->getValue('name') .'</a>';
-		if(!in_array($message, $warning)) {
+		if(!in_array($message, $warning, true)) {
 			$warning[] = $message;
 		}
 		$sql_videos->next();
@@ -62,7 +62,7 @@ function rex_d2u_videos_media_is_in_use(rex_extension_point $ep) {
 	if($addon->hasConfig("player_js") && $addon->getConfig("player_js") == $filename) {
 		$message = '<a href="javascript:openPage(\'index.php?page=d2u_videos/settings\')">'.
 			 rex_i18n::msg('d2u_videos') ." ". rex_i18n::msg('d2u_helper_settings') . '</a>';
-		if(!in_array($message, $warning)) {
+		if(!in_array($message, $warning, true)) {
 			$warning[] = $message;
 		}
 	}

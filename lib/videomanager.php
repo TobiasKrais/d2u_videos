@@ -12,47 +12,47 @@ class Videomanager {
 	/**
 	 * @var int Max. player window height 
 	 */
-	var $max_height = 440;
+	var int $max_height = 440;
 	
 	/**
 	 * @var int Max. player window width including playlist width
 	 */
-	var $max_width = 1180;
+	var int $max_width = 1180;
 
 	/**
-	 * @var String Playlist position ("left" or "right")
+	 * @var string Playlist position ("left" or "right")
 	 */
-	var $playlist_position = "right";
+	var string $playlist_position = "right";
 	
 	/**
 	 * @var int Playlist width
 	 */
-	var $playlist_width = 400;
+	var int $playlist_width = 400;
 
 	/**
-	 * @var String Image Manager Type video thumbs
+	 * @var string Image Manager Type video thumbs
 	 */
-	var $video_thumb_type = "d2u_videos_thumb";
+	var string $video_thumb_type = "d2u_videos_thumb";
 	
 	/**
-	 * @var String Image Manager Type video preview
+	 * @var string Image Manager Type video preview
 	 */
-	var $video_preview_type = "d2u_videos_preview";
+	var string $video_preview_type = "d2u_videos_preview";
 
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
 		$d2u_videos = rex_addon::get('d2u_videos');
-		$this->max_height = $d2u_videos->getConfig('max_height');
-		$this->max_width = $d2u_videos->getConfig('max_width');
+		$this->max_height = intval($d2u_videos->getConfig('max_height'));
+		$this->max_width = intval($d2u_videos->getConfig('max_width'));
 	}
 	
 	/**
 	 * Prints single video
 	 * @param Video $video Video Objekt
 	 */
-	function printVideo($video) {
+	public function printVideo($video):void {
 		if($video->video_id > 0 && $video->getVideoURL() != "") {
 			$useYoutube = $this->useYoutube([$video]);
 			$this->printVideoplayer([$video], "no", $useYoutube);
@@ -62,8 +62,9 @@ class Videomanager {
 	/**
 	 * Prints multiple videos
 	 * @param Video[] $videos Video Objekte
+	 * @api
 	 */
-	function printVideos($videos) {
+	public function printVideos($videos):void {
 		$proved_videos = [];
 		foreach ($videos as $video) {
 			if($video->video_id > 0 && $video->getVideoURL() != "") {
@@ -80,7 +81,7 @@ class Videomanager {
 	 * Prints playlist
 	 * @param Playlist $playlist Playlist Objekt
 	 */
-	function printPlaylist($playlist) {
+	public function printPlaylist($playlist):void {
 		if(count($playlist->videos) > 0) {
 			$useYoutube = $this->useYoutube($playlist->videos);
 			$this->printVideoplayer($playlist->videos, (count($playlist->videos) > 1 ? "yes" : "no"), $useYoutube);
@@ -94,10 +95,10 @@ class Videomanager {
 	 * @param String $showPlaylist "yes" oder "no". Last option if only one video should be played
 	 * @param String $useYoutube "yes" if youtube video is in playlist, "no" if not. Default is "no".
 	 */
-	private function printJS($playerID, $showPlaylist, $useYoutube = "no") {
+	private function printJS($playerID, $showPlaylist, $useYoutube = "no"):void {
 		$d2u_videos = rex_addon::get('d2u_videos');
 		if($d2u_videos->hasConfig('player_js') && $d2u_videos->getConfig('player_js') != '') {
-			print '<script src="'. rex_url::media($d2u_videos->getConfig('player_js')) .'"></script>';
+			print '<script src="'. rex_url::media(strval($d2u_videos->getConfig('player_js'))) .'"></script>';
 		}
 		else {
 			print '<p>D2U Videos settings incomplete. Please upload FWDUVPlayer.js to media pool and complete settings.</p>';
@@ -218,7 +219,7 @@ class Videomanager {
 	 * @param int $playerID Unique ID der Playerinstanz. Nötig um auf einer Seite
 	 * mehrere Instanzen des Player betreiben zu können.
 	 */
-	private function printPlayerDiv($playerID) {
+	private function printPlayerDiv($playerID):void {
 		print '<div id="videoplayer'. $playerID .'" style="position:relative; left:0px; top:0px;"></div>'. PHP_EOL;
 	}
 	
@@ -228,7 +229,7 @@ class Videomanager {
 	 * @param String $showPlaylist "yes" = Playlist wird angezeigt, "no" = Playlist wird nicht angezeigt
 	 * @param String $useYoutube "yes" wenn Youtube eingebunden werden soll, "no" wenn nicht. Default: "no"
 	 */
-	private function printVideoplayer($videos, $showPlaylist = "yes", $useYoutube = "no") {
+	private function printVideoplayer($videos, $showPlaylist = "yes", $useYoutube = "no"):void {
 		// Für data-source der Playlist und zur Unterscheidung bei mehreren Playlists auf einer Seite
 		$playerID = rand(1, 1000);
 

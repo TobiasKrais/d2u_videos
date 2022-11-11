@@ -1,10 +1,10 @@
 <?php
 // save settings
 if (filter_input(INPUT_POST, "btn_save") == 'save') {
-	$settings = (array) rex_post('settings', 'array', []);
+	$settings = rex_post('settings', 'array', []);
 
 	// Special treatment for media fields
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
+	$input_media = rex_post('REX_INPUT_MEDIA', 'array', array());
 	$settings['player_js'] = $input_media['player_js'];
 
 	// Save settings
@@ -24,9 +24,9 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?php echo rex_i18n::msg('d2u_helper_settings'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-						d2u_addon_backend_helper::form_mediafield('d2u_videos_player_file', 'player_js', $this->getConfig('player_js'));
-						d2u_addon_backend_helper::form_input('d2u_videos_max_height', 'settings[max_height]', $this->getConfig('max_height'), FALSE, FALSE, "number");
-						d2u_addon_backend_helper::form_input('d2u_videos_max_width', 'settings[max_width]', $this->getConfig('max_width'), FALSE, FALSE, "number");
+						d2u_addon_backend_helper::form_mediafield('d2u_videos_player_file', 'player_js', strval(rex_config::get('d2u_videos', 'player_js')));
+						d2u_addon_backend_helper::form_input('d2u_videos_max_height', 'settings[max_height]', strval(rex_config::get('d2u_videos', 'max_height')), FALSE, FALSE, "number");
+						d2u_addon_backend_helper::form_input('d2u_videos_max_width', 'settings[max_width]', strval(rex_config::get('d2u_videos', 'max_width')), FALSE, FALSE, "number");
 					?>
 				</div>
 			</fieldset>

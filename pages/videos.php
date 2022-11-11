@@ -10,10 +10,10 @@ if($message != "") {
 
 // save settings
 if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
+	$input_media = rex_post('REX_INPUT_MEDIA', 'array', array());
 
 	$success = TRUE;
 	$video = FALSE;
@@ -69,10 +69,10 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$video_id = $entry_id;
 	if($video_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+		$form = rex_post('form', 'array', []);
 		$video_id = $form['video_id'];
 	}
-	$video = new Video($video_id, rex_config::get("d2u_helper", "default_lang"), FALSE);
+	$video = new Video($video_id, intval(rex_config::get("d2u_helper", "default_lang")), FALSE);
 	$video->video_id = $video_id; // Ensure correct ID in case first language has no object
 	$playlists = $video->getPlaylists();
 	if(count($playlists) > 0) {
@@ -104,13 +104,13 @@ if ($func == 'edit' || $func == 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
-							$video = new Video($entry_id, rex_config::get("d2u_helper", "default_lang"), FALSE);
+							$video = new Video($entry_id, intval(rex_config::get("d2u_helper", "default_lang")), FALSE);
 							$readonly = TRUE;
-							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_videos[edit_data]')) {
+							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_videos[edit_data]'))) {
 								$readonly = FALSE;
 							}
 							
-							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $video->priority, TRUE, $readonly, 'number');
+							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', (string) $video->priority, TRUE, $readonly, 'number');
 							d2u_addon_backend_helper::form_mediafield('d2u_videos_picture', '1', $video->picture, $readonly);
 							$options_link = [
 								"redaxo" => rex_i18n::msg('d2u_videos_videotype_mp4'),
@@ -147,7 +147,7 @@ if ($func == 'edit' || $func == 'add') {
 						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
-						if(\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_videos[edit_lang]') && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
+						if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_videos[edit_lang]') && \rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
 							$readonly_lang = FALSE;
 						}
 				?>
@@ -230,7 +230,7 @@ if ($func == 'edit' || $func == 'add') {
 						<button class="btn btn-apply" type="submit" name="btn_apply" value="1"><?php echo rex_i18n::msg('form_apply'); ?></button>
 						<button class="btn btn-abort" type="submit" name="btn_abort" formnovalidate="formnovalidate" value="1"><?php echo rex_i18n::msg('form_abort'); ?></button>
 						<?php
-							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_videos[edit_data]')) {
+							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_videos[edit_data]'))) {
 								print '<button class="btn btn-delete" type="submit" name="btn_delete" formnovalidate="formnovalidate" data-confirm="'. rex_i18n::msg('form_delete') .'?" value="1">'. rex_i18n::msg('form_delete') .'</button>';
 							}
 						?>
@@ -257,7 +257,7 @@ if ($func == '') {
 
     $tdIcon = '<i class="rex-icon fa-video-camera"></i>';
 	$thIcon = "";
-	if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_videos[edit_data]')) {
+	if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_videos[edit_data]'))) {
 		$thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
 	}
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
@@ -275,7 +275,7 @@ if ($func == '') {
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###video_id###']);
 
-	if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_videos[edit_data]')) {
+	if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_videos[edit_data]'))) {
 		$list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
 		$list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
 		$list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###video_id###']);

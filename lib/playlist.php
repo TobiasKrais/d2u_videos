@@ -12,12 +12,12 @@ class Playlist {
 	/**
 	 * @var int Playlist ID
 	 */
-	var $playlist_id = 0;
+	var int $playlist_id = 0;
 	
 	/**
-	 * @var String Name
+	 * @var string Name
 	 */
-	var $name = "";
+	var string $name = "";
 	
 	/**
 	 * @var Video[] Videos
@@ -37,10 +37,12 @@ class Playlist {
 
 		if ($num_rows > 0) {
 			$this->playlist_id = $playlist_id;
-			$this->name = stripslashes($result->getValue("name"));
-			$video_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("video_ids")), PREG_GREP_INVERT);
-			foreach ($video_ids as $video_id) {
-				$this->videos[$video_id] = new Video($video_id, rex_clang::getCurrentId());
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$video_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("video_ids")), PREG_GREP_INVERT);
+			if(is_array($video_ids)) {
+				foreach ($video_ids as $video_id) {
+					$this->videos[$video_id] = new Video($video_id, rex_clang::getCurrentId());
+				}			
 			}
 		}
 	}
@@ -48,7 +50,7 @@ class Playlist {
 	/**
 	 * Deletes the object in all languages.
 	 */
-	public function delete() {
+	public function delete():void {
 		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_videos_playlists "
 			."WHERE playlist_id = ". $this->playlist_id;
 		$result = rex_sql::factory();
@@ -67,7 +69,7 @@ class Playlist {
 		
 		$playlist = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$playlist[$result->getValue("playlist_id")] = new Playlist($result->getValue("playlist_id"), $clang_id);
+			$playlist[$result->getValue("playlist_id")] = new Playlist(intval($result->getValue("playlist_id")));
 			$result->next();
 		}
 		return $playlist;
@@ -92,7 +94,7 @@ class Playlist {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		if($this->playlist_id == 0) {
-			$this->playlist_id = $result->getLastId();
+			$this->playlist_id = (int) $result->getLastId();
 		}
 		
 		return !$result->hasError();

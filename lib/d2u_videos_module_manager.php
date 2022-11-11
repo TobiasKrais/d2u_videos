@@ -13,7 +13,7 @@ class D2UVideosModules {
 		$modules = [];
 		$modules[] = new D2UModule("30-1",
 			"D2U Videomanager - Video / Playlist",
-			1);
+			2);
 		return $modules;
 	}
 }

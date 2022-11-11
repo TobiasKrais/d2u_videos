@@ -15,9 +15,6 @@ if($d2u_module_id != "") {
 // D2UModuleManager show list
 $d2u_module_manager->showManagerList();
 
-/*
- * Templates
- */
 ?>
 <h2>Beispielseiten</h2>
 <ul>
@@ -45,6 +42,9 @@ $d2u_module_manager->showManagerList();
 	<li>Bugfix: Beim Löschen von Medien die vom Addon verlinkt werden wurde der Name der verlinkenden Quelle in der Warnmeldung nicht immer korrekt angegeben.</li>
 	<li>Auswahlfeld Videotyp für jeden Datensatz.</li>
 	<li>Anpassung auf aktuelle Upstream Version: breite des Videos wurde bei einzelnen Video nicht mehr korrekt gesetzt.</li>
+	<li>Modul "30-1 D2U Videomanager - Video / Playlist" gibt jetzt auch LD+JSON Code aus.<li>
+	<li>Videoklasse verfügt nun über eine Methode die den LD+JSON Code für die Videosuchmaschine ausgibt.<li>
+	<li>install.php und update.php auf Redaxo Style umgestellt und vereinheitlicht.<li>
 </ul>
 <p>1.0.9:</p>
 <ul>

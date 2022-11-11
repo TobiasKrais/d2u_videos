@@ -12,74 +12,79 @@ class Video implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Video ID.
 	 */
-	var $video_id = 0;
+	var int $video_id = 0;
 	
 	/**
 	 * @var String name
 	 */
-	var $name = "";
+	var string $name = "";
 	
 	/**
 	 * @var String Teaser
 	 */
-	var $teaser = "";
+	var string $teaser = "";
 	
 	/**
 	 * @var String Youtube Video ID for all langs
 	 */
-	var $youtube_video_id = "";
+	var string $youtube_video_id = "";
 	
 	/**
 	 * @var String Youtube Video ID
 	 */
-	var $youtube_video_id_lang = "";
+	var string $youtube_video_id_lang = "";
 	
 	/**
 	 * @var String Preview picture filename
 	 */
-	var $picture = "";
+	var string $picture = "";
 	
 	/**
-	 * @var String priority
+	 * @var int priority
 	 */
-	var $priority = "";
+	var int $priority = 0;
 	
 	/**
-	 * @var String MP4 filename for all languages
+	 * @var string MP4 filename for all languages
 	 */
-	var $redaxo_file = "";
+	var string $redaxo_file = "";
 	
 	/**
-	 * @var String MP4 filename
+	 * @var string MP4 filename
 	 */
-	var $redaxo_file_lang = "";
+	var string $redaxo_file_lang = "";
 	
 	/**
 	 * @var int Redaxo language ID
 	 */
-	var $clang_id = 0;
+	var int $clang_id = 0;
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	var string $translation_needs_update = "delete";
 
 	/**
-	 * @var String Video type, either 'redaxo' for videos in redaxo media pool
+	 * @var string Video type, either 'redaxo' for videos in redaxo media pool
 	 * or 'youtube' for YouTube video id
 	 */
-	var $video_type = "";
+	var string $video_type = "";
 
 	/**
-	 * @var String Video type, either 'redaxo' for videos in redaxo media pool
+	 * @var string Video type, either 'redaxo' for videos in redaxo media pool
 	 * or 'youtube' for YouTube video id
 	 */
-	var $video_type_lang = "";
+	var string $video_type_lang = "";
 
 	/**
-	 * @var String Video URL
+	 * @var string Video URL
 	 */
-	private $video_url = "";
+	private string $video_url = "";
+	
+	/**
+	 * @var string LD+JSON code for video search engines
+	 */
+	private string $ld_json = "";
 	
 	/**
 	 * Constructor
@@ -100,17 +105,17 @@ class Video implements \D2U_Helper\ITranslationHelper {
 
 		if ($result->getRows() > 0) {
 			$this->video_id = $video_id;
-			$this->name = stripslashes($result->getValue("name"));
-			$this->teaser = $result->getValue("teaser");
-			$this->video_type = $result->getValue("videos.video_type");
-			$this->video_type_lang = $result->getValue("lang.video_type");
-			$this->youtube_video_id = $result->getValue("videos.youtube_video_id");
-			$this->youtube_video_id_lang = $result->getValue("lang.youtube_video_id");
-			$this->redaxo_file = $result->getValue("videos.redaxo_file");
-			$this->redaxo_file_lang = $result->getValue("lang.redaxo_file");
-			$this->picture = $result->getValue("picture");
-			$this->priority = $result->getValue("priority");
-			$this->translation_needs_update = $result->getValue("translation_needs_update");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$this->teaser = (string) $result->getValue("teaser");
+			$this->video_type = (string) $result->getValue("videos.video_type");
+			$this->video_type_lang = (string) $result->getValue("lang.video_type");
+			$this->youtube_video_id = (string) $result->getValue("videos.youtube_video_id");
+			$this->youtube_video_id_lang = (string) $result->getValue("lang.youtube_video_id");
+			$this->redaxo_file = (string) $result->getValue("videos.redaxo_file");
+			$this->redaxo_file_lang = (string) $result->getValue("lang.redaxo_file");
+			$this->picture = (string) $result->getValue("picture");
+			$this->priority = (int) $result->getValue("priority");
+			$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 		}
 		else if($fallback) {
 			// fallback to default lang
@@ -124,17 +129,17 @@ class Video implements \D2U_Helper\ITranslationHelper {
 
 			if ($result_fallback->getRows() > 0) {
 				$this->video_id = $video_id;
-				$this->name = stripslashes($result_fallback->getValue("name"));
-				$this->teaser = stripslashes($result_fallback->getValue("teaser"));
-				$this->picture = $result_fallback->getValue("picture");
-				$this->priority = $result_fallback->getValue("priority");
+				$this->name = stripslashes((string) $result_fallback->getValue("name"));
+				$this->teaser = stripslashes((string) $result_fallback->getValue("teaser"));
+				$this->picture = (string) $result_fallback->getValue("picture");
+				$this->priority = (int) $result_fallback->getValue("priority");
 				if($this->redaxo_file == "" && $this->redaxo_file_lang == "" && $this->youtube_video_id == "" && $this->youtube_video_id_lang == "") {
-					$this->video_type = $result_fallback->getValue("videos.video_type");
-					$this->video_type_lang = $result_fallback->getValue("lang.video_type");
-					$this->redaxo_file = $result_fallback->getValue("videos.redaxo_file");
-					$this->redaxo_file_lang = $result_fallback->getValue("lang.redaxo_file");
-					$this->youtube_video_id = $result_fallback->getValue("videos.youtube_video_id");
-					$this->youtube_video_id_lang = $result_fallback->getValue("lang.youtube_video_id");
+					$this->video_type = (string) $result_fallback->getValue("videos.video_type");
+					$this->video_type_lang = (string) $result_fallback->getValue("lang.video_type");
+					$this->redaxo_file = (string) $result_fallback->getValue("videos.redaxo_file");
+					$this->redaxo_file_lang = (string) $result_fallback->getValue("lang.redaxo_file");
+					$this->youtube_video_id = (string) $result_fallback->getValue("videos.youtube_video_id");
+					$this->youtube_video_id_lang = (string) $result_fallback->getValue("lang.youtube_video_id");
 				}
 			}
 		}
@@ -142,10 +147,10 @@ class Video implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * @param boolean $delete_all If TRUE, all translations and main object are deleted. If 
 	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_videos_videos_lang "
 			."WHERE video_id = ". $this->video_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -181,12 +186,40 @@ class Video implements \D2U_Helper\ITranslationHelper {
 		
 		$videos = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$videos[$result->getValue("video_id")] = new Video($result->getValue("video_id"), $clang_id);
+			$videos[(int) $result->getValue("video_id")] = new Video((int) $result->getValue("video_id"), $clang_id);
 			$result->next();
 		}
 		return $videos;
 	}
 
+	/**
+	 * Get LD+JSON code including surrounding script tag. In case not all required
+	 * data is available, an empty string is returned
+	 * @return string String containing LD+JSON Code
+	 */
+	public function getLDJSONScript() {
+		if($this->ld_json !== "") {
+			return $this->ld_json;
+		}
+		$rex_video = rex_media::get($this->redaxo_file_lang !== "" ? $this->redaxo_file_lang : $this->redaxo_file);
+		if($rex_video instanceof rex_media && $this->picture !== "") {
+			$server = rtrim((rex_addon::get('yrewrite')->isAvailable() ? rex_yrewrite::getCurrentDomain()->getUrl() : rex::getServer()), "/");
+			
+			$this->ld_json .= '<script type="application/ld+json">'. PHP_EOL;
+			$this->ld_json .=  '{'. PHP_EOL;
+			$this->ld_json .=  '"@context": "https://schema.org",'. PHP_EOL;
+			$this->ld_json .=  '"@type": "VideoObject",'. PHP_EOL;
+			$this->ld_json .=  '"name": "'. $this->name .'",'. PHP_EOL;
+			$this->ld_json .=  '"description": "'. ($this->teaser !== "" ? $this->teaser : $this->name) .'",'. PHP_EOL;
+			$this->ld_json .=  '"thumbnailUrl": [ "'. $server . rex_url::media($this->picture) .'" ],'. PHP_EOL;
+			$this->ld_json .=  '"uploadDate": "'. date('c', $rex_video->getUpdateDate()) .'",'. PHP_EOL;
+			$this->ld_json .=  '"contentUrl": "'. $server . $rex_video->getUrl() .'"'. PHP_EOL;
+			$this->ld_json .=  '}'. PHP_EOL;
+			$this->ld_json .=  '</script>'. PHP_EOL;
+		}
+		return $this->ld_json;
+	}
+	
 	/**
 	 * Get all playlists, the video is in.
 	 * @return Playlist[] Array with playlists objects.
@@ -199,7 +232,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 		
 		$playlists = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$playlists[$result->getValue("playlist_id")] = new Playlist($result->getValue("playlist_id"));
+			$playlists[(int) $result->getValue("playlist_id")] = new Playlist((int) $result->getValue("playlist_id"));
 			$result->next();
 		}
 		return $playlists;
@@ -223,14 +256,14 @@ class Video implements \D2U_Helper\ITranslationHelper {
 						.'ON main.video_id = default_lang.video_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.video_id IS NULL "
 					.'ORDER BY default_lang.name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new Video($result->getValue("video_id"), $clang_id);
+			$objects[] = new Video(intval($result->getValue("video_id")), $clang_id);
 			$result->next();
 		}
 		
@@ -238,11 +271,12 @@ class Video implements \D2U_Helper\ITranslationHelper {
     }
 
 	/**
-	 * Gibt die URL des Videos zurück.
+	 * Get video URL
+	 * @return string video URL
 	 */
 	public function getVideoURL() {
 		if($this->video_url == "") {
-			$media_domain = trim(\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer(), "/");
+			$media_domain = trim(\rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer(), "/");
 			if($this->video_type_lang == "youtube" && $this->youtube_video_id_lang != "") {
 				$this->video_url = (strlen($this->youtube_video_id_lang) < 15 ? "https://www.youtube.com/watch?v=" : "") . $this->youtube_video_id_lang;
 			}
@@ -264,7 +298,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 	 * @return boolean TRUE if successful
 	 */
 	public function save() {
-		$error = 0;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_video = new Video($this->video_id, $this->clang_id);
@@ -292,12 +326,12 @@ class Video implements \D2U_Helper\ITranslationHelper {
 			$result = rex_sql::factory();
 			$result->setQuery($query);
 			if($this->video_id == 0) {
-				$this->video_id = $result->getLastId();
+				$this->video_id = (int) $result->getLastId();
 				$error = $result->hasError();
 			}
 		}
 		
-		if($error == 0) {
+		if(!$error) {
 			// Save the language specific part
 			$pre_save_video = new Video($this->video_id, $this->clang_id);
 			if($pre_save_video != $this) {
@@ -324,7 +358,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 	 * Reassigns priorities in database.
 	 * @param boolean $delete Reorder priority after deletion
 	 */
-	private function setPriority($delete = FALSE) {
+	private function setPriority($delete = FALSE):void {
 		// Pull prios from database
 		$query = "SELECT video_id, priority FROM ". \rex::getTablePrefix() ."d2u_videos_videos "
 			."WHERE video_id <> ". $this->video_id ." ORDER BY priority";
@@ -338,12 +372,12 @@ class Video implements \D2U_Helper\ITranslationHelper {
 		
 		// When prio is too high or was deleted, simply add at end 
 		if($this->priority > $result->getRows() || $delete) {
-			$this->priority = $result->getRows() + 1;
+			$this->priority = (int) $result->getRows() + 1;
 		}
 
 		$videos = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$videos[$result->getValue("priority")] = $result->getValue("video_id");
+			$videos[intval($result->getValue("priority"))] = intval($result->getValue("video_id"));
 			$result->next();
 		}
 		array_splice($videos, ($this->priority - 1), 0, array($this->video_id));
