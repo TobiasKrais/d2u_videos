@@ -28,7 +28,7 @@ $d2u_module_manager->showManagerList();
 		<pre>Header set Accept-Ranges bytes</pre></li>
 </ul>
 <h2>Fremdcode</h2>
-<p>Für den Videoplayer braucht es den Ultimate Video Player, der hier erworben
+<p>Für den Videoplayer braucht entweder das Plyr Addon oder den Ultimate Video Player, der hier erworben
 	werden kann: <a href="http://codecanyon.net/item/ultimate-video-player/7694071">
 	http://codecanyon.net/item/ultimate-video-player/7694071</a>. Aus dem gekauften
 	Archiv muss die start/java/fwduvplayer.js in den Medienpool hochgeladen werden und
@@ -38,6 +38,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.1.0-DEV:</p>
 <ul>
+	<li>Unterstützung des Plyr Addons als alternativen Video Player.</li>
 	<li>Anpassungen an Publish Github Release to Redaxo.</li>
 	<li>Bugfix: Beim Löschen von Medien die vom Addon verlinkt werden wurde der Name der verlinkenden Quelle in der Warnmeldung nicht immer korrekt angegeben.</li>
 	<li>Auswahlfeld Videotyp für jeden Datensatz.</li>
@@ -45,6 +46,7 @@ $d2u_module_manager->showManagerList();
 	<li>Modul "30-1 D2U Videomanager - Video / Playlist" gibt jetzt auch LD+JSON Code aus.<li>
 	<li>Videoklasse verfügt nun über eine Methode die den LD+JSON Code für die Videosuchmaschine ausgibt.<li>
 	<li>install.php und update.php auf Redaxo Style umgestellt und vereinheitlicht.<li>
+	<li>rexstan Codelevel 9.<li>
 </ul>
 <p>1.0.9:</p>
 <ul>

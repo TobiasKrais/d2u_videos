@@ -279,13 +279,14 @@ class Videomanager {
 				$playlist_start .= '</li>'. PHP_EOL;
 			}
 
-			$playlist_inhalt .=  '<div data-video-short-description="">';
-			$playlist_inhalt .=  '<div>';
-			$playlist_inhalt .=  '<p class="minimalDarkThumbnailTitle">'. $video->name .'</p>';
-			$playlist_inhalt .=  '<p class="minimalDarkThumbnailDesc">'. $video->teaser .'</p>';
-			$playlist_inhalt .=  '</div>';
-			$playlist_inhalt .=  '</div>';
-			$playlist_inhalt .=  '</li>'. PHP_EOL;
+			$playlist_inhalt .= '<div data-video-short-description="">';
+			$playlist_inhalt .= '<div>';
+			$playlist_inhalt .= '<p class="minimalDarkThumbnailTitle">'. $video->name .'</p>';
+			$playlist_inhalt .= '<p class="minimalDarkThumbnailDesc">'. $video->teaser .'</p>';
+			$playlist_inhalt .= '</div>';
+			$playlist_inhalt .= '</div>';
+			$playlist_inhalt .= $video->getLDJSONScript();
+			$playlist_inhalt .= '</li>'. PHP_EOL;
 			$videocounter++;
 		}
 		$playlist_start .= '</ul>'. PHP_EOL;

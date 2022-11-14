@@ -24,10 +24,41 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?php echo rex_i18n::msg('d2u_helper_settings'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
+						$player_options = [
+							"ultimate" => rex_i18n::msg('d2u_videos_settings_ultimate'),
+							"plyr" => rex_i18n::msg('d2u_videos_settings_plyr') .(rex_addon::get('plyr')->isAvailable() ? '' : ' '. rex_i18n::msg('d2u_videos_settings_plyr_install'))
+						];
+						d2u_addon_backend_helper::form_select('d2u_videos_settings_player', 'settings[player]', $player_options, [strval(rex_config::get('d2u_videos', 'player'))]);
+						
+						// Fields only for ultimate video player
 						d2u_addon_backend_helper::form_mediafield('d2u_videos_player_file', 'player_js', strval(rex_config::get('d2u_videos', 'player_js')));
 						d2u_addon_backend_helper::form_input('d2u_videos_max_height', 'settings[max_height]', strval(rex_config::get('d2u_videos', 'max_height')), FALSE, FALSE, "number");
 						d2u_addon_backend_helper::form_input('d2u_videos_max_width', 'settings[max_width]', strval(rex_config::get('d2u_videos', 'max_width')), FALSE, FALSE, "number");
 					?>
+					<script>
+						function player_type_changer(value) {
+							if (value === "ultimate") {
+								$("dl[id='MEDIA_player_js']").fadeIn();
+								$("dl[id='settings[max_height]']").fadeIn();
+								$("dl[id='settings[max_width]']").fadeIn();
+							}
+							else {
+								$("dl[id='MEDIA_player_js']").hide();
+								$("dl[id='settings[max_height]']").hide();
+								$("dl[id='settings[max_width]']").hide();
+							}		
+						}
+
+						// Hide on document load
+						$(document).ready(function() {
+							player_type_changer($("select[name='settings[player]']").val());
+						});
+
+						// Hide on selection change
+						$("select[name='settings[player]']").on('change', function(e) {
+							player_type_changer($(this).val());
+						});
+					</script>
 				</div>
 			</fieldset>
 		</div>

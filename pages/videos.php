@@ -33,7 +33,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		}
 		$video->name = $form['lang'][$rex_clang->getId()]['name'];
 		$video->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
-		$video->video_type_lang = $form['video_type_lang'];
+		$video->video_type_lang = $form['video_type_lang'] !== null ? $form['video_type_lang'] : '';
 		$video->redaxo_file_lang = $input_media['1'. $rex_clang->getId()];
 		$video->youtube_video_id_lang = $form['lang'][$rex_clang->getId()]['youtube_video_id_lang'];
 		$video->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
