@@ -36,9 +36,10 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_videos" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.1.0-DEV:</p>
+<p>1.1.0:</p>
 <ul>
-	<li>Methode für die Ausgabe von Videoinformationen in sitemap.xml hinzugefügt.</li>
+	<li>Methode für die Ausgabe von Videoinformationen in sitemap.xml hinzugefügt.
+		Für eine korrekte optische Darstellung der sitemap.xml braucht es noch <a href="https://github.com/yakamara/redaxo_yrewrite/pull/521" target="_blank">diesen PR für YRewrite <=2.9.1</a>.</li>
 	<li>Unterstützung des Plyr Addons als alternativen Video Player.</li>
 	<li>Anpassungen an Publish Github Release to Redaxo.</li>
 	<li>Bugfix: Beim Löschen von Medien die vom Addon verlinkt werden wurde der Name der verlinkenden Quelle in der Warnmeldung nicht immer korrekt angegeben.</li>

@@ -109,7 +109,6 @@ function rex_d2u_videos_sitemap(rex_extension_point $ep) {
 			else if($type === 'video') {
 				$video_id = (int) $sql->getValue("value3");
 				$video = new Video($video_id, $clang_id, true);
-
 				// insert into sitemap
 				foreach($sitemap_entries as $sitemap_key => $sitemap_entry) {
 					if(str_contains($sitemap_entry, rex_getUrl($article_id, $clang_id) .'</loc>')) {
