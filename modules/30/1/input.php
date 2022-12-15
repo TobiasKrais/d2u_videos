@@ -71,7 +71,7 @@
 	<div class="col-xs-8">
 		<?php
 		$select_link = new rex_select(); 
-		$select_link->setName('REX_INPUT_VALUE[1]'); 
+		$select_link->setName('REX_INPUT_VALUE[1]'); // do not change, see boot.php
 		$select_link->setSize(1);
 		$select_link->setAttribute('class', 'form-control');
 		$select_link->setAttribute('id', 'selector');
@@ -96,7 +96,7 @@
 	<div class="col-xs-8">
 		<?php
 			$select_playlist = new rex_select(); 
-			$select_playlist->setName('REX_INPUT_VALUE[2]'); 
+			$select_playlist->setName('REX_INPUT_VALUE[2]'); // do not change, see boot.php
 			$select_playlist->setSize(1);
 			$select_playlist->setAttribute('class', 'form-control');
 
@@ -119,7 +119,7 @@
 	<div class="col-xs-8">
 		<?php
 			$select_video = new rex_select();
-			$select_video->setName('REX_INPUT_VALUE[3]'); 
+			$select_video->setName('REX_INPUT_VALUE[3]'); // do not change, see boot.php
 			$select_video->setSize(1);
 			$select_video->setAttribute('class', 'form-control');
 

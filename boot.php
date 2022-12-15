@@ -10,6 +10,9 @@ if(\rex::isBackend()) {
 	rex_extension::register('CLANG_DELETED', 'rex_d2u_videos_clang_deleted');
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_videos_media_is_in_use');
 }
+else {
+	rex_extension::register('YREWRITE_SITEMAP', 'rex_d2u_videos_sitemap');
+}
 
 /**
  * Deletes language specific configurations and objects
@@ -67,4 +70,56 @@ function rex_d2u_videos_media_is_in_use(rex_extension_point $ep) {
 		}
 	}
 	return $warning;
+}
+
+/**
+ * Adds videos to sitemap
+ * @param rex_extension_point<string> $ep Redaxo extension point
+ * @return string[] updated sitemap entries
+ */
+function rex_d2u_videos_sitemap(rex_extension_point $ep) {
+	$sitemap_entries = $ep->getSubject();
+
+	$modules = D2UVideosModules::getModules();
+	foreach($modules as $module) {
+		$module->initRedaxoContext(rex_addon::get('d2u_videos'), 'modules/');
+		$sql = rex_sql::factory();
+		$sql->setQuery('SELECT * FROM '. rex::getTablePrefix() .'article_slice WHERE module_id = '. $module->getRedaxoId());
+		for($i = 0; $i < $sql->getRows(); $i++) {
+			$type = $sql->getValue("value1");
+			$article_id = $sql->getValue("article_id");
+			$clang_id = $sql->getValue("clang_id");
+			if($type == 'playlist') {
+				$playlist_id = $sql->getValue("value2");
+				$playlist = new Playlist($playlist_id);
+				$video_entry = '';
+				foreach($playlist->videos as $playlist_video) {
+					// set correct clang id
+					$video = new Video($playlist_video->video_id, $clang_id, true);
+					$video_entry .= $video->getSitemapEntry();
+				}
+				// insert into sitemap
+				foreach($sitemap_entries as $sitemap_key => $sitemap_entry) {
+					if(str_contains($sitemap_entry, rex_getUrl($article_id, $clang_id) .'</loc>')) {
+						$sitemap_entries[$sitemap_key] = str_replace('</url>', $video_entry .'</url>', $sitemap_entry);
+					}
+				}
+			}
+			else if($type == 'video') {
+				$video_id = $sql->getValue("value3");
+				$video = new Video($video_id, $clang_id, true);
+
+				// insert into sitemap
+				foreach($sitemap_entries as $sitemap_key => $sitemap_entry) {
+					if(str_contains($sitemap_entry, rex_getUrl($article_id, $clang_id) .'</loc>')) {
+						$sitemap_entries[$sitemap_key] = str_replace('</url>', $video->getSitemapEntry() .'</url>', $sitemap_entry);
+					}
+				}
+			}
+			$sql->next();
+		}
+		
+	}
+
+	return $sitemap_entries;
 }

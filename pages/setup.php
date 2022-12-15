@@ -38,6 +38,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.1.0-DEV:</p>
 <ul>
+	<li>Methode für die Ausgabe von Videoinformationen in sitemap.xml hinzugefügt.</li>
 	<li>Unterstützung des Plyr Addons als alternativen Video Player.</li>
 	<li>Anpassungen an Publish Github Release to Redaxo.</li>
 	<li>Bugfix: Beim Löschen von Medien die vom Addon verlinkt werden wurde der Name der verlinkenden Quelle in der Warnmeldung nicht immer korrekt angegeben.</li>

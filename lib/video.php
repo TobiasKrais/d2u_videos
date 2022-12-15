@@ -87,6 +87,11 @@ class Video implements \D2U_Helper\ITranslationHelper {
 	private string $ld_json = "";
 	
 	/**
+	 * @var string XML code for sitemap
+	 */
+	private string $sitemap_entry = "";
+	
+	/**
 	 * Constructor
 	 * @param int $video_id Video ID.
 	 * @param int $clang_id Redaxo language ID
@@ -206,16 +211,16 @@ class Video implements \D2U_Helper\ITranslationHelper {
 			$server = rtrim((rex_addon::get('yrewrite')->isAvailable() ? rex_yrewrite::getCurrentDomain()->getUrl() : rex::getServer()), "/");
 			
 			$this->ld_json .= '<script type="application/ld+json">'. PHP_EOL;
-			$this->ld_json .=  '{'. PHP_EOL;
-			$this->ld_json .=  '"@context": "https://schema.org",'. PHP_EOL;
-			$this->ld_json .=  '"@type": "VideoObject",'. PHP_EOL;
-			$this->ld_json .=  '"name": "'. $this->name .'",'. PHP_EOL;
-			$this->ld_json .=  '"description": "'. ($this->teaser !== "" ? $this->teaser : $this->name) .'",'. PHP_EOL;
-			$this->ld_json .=  '"thumbnailUrl": [ "'. $server . rex_url::media($this->picture) .'" ],'. PHP_EOL;
-			$this->ld_json .=  '"uploadDate": "'. date('c', $rex_video->getUpdateDate()) .'",'. PHP_EOL;
-			$this->ld_json .=  '"contentUrl": "'. $server . $rex_video->getUrl() .'"'. PHP_EOL;
-			$this->ld_json .=  '}'. PHP_EOL;
-			$this->ld_json .=  '</script>'. PHP_EOL;
+			$this->ld_json .= '{'. PHP_EOL;
+			$this->ld_json .= '"@context": "https://schema.org",'. PHP_EOL;
+			$this->ld_json .= '"@type": "VideoObject",'. PHP_EOL;
+			$this->ld_json .= '"name": "'. $this->name .'",'. PHP_EOL;
+			$this->ld_json .= '"description": "'. ($this->teaser !== "" ? $this->teaser : $this->name) .'",'. PHP_EOL;
+			$this->ld_json .= '"thumbnailUrl": [ "'. $server . rex_url::media($this->picture) .'" ],'. PHP_EOL;
+			$this->ld_json .= '"uploadDate": "'. date('c', $rex_video->getUpdateDate()) .'",'. PHP_EOL;
+			$this->ld_json .= '"contentUrl": "'. $server . $rex_video->getUrl() .'"'. PHP_EOL;
+			$this->ld_json .= '}'. PHP_EOL;
+			$this->ld_json .= '</script>'. PHP_EOL;
 		}
 		return $this->ld_json;
 	}
@@ -236,6 +241,29 @@ class Video implements \D2U_Helper\ITranslationHelper {
 			$result->next();
 		}
 		return $playlists;
+	}
+	
+	/**
+	 * Get sitemap entry in XML format (<video:video>...</video:video>)
+	 * @return string String containing XML sitemap Code
+	 */
+	public function getSitemapEntry() {
+		if($this->sitemap_entry !== '') {
+			return $this->sitemap_entry;
+		}
+		$rex_video = rex_media::get($this->redaxo_file_lang !== '' ? $this->redaxo_file_lang : $this->redaxo_file);
+		if($rex_video instanceof rex_media && $this->picture !== '' && $this->name != '') {
+			$server = rtrim((rex_addon::get('yrewrite')->isAvailable() ? rex_yrewrite::getCurrentDomain()->getUrl() : rex::getServer()), '/');
+			
+			$this->sitemap_entry .= '	<video:video>'. PHP_EOL;
+			$this->sitemap_entry .= '		<video:thumbnail_loc>'. $server . rex_url::media($this->picture) .'</video:thumbnail_loc>'. PHP_EOL;
+			$this->sitemap_entry .= '		<video:title>'. $this->name .'</video:title>'. PHP_EOL;
+			$this->sitemap_entry .= '		<video:description>'. ($this->teaser !== "" ? $this->teaser : $this->name) .'</video:description>'. PHP_EOL;
+			$this->sitemap_entry .= '		<video:content_loc>'. $server . $rex_video->getUrl() .'</video:content_loc>'. PHP_EOL;
+			$this->sitemap_entry .= '		<video:publication_date>'. date('c', $rex_video->getUpdateDate()) .'</video:publication_date>'. PHP_EOL;
+			$this->sitemap_entry .= '	</video:video>'. PHP_EOL;
+		}
+		return $this->sitemap_entry;
 	}
 	
 	/**
