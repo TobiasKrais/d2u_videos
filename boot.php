@@ -36,7 +36,7 @@ function rex_d2u_videos_clang_deleted(rex_extension_point $ep) {
 /**
  * Checks if media is used by this addon
  * @param rex_extension_point<string> $ep Redaxo extension point
- * @return string[] Warning message as array
+ * @return array<mixed>|string Warning message as array
  */
 function rex_d2u_videos_media_is_in_use(rex_extension_point $ep) {
 	$warning = $ep->getSubject();
@@ -62,10 +62,10 @@ function rex_d2u_videos_media_is_in_use(rex_extension_point $ep) {
 
 	// Settings
 	$addon = rex_addon::get("d2u_videos");
-	if($addon->hasConfig("player_js") && $addon->getConfig("player_js") == $filename) {
+	if($addon->hasConfig("player_js") && $addon->getConfig("player_js") === $filename) {
 		$message = '<a href="javascript:openPage(\'index.php?page=d2u_videos/settings\')">'.
 			 rex_i18n::msg('d2u_videos') ." ". rex_i18n::msg('d2u_helper_settings') . '</a>';
-		if(!in_array($message, $warning, true)) {
+		if(is_array($warning) && !in_array($message, $warning, true)) {
 			$warning[] = $message;
 		}
 	}
@@ -75,22 +75,23 @@ function rex_d2u_videos_media_is_in_use(rex_extension_point $ep) {
 /**
  * Adds videos to sitemap
  * @param rex_extension_point<string> $ep Redaxo extension point
- * @return string[] updated sitemap entries
+ * @return array<string> updated sitemap entries
  */
 function rex_d2u_videos_sitemap(rex_extension_point $ep) {
+	/** @var string[] $sitemap_entries */
 	$sitemap_entries = $ep->getSubject();
-
+	
 	$modules = D2UVideosModules::getModules();
 	foreach($modules as $module) {
 		$module->initRedaxoContext(rex_addon::get('d2u_videos'), 'modules/');
 		$sql = rex_sql::factory();
 		$sql->setQuery('SELECT * FROM '. rex::getTablePrefix() .'article_slice WHERE module_id = '. $module->getRedaxoId());
 		for($i = 0; $i < $sql->getRows(); $i++) {
-			$type = $sql->getValue("value1");
-			$article_id = $sql->getValue("article_id");
-			$clang_id = $sql->getValue("clang_id");
-			if($type == 'playlist') {
-				$playlist_id = $sql->getValue("value2");
+			$type = (string) $sql->getValue("value1");
+			$article_id = (int) $sql->getValue("article_id");
+			$clang_id = (int) $sql->getValue("clang_id");
+			if($type === 'playlist') {
+				$playlist_id = (int) $sql->getValue("value2");
 				$playlist = new Playlist($playlist_id);
 				$video_entry = '';
 				foreach($playlist->videos as $playlist_video) {
@@ -105,8 +106,8 @@ function rex_d2u_videos_sitemap(rex_extension_point $ep) {
 					}
 				}
 			}
-			else if($type == 'video') {
-				$video_id = $sql->getValue("value3");
+			else if($type === 'video') {
+				$video_id = (int) $sql->getValue("value3");
 				$video = new Video($video_id, $clang_id, true);
 
 				// insert into sitemap

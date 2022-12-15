@@ -4,12 +4,12 @@ $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // Print comments
-if($message != "") {
+if($message !== "") {
 	print rex_view::success(rex_i18n::msg($message));
 }
 
 // save settings
-if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
+if (filter_input(INPUT_POST, "btn_save") === 1 || filter_input(INPUT_POST, "btn_apply") === 1) {
 	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
@@ -38,7 +38,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		$video->youtube_video_id_lang = $form['lang'][$rex_clang->getId()]['youtube_video_id_lang'];
 		$video->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 		
-		if($video->translation_needs_update == "delete") {
+		if($video->translation_needs_update === "delete") {
 			$video->delete(FALSE);
 		}
 		else if($video->save() > 0){
@@ -57,7 +57,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $video !== FALSE) {
+	if(filter_input(INPUT_POST, "btn_apply") === 1 && $video !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$video->video_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
@@ -66,9 +66,9 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(filter_input(INPUT_POST, "btn_delete") === 1 || $func === 'delete') {
 	$video_id = $entry_id;
-	if($video_id == 0) {
+	if($video_id === 0) {
 		$form = rex_post('form', 'array', []);
 		$video_id = $form['video_id'];
 	}
@@ -92,7 +92,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 
 // Form
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -144,7 +144,7 @@ if ($func == 'edit' || $func == 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$video = new Video($entry_id, $rex_clang->getId(), FALSE);
-						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
+						$required = $rex_clang->getId() === rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
 						if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_videos[edit_lang]') && \rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
@@ -155,7 +155,7 @@ if ($func == 'edit' || $func == 'add') {
 						<legend><?php echo rex_i18n::msg('d2u_helper_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-								if($rex_clang->getId() != rex_config::get("d2u_helper", "default_lang")) {
+								if($rex_clang->getId() !== rex_config::get("d2u_helper", "default_lang")) {
 									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
@@ -245,7 +245,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT videos.video_id, name, priority '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_videos_videos AS videos '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_videos_videos_lang AS lang '

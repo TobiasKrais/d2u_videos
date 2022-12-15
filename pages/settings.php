@@ -1,6 +1,6 @@
 <?php
 // save settings
-if (filter_input(INPUT_POST, "btn_save") == 'save') {
+if (filter_input(INPUT_POST, "btn_save") === 'save') {
 	$settings = rex_post('settings', 'array', []);
 
 	// Special treatment for media fields

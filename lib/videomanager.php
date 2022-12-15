@@ -53,7 +53,7 @@ class Videomanager {
 	 * @param Video $video Video Objekt
 	 */
 	public function printVideo($video):void {
-		if($video->video_id > 0 && $video->getVideoURL() != "") {
+		if($video->video_id > 0 && $video->getVideoURL() !== "") {
 			$useYoutube = $this->useYoutube([$video]);
 			$this->printVideoplayer([$video], "no", $useYoutube);
 		}
@@ -67,7 +67,7 @@ class Videomanager {
 	public function printVideos($videos):void {
 		$proved_videos = [];
 		foreach ($videos as $video) {
-			if($video->video_id > 0 && $video->getVideoURL() != "") {
+			if($video->video_id > 0 && $video->getVideoURL() !== "") {
 				$proved_videos[] = $video;
 			}
 		}
@@ -97,7 +97,7 @@ class Videomanager {
 	 */
 	private function printJS($playerID, $showPlaylist, $useYoutube = "no"):void {
 		$d2u_videos = rex_addon::get('d2u_videos');
-		if($d2u_videos->hasConfig('player_js') && $d2u_videos->getConfig('player_js') != '') {
+		if($d2u_videos->hasConfig('player_js') && $d2u_videos->getConfig('player_js') !== '') {
 			print '<script src="'. rex_url::media(strval($d2u_videos->getConfig('player_js'))) .'"></script>';
 		}
 		else {
@@ -242,19 +242,19 @@ class Videomanager {
 		$videocounter = 0;
 		foreach ($videos as $video) {
 			// Videoobjekt initialisieren
-			if($video->video_id == 0 || $video->getVideoURL() == "") {
+			if($video->video_id === 0 || $video->getVideoURL() === "") {
 				continue;
 			}
 			
 			// ycom/auth_media permissions
 			$rex_video = FALSE;
-			if(($video->video_type_lang === "youtube" && $video->youtube_video_id_lang != "") || ($video->video_type === "youtube" && $video->youtube_video_id != "")) {
+			if(($video->video_type_lang === "youtube" && $video->youtube_video_id_lang !== "") || ($video->video_type === "youtube" && $video->youtube_video_id !== "")) {
 				$rex_video = FALSE;
 			}
-			else if($video->redaxo_file_lang != "") {
+			else if($video->redaxo_file_lang !== "") {
 				$rex_video = rex_media::get($video->redaxo_file_lang);
 			}
-			else if($video->redaxo_file != "") {
+			else if($video->redaxo_file !== "") {
 				$rex_video = rex_media::get($video->redaxo_file);
 			}
 
@@ -265,16 +265,16 @@ class Videomanager {
 
 			// Standard URLs für Bilder
 			$fallback_background = rex_url::addonAssets('d2u_videos', 'minimal_skin_dark/thumbnail-background.png');
-			$picture_thumb = $video->picture != '' ? 'index.php?rex_media_type='. $this->video_thumb_type .'&rex_media_file='. $video->picture : $fallback_background;
-			$picture_preview = $video->picture != '' ? 'index.php?rex_media_type='. $this->video_preview_type .'&rex_media_file='. $video->picture : $fallback_background;
+			$picture_thumb = $video->picture !== '' ? 'index.php?rex_media_type='. $this->video_thumb_type .'&rex_media_file='. $video->picture : $fallback_background;
+			$picture_preview = $video->picture !== '' ? 'index.php?rex_media_type='. $this->video_preview_type .'&rex_media_file='. $video->picture : $fallback_background;
 
-			if($videocounter == 0) {
+			if($videocounter === 0) {
 				$playlist_start .= '<li data-source="'. $playerID .'" data-playlist-name="'. $video->teaser .'" data-thumbnail-path="'. $picture_preview .'">';
 			}
 			$playlist_inhalt .=  '<li data-thumb-source="'. $picture_thumb .'" data-video-source="'. $video->getVideoURL() .'" data-poster-source="'. $picture_preview .'" data-downloadable="yes">';
 
 			// Rest der Ausgabe
-			if($videocounter == 0) {
+			if($videocounter === 0) {
 				$playlist_start .= '<p class="minimalDarkCategoriesTitle"><span class="minimalDarkBold">'. $video->teaser .'</span></p>';
 				$playlist_start .= '</li>'. PHP_EOL;
 			}
@@ -303,7 +303,7 @@ class Videomanager {
 	 */
 	private function useYoutube($videos) {
 		foreach($videos as $video) {
-			if($video->youtube_video_id_lang != "" || $video->youtube_video_id != "") {
+			if($video->youtube_video_id_lang !== "" || $video->youtube_video_id !== "") {
 				return "yes";
 			}
 		}

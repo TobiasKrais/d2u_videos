@@ -138,7 +138,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 				$this->teaser = stripslashes((string) $result_fallback->getValue("teaser"));
 				$this->picture = (string) $result_fallback->getValue("picture");
 				$this->priority = (int) $result_fallback->getValue("priority");
-				if($this->redaxo_file == "" && $this->redaxo_file_lang == "" && $this->youtube_video_id == "" && $this->youtube_video_id_lang == "") {
+				if($this->redaxo_file === "" && $this->redaxo_file_lang === "" && $this->youtube_video_id === "" && $this->youtube_video_id_lang === "") {
 					$this->video_type = (string) $result_fallback->getValue("videos.video_type");
 					$this->video_type_lang = (string) $result_fallback->getValue("lang.video_type");
 					$this->redaxo_file = (string) $result_fallback->getValue("videos.redaxo_file");
@@ -167,7 +167,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 			."WHERE video_id = ". $this->video_id;
 		$result_main = rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if($result_main->getRows() === 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_videos_videos "
 				."WHERE video_id = ". $this->video_id;
 			$result = rex_sql::factory();
@@ -252,7 +252,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 			return $this->sitemap_entry;
 		}
 		$rex_video = rex_media::get($this->redaxo_file_lang !== '' ? $this->redaxo_file_lang : $this->redaxo_file);
-		if($rex_video instanceof rex_media && $this->picture !== '' && $this->name != '') {
+		if($rex_video instanceof rex_media && $this->picture !== '' && $this->name !== '') {
 			$server = rtrim((rex_addon::get('yrewrite')->isAvailable() ? rex_yrewrite::getCurrentDomain()->getUrl() : rex::getServer()), '/');
 			
 			$this->sitemap_entry .= '	<video:video>'. PHP_EOL;
@@ -276,7 +276,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT video_id FROM '. \rex::getTablePrefix() .'d2u_videos_videos_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.video_id FROM '. \rex::getTablePrefix() .'d2u_videos_videos AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_videos_videos_lang AS target_lang '
 						.'ON main.video_id = target_lang.video_id AND target_lang.clang_id = '. $clang_id .' '
@@ -303,18 +303,18 @@ class Video implements \D2U_Helper\ITranslationHelper {
 	 * @return string video URL
 	 */
 	public function getVideoURL() {
-		if($this->video_url == "") {
+		if($this->video_url === "") {
 			$media_domain = trim(\rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer(), "/");
-			if($this->video_type_lang == "youtube" && $this->youtube_video_id_lang != "") {
+			if($this->video_type_lang === "youtube" && $this->youtube_video_id_lang !== "") {
 				$this->video_url = (strlen($this->youtube_video_id_lang) < 15 ? "https://www.youtube.com/watch?v=" : "") . $this->youtube_video_id_lang;
 			}
-			else if($this->video_type_lang == "redaxo" && $this->redaxo_file_lang != "") {
+			else if($this->video_type_lang === "redaxo" && $this->redaxo_file_lang !== "") {
 				$this->video_url = $media_domain . rex_url::media($this->redaxo_file_lang);
 			}
-			else if($this->video_type == "youtube" && $this->youtube_video_id != "") {
+			else if($this->video_type === "youtube" && $this->youtube_video_id !== "") {
 				$this->video_url = (strlen($this->youtube_video_id) < 15 ? "https://www.youtube.com/watch?v=" : "") . $this->youtube_video_id;
 			}
-			else if($this->redaxo_file != "") {
+			else if($this->redaxo_file !== "") {
 				$this->video_url = $media_domain . rex_url::media($this->redaxo_file);
 			}
 		}
@@ -332,11 +332,11 @@ class Video implements \D2U_Helper\ITranslationHelper {
 		$pre_save_video = new Video($this->video_id, $this->clang_id);
 
 		// save priority, but only if new or changed
-		if($this->priority != $pre_save_video->priority || $this->video_id == 0) {
+		if($this->priority !== $pre_save_video->priority || $this->video_id === 0) {
 			$this->setPriority();
 		}
 	
-		if($this->video_id == 0 || $pre_save_video != $this) {
+		if($this->video_id === 0 || $pre_save_video !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_videos_videos SET "
 					."picture = '". $this->picture ."', "
 					."priority = ". $this->priority .", "
@@ -344,7 +344,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 					."youtube_video_id = '". $this->youtube_video_id ."', "
 					."redaxo_file = '". $this->redaxo_file ."' ";
 
-			if($this->video_id == 0) {
+			if($this->video_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -353,7 +353,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 
 			$result = rex_sql::factory();
 			$result->setQuery($query);
-			if($this->video_id == 0) {
+			if($this->video_id === 0) {
 				$this->video_id = (int) $result->getLastId();
 				$error = $result->hasError();
 			}
@@ -362,7 +362,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 		if(!$error) {
 			// Save the language specific part
 			$pre_save_video = new Video($this->video_id, $this->clang_id);
-			if($pre_save_video != $this) {
+			if($pre_save_video !== $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_videos_videos_lang SET "
 						."video_id = '". $this->video_id ."', "
 						."clang_id = '". $this->clang_id ."', "

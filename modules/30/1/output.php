@@ -2,7 +2,7 @@
 $slice = $this->getCurrentSlice(); /** @phpstan-ignore-line */
 
 $cols = (int) $slice->getValue(20);
-if($cols == 0) {
+if($cols === 0) {
 	$cols = 8;
 }
 $offset_lg_cols = (int) $slice->getValue(17);
@@ -20,10 +20,10 @@ $video_id = (int) $slice->getValue(3);
 $video = new Video($video_id, rex_clang::getCurrentId(), TRUE);
 
 if(\rex::isBackend()) {
-	if($type == "playlist") {
+	if($type === "playlist") {
 		print '<p>Gewählte Playlist: '. $playlist->name .'</p>';
 	}
-	else if($type == "video") {
+	else if($type === "video") {
 		print '<p>Gewähltes Video: '. $video->name .'</p>';
 	}
 
@@ -33,7 +33,7 @@ if(\rex::isBackend()) {
 }
 else {
 	// frontend
-	if(strval(rex_config::get('d2u_videos', 'player', 'ultimate')) == 'plyr' && rex_addon::get('plyr')->isAvailable()) {
+	if(strval(rex_config::get('d2u_videos', 'player', 'ultimate')) === 'plyr' && rex_addon::get('plyr')->isAvailable()) {
 		if(!function_exists('loadJsPlyr')) {
 			function loadJsPlyr():void {
 				print '<script src="'. rex_url::base('assets/addons/plyr/vendor/plyr/dist/plyr.min.js') .'"></script>';
@@ -43,8 +43,8 @@ else {
 	}
 
 	print '<div class="col-12 col-lg-'. $cols . $offset_lg .'">';
-	if($type == "playlist") {
-		if(rex_config::get('d2u_videos', 'player', 'ultimate') == strval('plyr') && rex_addon::get('plyr')->isAvailable()) {
+	if($type === "playlist") {
+		if(rex_config::get('d2u_videos', 'player', 'ultimate') === strval('plyr') && rex_addon::get('plyr')->isAvailable()) {
 			$media_filenames = [];
 			$ld_json = '';
 			foreach($playlist->videos as $playlist_video) {
@@ -60,8 +60,8 @@ else {
 			$videomanager->printPlaylist($playlist);
 		}
 	}
-	else if($type == "video") {
-		if(strval(rex_config::get('d2u_videos', 'player', 'ultimate')) == 'plyr' && rex_addon::get('plyr')->isAvailable()) {
+	else if($type === "video") {
+		if(strval(rex_config::get('d2u_videos', 'player', 'ultimate')) === 'plyr' && rex_addon::get('plyr')->isAvailable()) {
 			$video_filename = $video->redaxo_file_lang !== '' ? $video->redaxo_file_lang : $video->redaxo_file;
 			print rex_plyr::outputMedia($video_filename, 'play-large,play,progress,current-time,duration,restart,volume,mute,pip,fullscreen', rex_url::media($video->picture));	
 			print '<script src="'. rex_url::base('assets/addons/plyr/plyr_init.js') .'"></script>';

@@ -84,7 +84,7 @@ class Playlist {
 				."name = '". addslashes($this->name) ."', "
 				."video_ids = '". implode('|', array_keys($this->videos)) ."' ";
 
-		if($this->playlist_id == 0) {
+		if($this->playlist_id === 0) {
 			$query = "INSERT INTO ". $query;
 		}
 		else {
@@ -93,7 +93,7 @@ class Playlist {
 
 		$result = rex_sql::factory();
 		$result->setQuery($query);
-		if($this->playlist_id == 0) {
+		if($this->playlist_id === 0) {
 			$this->playlist_id = (int) $result->getLastId();
 		}
 		

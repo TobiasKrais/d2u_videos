@@ -4,12 +4,12 @@ $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // Print comments
-if($message != "") {
+if($message !== "") {
 	print rex_view::success(rex_i18n::msg($message));
 }
 
 // save settings
-if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
+if (filter_input(INPUT_POST, "btn_save") === 1 || filter_input(INPUT_POST, "btn_apply") === 1) {
 	$form = rex_post('form', 'array', []);
 
 	$success = TRUE;
@@ -29,7 +29,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $playlist->playlist_id > 0) {
+	if(filter_input(INPUT_POST, "btn_apply") === 1 && $playlist->playlist_id > 0) {
 		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$playlist->playlist_id, "func"=>'edit', "message"=>$message], FALSE));
 	}
 	else {
@@ -38,9 +38,9 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(filter_input(INPUT_POST, "btn_delete") === 1 || $func === 'delete') {
 	$playlist_id = $entry_id;
-	if($playlist_id == 0) {
+	if($playlist_id === 0) {
 		$form = rex_post('form', 'array', []);
 		$playlist_id = $form['playlist_id'];
 	}
@@ -51,7 +51,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 
 // Form
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -101,7 +101,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJSOpenAll();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT playlist_id, name FROM '. \rex::getTablePrefix() .'d2u_videos_playlists '
 		.'ORDER BY `name`';
     $list = rex_list::factory($query, 1000);
