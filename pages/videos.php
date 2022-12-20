@@ -9,11 +9,11 @@ if($message !== "") {
 }
 
 // save settings
-if (filter_input(INPUT_POST, "btn_save") === 1 || filter_input(INPUT_POST, "btn_apply") === 1) {
+if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
 	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media = rex_post('REX_INPUT_MEDIA', 'array', array());
+	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 
 	$success = TRUE;
 	$video = FALSE;
@@ -155,7 +155,7 @@ if ($func === 'edit' || $func === 'add') {
 						<legend><?php echo rex_i18n::msg('d2u_helper_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-								if($rex_clang->getId() !== rex_config::get("d2u_helper", "default_lang")) {
+								if($rex_clang->getId() !== (int) rex_config::get("d2u_helper", "default_lang")) {
 									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
