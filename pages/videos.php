@@ -144,7 +144,7 @@ if ($func === 'edit' || $func === 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$video = new Video($entry_id, $rex_clang->getId(), FALSE);
-						$required = $rex_clang->getId() === rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
+						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
 						if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_videos[edit_lang]') && \rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
@@ -155,7 +155,7 @@ if ($func === 'edit' || $func === 'add') {
 						<legend><?php echo rex_i18n::msg('d2u_helper_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-								if($rex_clang->getId() !== (int) rex_config::get("d2u_helper", "default_lang")) {
+								if($rex_clang->getId() !== intval(rex_config::get("d2u_helper", "default_lang"))) {
 									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
@@ -249,7 +249,7 @@ if ($func === '') {
 	$query = 'SELECT videos.video_id, name, priority '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_videos_videos AS videos '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_videos_videos_lang AS lang '
-			. 'ON videos.video_id = lang.video_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
+			. 'ON videos.video_id = lang.video_id AND lang.clang_id = '. intval(rex_config::get("d2u_helper", "default_lang")) .' '
 		.'ORDER BY `priority`';
     $list = rex_list::factory($query, 1000);
 
