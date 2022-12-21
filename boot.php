@@ -20,6 +20,7 @@ else {
  * @return mixed Warning message as array
  */
 function rex_d2u_videos_clang_deleted(rex_extension_point $ep) {
+	/** @var string[] $warning */
 	$warning = $ep->getSubject();
 	$params = $ep->getParams();
 	$clang_id = $params['id'];
@@ -39,6 +40,7 @@ function rex_d2u_videos_clang_deleted(rex_extension_point $ep) {
  * @return array<mixed>|string Warning message as array
  */
 function rex_d2u_videos_media_is_in_use(rex_extension_point $ep) {
+	/** @var string[] $warning */
 	$warning = $ep->getSubject();
 	$params = $ep->getParams();
 	$filename = addslashes($params['filename']);
