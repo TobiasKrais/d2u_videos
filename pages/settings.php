@@ -32,8 +32,8 @@ if (filter_input(INPUT_POST, "btn_save") === 'save') {
 						
 						// Fields only for ultimate video player
 						d2u_addon_backend_helper::form_mediafield('d2u_videos_player_file', 'player_js', strval(rex_config::get('d2u_videos', 'player_js')));
-						d2u_addon_backend_helper::form_input('d2u_videos_max_height', 'settings[max_height]', strval(rex_config::get('d2u_videos', 'max_height')), FALSE, FALSE, "number");
-						d2u_addon_backend_helper::form_input('d2u_videos_max_width', 'settings[max_width]', strval(rex_config::get('d2u_videos', 'max_width')), FALSE, FALSE, "number");
+						d2u_addon_backend_helper::form_input('d2u_videos_max_height', 'settings[max_height]', strval(rex_config::get('d2u_videos', 'max_height')), false, false, "number");
+						d2u_addon_backend_helper::form_input('d2u_videos_max_width', 'settings[max_width]', strval(rex_config::get('d2u_videos', 'max_width')), false, false, "number");
 					?>
 					<script>
 						function player_type_changer(value) {

@@ -6,6 +6,7 @@
  */
 
 /**
+ * @api
  * Manages video outpu
  */
 class Videomanager {
@@ -247,9 +248,9 @@ class Videomanager {
 			}
 			
 			// ycom/auth_media permissions
-			$rex_video = FALSE;
+			$rex_video = false;
 			if(($video->video_type_lang === "youtube" && $video->youtube_video_id_lang !== "") || ($video->video_type === "youtube" && $video->youtube_video_id !== "")) {
-				$rex_video = FALSE;
+				$rex_video = false;
 			}
 			else if($video->redaxo_file_lang !== "") {
 				$rex_video = rex_media::get($video->redaxo_file_lang);

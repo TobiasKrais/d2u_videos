@@ -97,7 +97,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 	 * @param int $clang_id Redaxo language ID
 	 * @param boolean $fallback Fallback to default lang if no localization is available
 	 */
-	public function __construct($video_id, $clang_id, $fallback = TRUE) {
+	public function __construct($video_id, $clang_id, $fallback = true) {
 		$this->clang_id = $clang_id;
 		
 		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_videos_videos AS videos "
@@ -152,8 +152,8 @@ class Video implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param boolean $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param boolean $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
 	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_videos_videos_lang "
@@ -174,7 +174,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 			$result->setQuery($query);
 
 			// reset priorities
-			$this->setPriority(TRUE);			
+			$this->setPriority(true);			
 		}
 	}
 
@@ -323,7 +323,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
 		$error = false;
@@ -386,7 +386,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 	 * Reassigns priorities in database.
 	 * @param boolean $delete Reorder priority after deletion
 	 */
-	private function setPriority($delete = FALSE):void {
+	private function setPriority($delete = false):void {
 		// Pull prios from database
 		$query = "SELECT video_id, priority FROM ". \rex::getTablePrefix() ."d2u_videos_videos "
 			."WHERE video_id <> ". $this->video_id ." ORDER BY priority";
@@ -413,7 +413,7 @@ class Video implements \D2U_Helper\ITranslationHelper {
 		// Save all prios
 		foreach($videos as $prio => $video_id) {
 			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_videos_videos "
-					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."SET priority = ". (intval($prio) + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE video_id = ". $video_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);

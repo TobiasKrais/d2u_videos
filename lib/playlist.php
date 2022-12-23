@@ -77,7 +77,7 @@ class Playlist {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
 		$query = \rex::getTablePrefix() ."d2u_videos_playlists SET "

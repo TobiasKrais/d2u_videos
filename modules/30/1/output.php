@@ -17,7 +17,7 @@ $playlist_id = (int) $slice->getValue(2);
 $playlist = new Playlist($playlist_id);
 
 $video_id = (int) $slice->getValue(3);
-$video = new Video($video_id, rex_clang::getCurrentId(), TRUE);
+$video = new Video($video_id, rex_clang::getCurrentId(), true);
 
 if(\rex::isBackend()) {
 	if($type === "playlist") {

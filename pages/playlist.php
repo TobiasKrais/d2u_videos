@@ -12,7 +12,7 @@ if($message !== "") {
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
 	$form = rex_post('form', 'array', []);
 
-	$success = TRUE;
+	$success = true;
 	$playlist_id = $form['playlist_id'];
 	$playlist = new Playlist( $form['playlist_id']);
 	$playlist->name = $form['name'];
@@ -30,10 +30,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	
 	// Redirect to make reload and thus double save impossible
 	if(filter_input(INPUT_POST, "btn_apply") === 1 && $playlist->playlist_id > 0) {
-		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$playlist->playlist_id, "func"=>'edit', "message"=>$message], FALSE));
+		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$playlist->playlist_id, "func"=>'edit', "message"=>$message], false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(["message"=>$message], FALSE));
+		header("Location: ". rex_url::currentBackendPage(["message"=>$message], false));
 	}
 	exit;
 }
@@ -63,17 +63,17 @@ if ($func === 'edit' || $func === 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							$playlist = new Playlist($entry_id);
-							$readonly = TRUE;
+							$readonly = true;
 							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_videos[edit_data]'))) {
-								$readonly = FALSE;
+								$readonly = false;
 							}
 
-							d2u_addon_backend_helper::form_input('d2u_helper_name', "form[name]", $playlist->name, TRUE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_helper_name', "form[name]", $playlist->name, true, $readonly, "text");
 							$options_videos = [];
 							foreach(Video::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $video) {
 								$options_videos[$video->video_id] = $video->name;
 							}
-							d2u_addon_backend_helper::form_select('d2u_videos_videos', 'form[video_ids][]', $options_videos, array_keys($playlist->videos), 20, TRUE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_videos_videos', 'form[video_ids][]', $options_videos, array_keys($playlist->videos), 20, true, $readonly);
 						?>
 					</div>
 				</fieldset>
