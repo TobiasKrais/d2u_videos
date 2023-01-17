@@ -20,7 +20,7 @@ else {
  * @return mixed Warning message as array
  */
 function rex_d2u_videos_clang_deleted(rex_extension_point $ep) {
-	/** @var string[] $warning */
+	/** @var array<string> $warning */
 	$warning = $ep->getSubject();
 	$params = $ep->getParams();
 	$clang_id = $params['id'];
@@ -40,7 +40,7 @@ function rex_d2u_videos_clang_deleted(rex_extension_point $ep) {
  * @return array<mixed> Warning message as array
  */
 function rex_d2u_videos_media_is_in_use(rex_extension_point $ep) {
-	/** @var string[] $warning */
+	/** @var array<string> $warning */
 	$warning = $ep->getSubject();
 	$params = $ep->getParams();
 	$filename = addslashes($params['filename']);
@@ -80,7 +80,7 @@ function rex_d2u_videos_media_is_in_use(rex_extension_point $ep) {
  * @return array<string> updated sitemap entries
  */
 function rex_d2u_videos_sitemap(rex_extension_point $ep) {
-	/** @var string[] $sitemap_entries */
+	/** @var array<string> $sitemap_entries */
 	$sitemap_entries = $ep->getSubject();
 	
 	$modules = D2UVideosModules::getModules();
