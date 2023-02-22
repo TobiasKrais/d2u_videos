@@ -5,16 +5,16 @@
 	<div class="col-xs-8">
 		<select name="REX_INPUT_VALUE[20]" class="form-control">
 		<?php
-		$values = [12=>"12 von 12 Spalten (ganze Breite)", 8=>"8 von 12 Spalten", 6=>"6 von 12 Spalten", 4=>"4 von 12 Spalten", 3=>"3 von 12 Spalten"];
-		foreach($values as $key => $value) {
-			echo '<option value="'. $key .'" ';
-	
-			if ("REX_VALUE[20]" === $key) { /** @phpstan-ignore-line */
-				echo 'selected="selected" ';
-			}
-			echo '>'. $value .'</option>';
-		}
-		?>
+        $values = [12 => '12 von 12 Spalten (ganze Breite)', 8 => '8 von 12 Spalten', 6 => '6 von 12 Spalten', 4 => '4 von 12 Spalten', 3 => '3 von 12 Spalten'];
+        foreach ($values as $key => $value) {
+            echo '<option value="'. $key .'" ';
+
+            if ('REX_VALUE[20]' === $key) { /** @phpstan-ignore-line */
+                echo 'selected="selected" ';
+            }
+            echo '>'. $value .'</option>';
+        }
+        ?>
 		</select>
 	</div>
 </div>
@@ -28,16 +28,16 @@
 	<div class="col-xs-8">
 		<select name="REX_INPUT_VALUE[17]" class="form-control">
 		<?php
-		$values = array(0=>"Nicht zentrieren.", 1=>"Zentrieren, wenn freie Breite von anderem Inhalt nicht genutzt wird");
-		foreach($values as $key => $value) {
-			echo '<option value="'. $key .'" ';
-	
-			if ("REX_VALUE[17]" === $key) { /** @phpstan-ignore-line */
-				echo 'selected="selected" ';
-			}
-			echo '>'. $value .'</option>';
-		}
-		?>
+        $values = [0 => 'Nicht zentrieren.', 1 => 'Zentrieren, wenn freie Breite von anderem Inhalt nicht genutzt wird'];
+        foreach ($values as $key => $value) {
+            echo '<option value="'. $key .'" ';
+
+            if ('REX_VALUE[17]' === $key) { /** @phpstan-ignore-line */
+                echo 'selected="selected" ';
+            }
+            echo '>'. $value .'</option>';
+        }
+        ?>
 		</select>
 	</div>
 </div>
@@ -70,19 +70,19 @@
 	</div>
 	<div class="col-xs-8">
 		<?php
-		$select_link = new rex_select(); 
-		$select_link->setName('REX_INPUT_VALUE[1]'); // do not change, see boot.php
-		$select_link->setSize(1);
-		$select_link->setAttribute('class', 'form-control');
-		$select_link->setAttribute('id', 'selector');
+        $select_link = new rex_select();
+        $select_link->setName('REX_INPUT_VALUE[1]'); // do not change, see boot.php
+        $select_link->setSize(1);
+        $select_link->setAttribute('class', 'form-control');
+        $select_link->setAttribute('id', 'selector');
 
-		$select_link->addOption("Playlist", "playlist"); 
-		$select_link->addOption("Video", "video"); 
+        $select_link->addOption('Playlist', 'playlist');
+        $select_link->addOption('Video', 'video');
 
-		$select_link->setSelected("REX_VALUE[1]");
+        $select_link->setSelected('REX_VALUE[1]');
 
-		echo $select_link->show();
-		?>
+        echo $select_link->show();
+        ?>
 	</div>
 </div>
 <div class="row">
@@ -95,20 +95,20 @@
 	</div>
 	<div class="col-xs-8">
 		<?php
-			$select_playlist = new rex_select(); 
-			$select_playlist->setName('REX_INPUT_VALUE[2]'); // do not change, see boot.php
-			$select_playlist->setSize(1);
-			$select_playlist->setAttribute('class', 'form-control');
+            $select_playlist = new rex_select();
+            $select_playlist->setName('REX_INPUT_VALUE[2]'); // do not change, see boot.php
+            $select_playlist->setSize(1);
+            $select_playlist->setAttribute('class', 'form-control');
 
-			$playlists = Playlist::getAll(rex_clang::getCurrentId());
-			foreach($playlists as $playlist)  {
-				$select_playlist->addOption($playlist->name, $playlist->playlist_id); 
-			}
+            $playlists = Playlist::getAll(rex_clang::getCurrentId());
+            foreach ($playlists as $playlist) {
+                $select_playlist->addOption($playlist->name, $playlist->playlist_id);
+            }
 
-			$select_playlist->setSelected("REX_VALUE[2]");
+            $select_playlist->setSelected('REX_VALUE[2]');
 
-			echo $select_playlist->show();
-		?>
+            echo $select_playlist->show();
+        ?>
 	</div>
 </div>
 
@@ -118,20 +118,20 @@
 	</div>
 	<div class="col-xs-8">
 		<?php
-			$select_video = new rex_select();
-			$select_video->setName('REX_INPUT_VALUE[3]'); // do not change, see boot.php
-			$select_video->setSize(1);
-			$select_video->setAttribute('class', 'form-control');
+            $select_video = new rex_select();
+            $select_video->setName('REX_INPUT_VALUE[3]'); // do not change, see boot.php
+            $select_video->setSize(1);
+            $select_video->setAttribute('class', 'form-control');
 
-			$videos = Video::getAll(rex_clang::getCurrentId());
-			foreach($videos as $video)  {
-				$select_video->addOption($video->name, $video->video_id); 
-			}
+            $videos = Video::getAll(rex_clang::getCurrentId());
+            foreach ($videos as $video) {
+                $select_video->addOption($video->name, $video->video_id);
+            }
 
-			$select_video->setSelected("REX_VALUE[3]");
+            $select_video->setSelected('REX_VALUE[3]');
 
-			echo $select_video->show();
-		?>
+            echo $select_video->show();
+        ?>
 	</div>
 </div>
 
@@ -146,10 +146,10 @@
 			$('#video').show();
 		}
 	}
-	
+
 	// On init
 	changeType();
-	
+
 	// On change
 	$('#selector').on('change', function() {
 		changeType();
