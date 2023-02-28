@@ -81,7 +81,7 @@
 
         $select_link->setSelected('REX_VALUE[1]');
 
-        echo $select_link->show();
+        $select_link->show();
         ?>
 	</div>
 </div>
