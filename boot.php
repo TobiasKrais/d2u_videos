@@ -76,12 +76,11 @@ function rex_d2u_videos_media_is_in_use(rex_extension_point $ep)
 
 /**
  * Adds videos to sitemap.
- * @param rex_extension_point<string> $ep Redaxo extension point
+ * @param rex_extension_point<array<string>> $ep Redaxo extension point
  * @return array<string> updated sitemap entries
  */
 function rex_d2u_videos_sitemap(rex_extension_point $ep)
 {
-    /** @var array<string> $sitemap_entries */
     $sitemap_entries = $ep->getSubject();
 
     $modules = D2UVideosModules::getModules();
