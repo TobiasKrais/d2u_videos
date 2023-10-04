@@ -190,8 +190,8 @@ class Video implements \D2U_Helper\ITranslationHelper
             $this->ld_json .= '{'. PHP_EOL;
             $this->ld_json .= '"@context": "https://schema.org",'. PHP_EOL;
             $this->ld_json .= '"@type": "VideoObject",'. PHP_EOL;
-            $this->ld_json .= '"name": "'. $this->name .'",'. PHP_EOL;
-            $this->ld_json .= '"description": "'. ('' !== $this->teaser ? $this->teaser : $this->name) .'",'. PHP_EOL;
+            $this->ld_json .= '"name": '. json_encode($this->name, JSON_UNESCAPED_UNICODE) .','. PHP_EOL;
+            $this->ld_json .= '"description": '. json_encode('' !== $this->teaser ? $this->teaser : $this->name, JSON_UNESCAPED_UNICODE) .','. PHP_EOL;
             $this->ld_json .= '"thumbnailUrl": [ "'. $server . rex_url::media($this->picture) .'" ],'. PHP_EOL;
             $this->ld_json .= '"uploadDate": "'. date('c', $rex_video->getUpdateDate()) .'",'. PHP_EOL;
             $this->ld_json .= '"contentUrl": "'. $server . $rex_video->getUrl() .'"'. PHP_EOL;

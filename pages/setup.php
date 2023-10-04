@@ -39,6 +39,7 @@ $d2u_module_manager->showManagerList();
 <p>1.1.1:</p>
 <ul>
 	<li>PHP-CS-Fixer Code Verbesserungen.</li>
+	<li>Bugfix für verbesserte JSON Ausgabe.</li>
 	<li>Bugfix beim Speichern von Videos und Playlists.</li>
 </ul>
 <p>1.1.0:</p>
