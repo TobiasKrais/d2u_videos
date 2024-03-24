@@ -1,6 +1,6 @@
-# D2U Videomanager Addon
+# D2U Videomanager Addon für Redaxo CMS
 
-Mehrsprachiges Redaxo 5 Addon zur Videoverwaltung für YouTube und lokale MP4 Videos. Einem Video kann ein Vorschaubild und ein Titel zugewiesen werden. Dies ist für jede Sprache möglich. So können Videos unterschiedlicher Sprachen in einem Videoobjekt verknpüft werden. Die Videos werden der Sitemap hinzugefügt.
+Mehrsprachiges Redaxo 5 Addon zur Videoverwaltung für YouTube und lokale MP4 Videos. Einem Video kann ein Vorschaubild und ein Titel zugewiesen werden. Dies ist für jede in Redaxo definierte Sprache möglich. So können Videos unterschiedlicher Sprachen in einem Videoobjekt verknpüft werden. Die Videos werden der Sitemap hinzugefügt.
 
 Videos können des weiteren zu Playlists zusammengefügt werden.
 
