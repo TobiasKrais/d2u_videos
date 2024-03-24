@@ -52,11 +52,6 @@ if (0 === (int) $sql->getRows()) {
 }
 
 // Update modules
-if (class_exists('D2UModuleManager')) {
-    $modules = [];
-    $modules[] = new D2UModule('30-1',
-        'D2U Videomanager - Video / Playlist',
-        2);
-    $d2u_module_manager = new D2UModuleManager($modules, '', 'd2u_videos');
-    $d2u_module_manager->autoupdate();
-}
+include __DIR__ . DIRECTORY_SEPARATOR .'lib'. DIRECTORY_SEPARATOR .'Module.php';
+$d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager(\TobiasKrais\D2UVideos\Module::getModules(), '', 'd2u_videos');
+$d2u_module_manager->autoupdate();

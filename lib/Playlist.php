@@ -1,4 +1,10 @@
 <?php
+
+namespace TobiasKrais\D2UVideos;
+
+use rex_clang;
+use rex_sql;
+
 /**
  * Redaxo Video Addon.
  * @author Tobias Krais
@@ -17,7 +23,7 @@ class Playlist
     public string $name = '';
 
     /** @var Video[] Videos */
-    public $videos = [];
+    public array $videos = [];
 
     /**
      * Constructor.

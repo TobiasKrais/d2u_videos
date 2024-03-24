@@ -2,17 +2,17 @@
 /*
  * Modules
  */
-$d2u_module_manager = new D2UModuleManager(D2UVideosModules::getModules(), 'modules/', 'd2u_videos');
+$d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager(\TobiasKrais\D2UVideos\Module::getModules(), 'modules/', 'd2u_videos');
 
-// D2UModuleManager actions
+// \TobiasKrais\D2UHelper\ModuleManager actions
 $d2u_module_id = rex_request('d2u_module_id', 'string');
-$paired_module = (int) rex_request('pair_'. $d2u_module_id, 'int');
+$paired_module = rex_request('pair_'. $d2u_module_id, 'int');
 $function = rex_request('function', 'string');
 if ('' !== $d2u_module_id) {
     $d2u_module_manager->doActions($d2u_module_id, $function, $paired_module);
 }
 
-// D2UModuleManager show list
+// \TobiasKrais\D2UHelper\ModuleManager show list
 $d2u_module_manager->showManagerList();
 
 ?>
@@ -36,8 +36,19 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_videos" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.1.1:</p>
+<p>1.2.0:</p>
 <ul>
+	<li>Vorbereitung auf R6: Folgende Klassen wurden umbenannt. Die alten Klassennamen funktionieren weiterhin, sind aber als veraltet markiert.
+		<ul>
+			<li><code>Playlist</code> wird zu <code>TobiasKrais\D2UVideos\Playlist</code>.</li>
+			<li><code>Video</code> wird zu <code>TobiasKrais\D2UVideos\Video</code>.</li>
+			<li><code>Videomanager</code> wird zu <code>TobiasKrais\D2UVideos\Videomanager</code>.</li>
+		</ul>
+		Folgende interne Klasse wurden wurden ebenfalls umbenannt:
+		<ul>
+			<li><code>D2UVideosModules</code> wird zu <code>TobiasKrais\D2UVideos\Module</code>.</li>
+		</ul>
+	</li>
 	<li>PHP-CS-Fixer Code Verbesserungen.</li>
 	<li>Bugfix für verbesserte JSON Ausgabe.</li>
 	<li>Bugfix beim Speichern von Videos und Playlists.</li>

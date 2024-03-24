@@ -1,4 +1,14 @@
 <?php
+
+namespace TobiasKrais\D2UVideos;
+
+use rex_addon;
+use rex_media;
+use rex_media_manager;
+use rex_plugin;
+use rex_url;
+use rex_ycom_media_auth;
+
 /**
  * Redaxo Videomanager Addon.
  * @author Tobias Krais
@@ -7,7 +17,7 @@
 
 /**
  * @api
- * Manages video outpu
+ * Manages video output
  */
 class Videomanager
 {

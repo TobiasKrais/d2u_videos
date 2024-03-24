@@ -1,4 +1,16 @@
 <?php
+
+namespace TobiasKrais\D2UVideos;
+
+use rex;
+use rex_addon;
+use rex_clang;
+use rex_config;
+use rex_media;
+use rex_sql;
+use rex_url;
+use rex_yrewrite;
+
 /**
  * Redaxo Videomanager Addon.
  * @author Tobias Krais
@@ -8,7 +20,7 @@
 /**
  * class representing database video object.
  */
-class Video implements \D2U_Helper\ITranslationHelper
+class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
 {
     /** @var int video ID */
     public int $video_id = 0;
@@ -391,7 +403,7 @@ class Video implements \D2U_Helper\ITranslationHelper
         // Save all prios
         foreach ($videos as $prio => $video_id) {
             $query = 'UPDATE '. \rex::getTablePrefix() .'d2u_videos_videos '
-                    .'SET priority = '. ((int) $prio + 1) .' ' // +1 because array_splice recounts at zero
+                    .'SET priority = '. ($prio + 1) .' ' // +1 because array_splice recounts at zero
                     .'WHERE video_id = '. $video_id;
             $result = rex_sql::factory();
             $result->setQuery($query);

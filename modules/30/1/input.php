@@ -100,14 +100,14 @@
             $select_playlist->setSize(1);
             $select_playlist->setAttribute('class', 'form-control');
 
-            $playlists = Playlist::getAll(rex_clang::getCurrentId());
+            $playlists = TobiasKrais\D2UVideos\Playlist::getAll(rex_clang::getCurrentId());
             foreach ($playlists as $playlist) {
                 $select_playlist->addOption($playlist->name, $playlist->playlist_id);
             }
 
             $select_playlist->setSelected('REX_VALUE[2]');
 
-            echo $select_playlist->show();
+            $select_playlist->show();
         ?>
 	</div>
 </div>
@@ -123,14 +123,14 @@
             $select_video->setSize(1);
             $select_video->setAttribute('class', 'form-control');
 
-            $videos = Video::getAll(rex_clang::getCurrentId());
+            $videos = TobiasKrais\D2UVideos\Video::getAll(rex_clang::getCurrentId());
             foreach ($videos as $video) {
                 $select_video->addOption($video->name, $video->video_id);
             }
 
             $select_video->setSelected('REX_VALUE[3]');
 
-            echo $select_video->show();
+            $select_video->show();
         ?>
 	</div>
 </div>

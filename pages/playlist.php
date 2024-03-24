@@ -1,6 +1,6 @@
 <?php
 $func = rex_request('func', 'string');
-$entry_id = (int) rex_request('entry_id', 'int');
+$entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // Print comments
@@ -14,12 +14,12 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
 
     $success = true;
     $playlist_id = $form['playlist_id'];
-    $playlist = new Playlist($form['playlist_id']);
+    $playlist = new TobiasKrais\D2UVideos\Playlist($form['playlist_id']);
     $playlist->name = $form['name'];
     $video_ids = $form['video_ids'] ?? [];
     $playlist->videos = [];
     foreach ($video_ids as $video_id) {
-        $playlist->videos[$video_id] = new Video($video_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+        $playlist->videos[$video_id] = new TobiasKrais\D2UVideos\Video($video_id, (int) rex_config::get('d2u_helper', 'default_lang'));
     }
 
     // message output
@@ -29,7 +29,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     }
 
     // Redirect to make reload and thus double save impossible
-    if (1 === filter_input(INPUT_POST, 'btn_apply') && $playlist->playlist_id > 0) {
+    if (1 === (int) filter_input(INPUT_POST, 'btn_apply') && $playlist->playlist_id > 0) {
         header('Location: '. rex_url::currentBackendPage(['entry_id' => $playlist->playlist_id, 'func' => 'edit', 'message' => $message], false));
     } else {
         header('Location: '. rex_url::currentBackendPage(['message' => $message], false));
@@ -37,13 +37,13 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     exit;
 }
 // Delete
-if (1 === filter_input(INPUT_POST, 'btn_delete') || 'delete' === $func) {
+if (1 === (int) filter_input(INPUT_POST, 'btn_delete') || 'delete' === $func) {
     $playlist_id = $entry_id;
     if (0 === $playlist_id) {
         $form = rex_post('form', 'array', []);
         $playlist_id = $form['playlist_id'];
     }
-    $playlist = new Playlist($playlist_id);
+    $playlist = new TobiasKrais\D2UVideos\Playlist($playlist_id);
     $playlist->delete();
 
     $func = '';
@@ -61,18 +61,18 @@ if ('edit' === $func || 'add' === $func) {
 					<legend><?= rex_i18n::msg('d2u_helper_data_all_lang') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-                            $playlist = new Playlist($entry_id);
+                            $playlist = new TobiasKrais\D2UVideos\Playlist($entry_id);
                             $readonly = true;
                             if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_videos[edit_data]'))) {
                                 $readonly = false;
                             }
 
-                            d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $playlist->name, true, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[name]', $playlist->name, true, $readonly, 'text');
                             $options_videos = [];
-                            foreach (Video::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $video) {
+                            foreach (TobiasKrais\D2UVideos\Video::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $video) {
                                 $options_videos[$video->video_id] = $video->name;
                             }
-                            d2u_addon_backend_helper::form_select('d2u_videos_videos', 'form[video_ids][]', $options_videos, array_keys($playlist->videos), 20, true, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_videos_videos', 'form[video_ids][]', $options_videos, array_keys($playlist->videos), 20, true, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -95,9 +95,9 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo d2u_addon_backend_helper::getCSS();
-        echo d2u_addon_backend_helper::getJS();
-        echo d2u_addon_backend_helper::getJSOpenAll();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getJSOpenAll();
 }
 
 if ('' === $func) {

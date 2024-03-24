@@ -1,6 +1,6 @@
 <?php
 $func = rex_request('func', 'string');
-$entry_id = (int) rex_request('entry_id', 'int');
+$entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // Print comments
@@ -20,7 +20,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $video_id = $form['video_id'];
     foreach (rex_clang::getAll() as $rex_clang) {
         if (false === $video) {
-            $video = new Video($video_id, $rex_clang->getId(), false);
+            $video = new TobiasKrais\D2UVideos\Video($video_id, $rex_clang->getId(), false);
             $video->video_id = $video_id; // Ensure correct ID in case first language has no object
             $video->picture = $input_media[1];
             $video->priority = $form['priority'];
@@ -54,7 +54,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     }
 
     // Redirect to make reload and thus double save impossible
-    if (1 === filter_input(INPUT_POST, 'btn_apply') && false !== $video) {
+    if (1 === (int) filter_input(INPUT_POST, 'btn_apply') && false !== $video) {
         header('Location: '. rex_url::currentBackendPage(['entry_id' => $video->video_id, 'func' => 'edit', 'message' => $message], false));
     } else {
         header('Location: '. rex_url::currentBackendPage(['message' => $message], false));
@@ -62,13 +62,13 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     exit;
 }
 // Delete
-if (1 === filter_input(INPUT_POST, 'btn_delete') || 'delete' === $func) {
+if (1 === (int) filter_input(INPUT_POST, 'btn_delete') || 'delete' === $func) {
     $video_id = $entry_id;
     if (0 === $video_id) {
         $form = rex_post('form', 'array', []);
         $video_id = $form['video_id'];
     }
-    $video = new Video($video_id, (int) rex_config::get('d2u_helper', 'default_lang'), false);
+    $video = new TobiasKrais\D2UVideos\Video($video_id, (int) rex_config::get('d2u_helper', 'default_lang'), false);
     $video->video_id = $video_id; // Ensure correct ID in case first language has no object
     $playlists = $video->getPlaylists();
     if (count($playlists) > 0) {
@@ -99,21 +99,21 @@ if ('edit' === $func || 'add' === $func) {
 					<div class="panel-body-wrapper slide">
 						<?php
                             // Do not use last object from translations, because you don't know if it exists in DB
-                            $video = new Video($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'), false);
+                            $video = new TobiasKrais\D2UVideos\Video($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'), false);
                             $readonly = true;
                             if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_videos[edit_data]'))) {
                                 $readonly = false;
                             }
 
-                            d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', (string) $video->priority, true, $readonly, 'number');
-                            d2u_addon_backend_helper::form_mediafield('d2u_videos_picture', '1', $video->picture, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('header_priority', 'form[priority]', (string) $video->priority, true, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_videos_picture', '1', $video->picture, $readonly);
                             $options_link = [
                                 'redaxo' => rex_i18n::msg('d2u_videos_videotype_mp4'),
                                 'youtube' => rex_i18n::msg('d2u_videos_videotype_youtube'),
                             ];
-                            d2u_addon_backend_helper::form_select('d2u_videos_videotype', 'form[video_type]', $options_link, [$video->video_type], 1, false, $readonly);
-                            d2u_addon_backend_helper::form_mediafield('d2u_videos_redaxo_file', '2', $video->redaxo_file, $readonly);
-                            d2u_addon_backend_helper::form_input('d2u_videos_youtube_video_id', 'form[youtube_video_id]', $video->youtube_video_id, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_videos_videotype', 'form[video_type]', $options_link, [$video->video_type], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_videos_redaxo_file', '2', $video->redaxo_file, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_videos_youtube_video_id', 'form[youtube_video_id]', $video->youtube_video_id, false, $readonly, 'text');
                         ?>
 						<script>
 							function changeType() {
@@ -138,7 +138,7 @@ if ('edit' === $func || 'add' === $func) {
 				</fieldset>
 				<?php
                     foreach (rex_clang::getAll() as $rex_clang) {
-                        $video = new Video($entry_id, $rex_clang->getId(), false);
+                        $video = new TobiasKrais\D2UVideos\Video($entry_id, $rex_clang->getId(), false);
                         $required = $rex_clang->getId() === (int) (rex_config::get('d2u_helper', 'default_lang')) ? true : false;
 
                         $readonly_lang = true;
@@ -155,7 +155,7 @@ if ('edit' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$video->translation_needs_update], 1, false, $readonly_lang);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$video->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
                                 }
@@ -173,11 +173,11 @@ if ('edit' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $video->name, $required, $readonly_lang, 'text');
-                                    d2u_addon_backend_helper::form_textarea('d2u_videos_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $video->teaser, 5, false, $readonly_lang, false);
-                                    d2u_addon_backend_helper::form_select('d2u_videos_videotype', 'form[lang]['. $rex_clang->getId() .'][video_type_lang]', $options_link, [$video->video_type_lang], 1, false, $readonly);
-                                    d2u_addon_backend_helper::form_mediafield('d2u_videos_redaxo_file_lang', '1'. $rex_clang->getId(), $video->redaxo_file_lang, $readonly_lang);
-                                    d2u_addon_backend_helper::form_input('d2u_videos_youtube_video_id_lang', 'form[lang]['. $rex_clang->getId() .'][youtube_video_id_lang]', $video->youtube_video_id_lang, false, $readonly_lang, 'text');
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $video->name, $required, $readonly_lang, 'text');
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_videos_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $video->teaser, 5, false, $readonly_lang, false);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_videos_videotype', 'form[lang]['. $rex_clang->getId() .'][video_type_lang]', $options_link, [$video->video_type_lang], 1, false, $readonly);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_videos_redaxo_file_lang', '1'. $rex_clang->getId(), $video->redaxo_file_lang, $readonly_lang);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_videos_youtube_video_id_lang', 'form[lang]['. $rex_clang->getId() .'][youtube_video_id_lang]', $video->youtube_video_id_lang, false, $readonly_lang, 'text');
                                 ?>
 							</div>
 						<script>
@@ -235,8 +235,8 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo d2u_addon_backend_helper::getCSS();
-        echo d2u_addon_backend_helper::getJS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
 }
 
 if ('' === $func) {

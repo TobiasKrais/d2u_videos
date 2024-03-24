@@ -27,12 +27,12 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
                             'ultimate' => rex_i18n::msg('d2u_videos_settings_ultimate'),
                             'plyr' => rex_i18n::msg('d2u_videos_settings_plyr') .(rex_addon::get('plyr')->isAvailable() ? '' : ' '. rex_i18n::msg('d2u_videos_settings_plyr_install')),
                         ];
-                        d2u_addon_backend_helper::form_select('d2u_videos_settings_player', 'settings[player]', $player_options, [(string) rex_config::get('d2u_videos', 'player')]);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_videos_settings_player', 'settings[player]', $player_options, [(string) rex_config::get('d2u_videos', 'player')]);
 
                         // Fields only for ultimate video player
-                        d2u_addon_backend_helper::form_mediafield('d2u_videos_player_file', 'player_js', (string) rex_config::get('d2u_videos', 'player_js'));
-                        d2u_addon_backend_helper::form_input('d2u_videos_max_height', 'settings[max_height]', (string) rex_config::get('d2u_videos', 'max_height'), false, false, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_videos_max_width', 'settings[max_width]', (string) rex_config::get('d2u_videos', 'max_width'), false, false, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_videos_player_file', 'player_js', (string) rex_config::get('d2u_videos', 'player_js'));
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_videos_max_height', 'settings[max_height]', (string) rex_config::get('d2u_videos', 'max_height'), false, false, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_videos_max_width', 'settings[max_width]', (string) rex_config::get('d2u_videos', 'max_width'), false, false, 'number');
                     ?>
 					<script>
 						function player_type_changer(value) {
@@ -71,6 +71,6 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 	</div>
 </form>
 <?php
-    echo d2u_addon_backend_helper::getCSS();
-    echo d2u_addon_backend_helper::getJS();
-    echo d2u_addon_backend_helper::getJSOpenAll();
+    echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
+    echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
+    echo \TobiasKrais\D2UHelper\BackendHelper::getJSOpenAll();
