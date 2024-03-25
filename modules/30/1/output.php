@@ -18,7 +18,7 @@ $playlist_id = (int) $slice->getValue(2);
 $playlist = new TobiasKrais\D2UVideos\Playlist($playlist_id);
 
 $video_id = (int) $slice->getValue(3);
-$video = new TobiasKrais\D2UVideos\Video($video_id, rex_clang::getCurrentId(), true);
+$video = new \TobiasKrais\D2UVideos\Video($video_id, rex_clang::getCurrentId(), true);
 
 if (\rex::isBackend()) {
     if ('playlist' === $type) {
@@ -55,7 +55,7 @@ if (\rex::isBackend()) {
             echo '<script src="'. rex_url::base('assets/addons/plyr/plyr_playlist.js') .'"></script>';
             echo $ld_json;
         } else {
-            $videomanager = new TobiasKrais\D2UVideos\Videomanager();
+            $videomanager = new \TobiasKrais\D2UVideos\Videomanager();
             $videomanager->printPlaylist($playlist);
         }
     } elseif ('video' === $type) {
@@ -64,7 +64,7 @@ if (\rex::isBackend()) {
             echo rex_plyr::outputMedia($video_filename, 'play-large,play,progress,current-time,duration,restart,volume,mute,pip,fullscreen', rex_url::media($video->picture));
             echo '<script src="'. rex_url::base('assets/addons/plyr/plyr_init.js') .'"></script>';
         } else {
-            $videomanager = new TobiasKrais\D2UVideos\Videomanager();
+            $videomanager = new \TobiasKrais\D2UVideos\Videomanager();
             $videomanager->printVideo($video);
         }
         echo $video->getLDJSONScript();

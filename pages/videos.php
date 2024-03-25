@@ -20,7 +20,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $video_id = $form['video_id'];
     foreach (rex_clang::getAll() as $rex_clang) {
         if (false === $video) {
-            $video = new TobiasKrais\D2UVideos\Video($video_id, $rex_clang->getId(), false);
+            $video = new \TobiasKrais\D2UVideos\Video($video_id, $rex_clang->getId(), false);
             $video->video_id = $video_id; // Ensure correct ID in case first language has no object
             $video->picture = $input_media[1];
             $video->priority = $form['priority'];
@@ -68,7 +68,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete') || 'delete' === $func) {
         $form = rex_post('form', 'array', []);
         $video_id = $form['video_id'];
     }
-    $video = new TobiasKrais\D2UVideos\Video($video_id, (int) rex_config::get('d2u_helper', 'default_lang'), false);
+    $video = new \TobiasKrais\D2UVideos\Video($video_id, (int) rex_config::get('d2u_helper', 'default_lang'), false);
     $video->video_id = $video_id; // Ensure correct ID in case first language has no object
     $playlists = $video->getPlaylists();
     if (count($playlists) > 0) {
@@ -99,7 +99,7 @@ if ('edit' === $func || 'add' === $func) {
 					<div class="panel-body-wrapper slide">
 						<?php
                             // Do not use last object from translations, because you don't know if it exists in DB
-                            $video = new TobiasKrais\D2UVideos\Video($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'), false);
+                            $video = new \TobiasKrais\D2UVideos\Video($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'), false);
                             $readonly = true;
                             if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_videos[edit_data]'))) {
                                 $readonly = false;
@@ -138,7 +138,7 @@ if ('edit' === $func || 'add' === $func) {
 				</fieldset>
 				<?php
                     foreach (rex_clang::getAll() as $rex_clang) {
-                        $video = new TobiasKrais\D2UVideos\Video($entry_id, $rex_clang->getId(), false);
+                        $video = new \TobiasKrais\D2UVideos\Video($entry_id, $rex_clang->getId(), false);
                         $required = $rex_clang->getId() === (int) (rex_config::get('d2u_helper', 'default_lang')) ? true : false;
 
                         $readonly_lang = true;

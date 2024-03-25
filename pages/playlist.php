@@ -19,7 +19,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $video_ids = $form['video_ids'] ?? [];
     $playlist->videos = [];
     foreach ($video_ids as $video_id) {
-        $playlist->videos[$video_id] = new TobiasKrais\D2UVideos\Video($video_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+        $playlist->videos[$video_id] = new \TobiasKrais\D2UVideos\Video($video_id, (int) rex_config::get('d2u_helper', 'default_lang'));
     }
 
     // message output
