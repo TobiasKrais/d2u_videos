@@ -19,7 +19,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $video = false;
     $video_id = $form['video_id'];
     foreach (rex_clang::getAll() as $rex_clang) {
-        if (false === $video) {
+        if (!$video instanceof \TobiasKrais\D2UVideos\Video) {
             $video = new \TobiasKrais\D2UVideos\Video($video_id, $rex_clang->getId(), false);
             $video->video_id = $video_id; // Ensure correct ID in case first language has no object
             $video->picture = $input_media[1];
@@ -32,7 +32,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
         }
         $video->name = $form['lang'][$rex_clang->getId()]['name'];
         $video->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
-        $video->video_type_lang = null !== $form['video_type_lang'] ? $form['video_type_lang'] : '';
+        $video->video_type_lang = $form['lang'][$rex_clang->getId()]['video_type_lang'];
         $video->redaxo_file_lang = $input_media['1'. $rex_clang->getId()];
         $video->youtube_video_id_lang = $form['lang'][$rex_clang->getId()]['youtube_video_id_lang'];
         $video->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];

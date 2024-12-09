@@ -38,7 +38,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.1-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Bugfix: Videotyp wurde in sprachbezogenen Videos nicht gespeichert.</li>
 </ul>
 <p>1.2.0:</p>
 <ul>
