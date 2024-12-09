@@ -34,6 +34,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
         $video->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
         $video->video_type_lang = $form['lang'][$rex_clang->getId()]['video_type_lang'];
         $video->redaxo_file_lang = $input_media['1'. $rex_clang->getId()];
+        $video->picture_lang = $input_media['2'. $rex_clang->getId()];
         $video->youtube_video_id_lang = $form['lang'][$rex_clang->getId()]['youtube_video_id_lang'];
         $video->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
@@ -177,6 +178,7 @@ if ('edit' === $func || 'add' === $func) {
                                     \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_videos_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $video->teaser, 5, false, $readonly_lang, false);
                                     \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_videos_videotype', 'form[lang]['. $rex_clang->getId() .'][video_type_lang]', $options_link, [$video->video_type_lang], 1, false, $readonly);
                                     \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_videos_redaxo_file_lang', '1'. $rex_clang->getId(), $video->redaxo_file_lang, $readonly_lang);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_videos_picture_lang', '2'. $rex_clang->getId(), $video->picture_lang, $readonly_lang);
                                     \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_videos_youtube_video_id_lang', 'form[lang]['. $rex_clang->getId() .'][youtube_video_id_lang]', $video->youtube_video_id_lang, false, $readonly_lang, 'text');
                                 ?>
 							</div>

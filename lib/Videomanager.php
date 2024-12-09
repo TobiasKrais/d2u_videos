@@ -269,8 +269,9 @@ class Videomanager
 
             // Standard URLs für Bilder
             $fallback_background = rex_url::addonAssets('d2u_videos', 'minimal_skin_dark/thumbnail-background.png');
-            $picture_thumb = '' !== $video->picture ? 'index.php?rex_media_type='. $this->video_thumb_type .'&rex_media_file='. $video->picture : $fallback_background;
-            $picture_preview = '' !== $video->picture ? 'index.php?rex_media_type='. $this->video_preview_type .'&rex_media_file='. $video->picture : $fallback_background;
+
+            $picture_thumb = '' !== $video->getPreviewPictureFilename() ? 'index.php?rex_media_type='. $this->video_thumb_type .'&rex_media_file='. $video->getPreviewPictureFilename() : $fallback_background;
+            $picture_preview = '' !== $video->getPreviewPictureFilename() ? 'index.php?rex_media_type='. $this->video_preview_type .'&rex_media_file='. $video->getPreviewPictureFilename() : $fallback_background;
 
             if (0 === $videocounter) {
                 $playlist_start .= '<li data-source="'. $playerID .'" data-playlist-name="'. $video->teaser .'" data-thumbnail-path="'. $picture_preview .'">';

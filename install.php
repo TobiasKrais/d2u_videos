@@ -16,6 +16,7 @@
     ->setPrimaryKey(['video_id', 'clang_id'])
     ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('teaser', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('picture', 'VARCHAR(191)'))
     ->ensureColumn(new \rex_sql_column('video_type', 'VARCHAR(10)'))
     ->ensureColumn(new \rex_sql_column('youtube_video_id', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('redaxo_file', 'VARCHAR(255)'))

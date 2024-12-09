@@ -40,6 +40,9 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
     /** @var string Preview picture filename */
     public string $picture = '';
 
+    /** @var string Language specific picture filename */
+    public string $picture_lang = '';
+
     /** @var int priority */
     public int $priority = 0;
 
@@ -76,6 +79,9 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
     /** @var string XML code for sitemap */
     private string $sitemap_entry = '';
 
+    /** @var string preview picture filename */
+    private string $preview_picture = '';
+
     /**
      * Constructor.
      * @param int $video_id video ID
@@ -105,6 +111,7 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
             $this->redaxo_file = (string) $result->getValue('videos.redaxo_file');
             $this->redaxo_file_lang = (string) $result->getValue('lang.redaxo_file');
             $this->picture = (string) $result->getValue('picture');
+            $this->picture_lang = (string) $result->getValue('lang.picture');
             $this->priority = (int) $result->getValue('priority');
             $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
         } elseif ($fallback) {
@@ -122,6 +129,7 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
                 $this->name = stripslashes((string) $result_fallback->getValue('name'));
                 $this->teaser = stripslashes((string) $result_fallback->getValue('teaser'));
                 $this->picture = (string) $result_fallback->getValue('picture');
+                $this->picture_lang = (string) $result_fallback->getValue('lang.picture');
                 $this->priority = (int) $result_fallback->getValue('priority');
                 if ('' === $this->redaxo_file && '' === $this->redaxo_file_lang && '' === $this->youtube_video_id && '' === $this->youtube_video_id_lang) {
                     $this->video_type = (string) $result_fallback->getValue('videos.video_type');
@@ -195,7 +203,7 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
             return $this->ld_json;
         }
         $rex_video = rex_media::get('' !== $this->redaxo_file_lang ? $this->redaxo_file_lang : $this->redaxo_file);
-        if ($rex_video instanceof rex_media && '' !== $this->picture) {
+        if ($rex_video instanceof rex_media && '' !== $this->getPreviewPictureFilename()) {
             $server = rtrim(rex_addon::get('yrewrite')->isAvailable() ? rex_yrewrite::getCurrentDomain()->getUrl() : rex::getServer(), '/');
 
             $this->ld_json .= '<script type="application/ld+json">'. PHP_EOL;
@@ -204,7 +212,7 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
             $this->ld_json .= '"@type": "VideoObject",'. PHP_EOL;
             $this->ld_json .= '"name": '. json_encode($this->name, JSON_UNESCAPED_UNICODE) .','. PHP_EOL;
             $this->ld_json .= '"description": '. json_encode('' !== $this->teaser ? $this->teaser : $this->name, JSON_UNESCAPED_UNICODE) .','. PHP_EOL;
-            $this->ld_json .= '"thumbnailUrl": [ "'. $server . rex_url::media($this->picture) .'" ],'. PHP_EOL;
+            $this->ld_json .= '"thumbnailUrl": [ "'. $server . rex_url::media($this->getPreviewPictureFilename()) .'" ],'. PHP_EOL;
             $this->ld_json .= '"uploadDate": "'. date('c', $rex_video->getUpdateDate()) .'",'. PHP_EOL;
             $this->ld_json .= '"contentUrl": "'. $server . $rex_video->getUrl() .'"'. PHP_EOL;
             $this->ld_json .= '}'. PHP_EOL;
@@ -233,6 +241,18 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
     }
 
     /**
+     * Get preview picture filename
+     * @return string preview picture filename
+     */
+    public function getPreviewPictureFilename(): string
+    {
+        if ('' === $this->preview_picture) {
+            $this->preview_picture = '' !== $this->picture_lang ? $this->picture_lang : $this->picture;
+        }
+        return $this->preview_picture;
+    }
+
+    /**
      * Get sitemap entry in XML format (<video:video>...</video:video>).
      * @return string String containing XML sitemap Code
      */
@@ -242,11 +262,11 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
             return $this->sitemap_entry;
         }
         $rex_video = rex_media::get('' !== $this->redaxo_file_lang ? $this->redaxo_file_lang : $this->redaxo_file);
-        if ($rex_video instanceof rex_media && '' !== $this->picture && '' !== $this->name) {
+        if ($rex_video instanceof rex_media && '' !== $this->getPreviewPictureFilename() && '' !== $this->name) {
             $server = rtrim(rex_addon::get('yrewrite')->isAvailable() ? rex_yrewrite::getCurrentDomain()->getUrl() : rex::getServer(), '/');
 
             $this->sitemap_entry .= '	<video:video>'. PHP_EOL;
-            $this->sitemap_entry .= '		<video:thumbnail_loc>'. $server . rex_url::media($this->picture) .'</video:thumbnail_loc>'. PHP_EOL;
+            $this->sitemap_entry .= '		<video:thumbnail_loc>'. $server . rex_url::media('' !== $this->getPreviewPictureFilename()) .'</video:thumbnail_loc>'. PHP_EOL;
             $this->sitemap_entry .= '		<video:title>'. $this->name .'</video:title>'. PHP_EOL;
             $this->sitemap_entry .= '		<video:description>'. ('' !== $this->teaser ? $this->teaser : $this->name) .'</video:description>'. PHP_EOL;
             $this->sitemap_entry .= '		<video:content_loc>'. $server . $rex_video->getUrl() .'</video:content_loc>'. PHP_EOL;
@@ -357,6 +377,7 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
                         ."clang_id = '". $this->clang_id ."', "
                         ."name = '". addslashes($this->name) ."', "
                         ."teaser = '". addslashes($this->teaser) ."', "
+                        ."picture = '". $this->picture_lang ."', "
                         ."video_type = '". $this->video_type_lang ."', "
                         ."youtube_video_id = '". $this->youtube_video_id_lang ."', "
                         ."redaxo_file = '". $this->redaxo_file_lang ."', "

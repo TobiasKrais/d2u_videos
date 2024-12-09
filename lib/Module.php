@@ -18,7 +18,7 @@ class Module
         $modules = [];
         $modules[] = new \TobiasKrais\D2UHelper\Module('30-1',
             'D2U Videomanager - Video / Playlist',
-            3);
+            4);
         return $modules;
     }
 }

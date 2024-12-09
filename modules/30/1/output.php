@@ -61,7 +61,7 @@ if (\rex::isBackend()) {
     } elseif ('video' === $type) {
         if ('plyr' === (string) rex_config::get('d2u_videos', 'player', 'ultimate') && rex_addon::get('plyr')->isAvailable()) {
             $video_filename = '' !== $video->redaxo_file_lang ? $video->redaxo_file_lang : $video->redaxo_file;
-            echo rex_plyr::outputMedia($video_filename, 'play-large,play,progress,current-time,duration,restart,volume,mute,pip,fullscreen', rex_url::media($video->picture));
+            echo rex_plyr::outputMedia($video_filename, 'play-large,play,progress,current-time,duration,restart,volume,mute,pip,fullscreen', rex_url::media($video->getPreviewPictureFilename()));
             echo '<script src="'. rex_url::base('assets/addons/plyr/plyr_init.js') .'"></script>';
         } else {
             $videomanager = new \TobiasKrais\D2UVideos\Videomanager();
