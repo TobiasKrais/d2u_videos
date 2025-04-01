@@ -50,7 +50,7 @@ function rex_d2u_videos_media_is_in_use(rex_extension_point $ep)
     $sql_videos = rex_sql::factory();
     $sql_videos->setQuery('SELECT lang.video_id, name FROM `' . rex::getTablePrefix() . 'd2u_videos_videos_lang` AS lang '
         .'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_videos_videos` AS videos ON lang.video_id = videos.video_id '
-        .'WHERE picture = "'. $filename .'" OR lang.redaxo_file = "'. $filename .'" OR videos.redaxo_file = "'. $filename .'"');
+        .'WHERE lang.picture = "'. $filename .'" OR videos.picture = "'. $filename .'" OR lang.redaxo_file = "'. $filename .'" OR videos.redaxo_file = "'. $filename .'"');
 
     // Prepare warnings
     // News
