@@ -36,7 +36,7 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_videos" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.2.1-DEV:</p>
+<p>1.2.1:</p>
 <ul>
 	<li>Sprachspezifisches Bild hinzugefügt.</li>
 	<li>Modul "30-1 D2U Videomanager - Video / Playlist" Anpassungen prachspezifisches Bild.</li>
