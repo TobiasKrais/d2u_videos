@@ -1,4 +1,7 @@
 <?php
+$showChangelogOnly = defined('D2U_VIDEOS_SHOW_CHANGELOG');
+
+if (!$showChangelogOnly) {
 /*
  * Modules
  */
@@ -35,6 +38,9 @@ $d2u_module_manager->showManagerList();
 	in den Einstellungen dieses Addons gespeichert werden.</p>
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_videos" target="_blank">GitHub Repository</a> melden.</p>
+<?php } ?>
+
+<?php if ($showChangelogOnly) { ?>
 <h2>Changelog</h2>
 <p>1.3.0-DEV:</p>
 <ul>
@@ -140,3 +146,4 @@ $d2u_module_manager->showManagerList();
 <ul>
 	<li>Initiale Version.</li>
 </ul>
+<?php } ?>
