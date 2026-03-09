@@ -28,7 +28,7 @@ $d2u_module_manager->showManagerList();
 		<pre>Header set Accept-Ranges bytes</pre></li>
 </ul>
 <h2>Fremdcode</h2>
-<p>Für den Videoplayer braucht entweder das Plyr Addon oder den Ultimate Video Player, der hier erworben
+<p>Für den Videoplayer braucht entweder das Plyr Addon, das Vidstack Addon oder den Ultimate Video Player, der hier erworben
 	werden kann: <a href="http://codecanyon.net/item/ultimate-video-player/7694071">
 	http://codecanyon.net/item/ultimate-video-player/7694071</a>. Aus dem gekauften
 	Archiv muss die start/java/fwduvplayer.js in den Medienpool hochgeladen werden und
@@ -36,6 +36,13 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_videos" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
+<p>1.3.0-DEV:</p>
+<ul>
+	<li>Unterstützung des Vidstack Addons als weitere Player-Option hinzugefügt.</li>
+	<li>Modul "30-1 D2U Videomanager - Video / Playlist" schaltet jetzt zwischen Ultimate Video Player, Plyr und Vidstack um.</li>
+	<li>Vidstack Ausgabe unterstützt einzelne Videos und Playlists inklusive YouTube-Kompatibilität.</li>
+	<li>Ultimate Video Player und Plyr sind als veraltet markiert und werden im nächsten Major Release nicht mehr unterstützt.</li>
+</ul>
 <p>1.2.1:</p>
 <ul>
 	<li>Sprachspezifisches Bild hinzugefügt.</li>

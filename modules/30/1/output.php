@@ -19,6 +19,8 @@ $playlist = new TobiasKrais\D2UVideos\Playlist($playlist_id);
 
 $video_id = (int) $slice->getValue(3);
 $video = new \TobiasKrais\D2UVideos\Video($video_id, rex_clang::getCurrentId(), true);
+$videomanager = new \TobiasKrais\D2UVideos\Videomanager();
+$selectedPlayer = $videomanager->getConfiguredPlayer();
 
 if (\rex::isBackend()) {
     if ('playlist' === $type) {
@@ -27,47 +29,17 @@ if (\rex::isBackend()) {
         echo '<p>Gewähltes Video: '. $video->name .'</p>';
     }
 
-    if ('plyr' === (string) rex_config::get('d2u_videos', 'player', 'ultimate') && !rex_addon::get('plyr')->isAvailable()) {
-        echo '<p style="color:red">Das Plyr Addon muss installiert und aktiviert sein.</p>';
+    if ('plyr' === $selectedPlayer && !rex_addon::get('plyr')->isAvailable()) {
+        echo '<p style="color:red">'. rex_i18n::msg('d2u_videos_settings_plyr_missing') .'</p>';
+    } elseif ('vidstack' === $selectedPlayer && !rex_addon::get('vidstack')->isAvailable()) {
+        echo '<p style="color:red">'. rex_i18n::msg('d2u_videos_settings_vidstack_missing') .'</p>';
     }
 } else {
-    // frontend
-    if ('plyr' === (string) rex_config::get('d2u_videos', 'player', 'ultimate') && rex_addon::get('plyr')->isAvailable()) {
-        if (!function_exists('loadJsPlyr')) {
-            function loadJsPlyr(): void
-            {
-                echo '<script src="'. rex_url::base('assets/addons/plyr/vendor/plyr/dist/plyr.min.js') .'"></script>';
-            }
-        }
-        loadJsPlyr();
-    }
-
     echo '<div class="col-12 col-lg-'. $cols . $offset_lg .'">';
     if ('playlist' === $type) {
-        if (rex_config::get('d2u_videos', 'player', 'ultimate') === 'plyr' && rex_addon::get('plyr')->isAvailable()) {
-            $media_filenames = [];
-            $ld_json = '';
-            foreach ($playlist->videos as $playlist_video) {
-                $media_filenames[] = '' !== $playlist_video->redaxo_file_lang ? $playlist_video->redaxo_file_lang : $playlist_video->redaxo_file;
-                $ld_json .= $playlist_video->getLDJSONScript();
-            }
-            echo rex_plyr::outputMediaPlaylist($media_filenames, 'play-large,play,progress,current-time,duration,restart,volume,mute,pip,fullscreen');
-            echo '<script src="'. rex_url::base('assets/addons/plyr/plyr_playlist.js') .'"></script>';
-            echo $ld_json;
-        } else {
-            $videomanager = new \TobiasKrais\D2UVideos\Videomanager();
-            $videomanager->printPlaylist($playlist);
-        }
+        $videomanager->printPlaylist($playlist);
     } elseif ('video' === $type) {
-        if ('plyr' === (string) rex_config::get('d2u_videos', 'player', 'ultimate') && rex_addon::get('plyr')->isAvailable()) {
-            $video_filename = '' !== $video->redaxo_file_lang ? $video->redaxo_file_lang : $video->redaxo_file;
-            echo rex_plyr::outputMedia($video_filename, 'play-large,play,progress,current-time,duration,restart,volume,mute,pip,fullscreen', rex_url::media($video->getPreviewPictureFilename()));
-            echo '<script src="'. rex_url::base('assets/addons/plyr/plyr_init.js') .'"></script>';
-        } else {
-            $videomanager = new \TobiasKrais\D2UVideos\Videomanager();
-            $videomanager->printVideo($video);
-        }
-        echo $video->getLDJSONScript();
+        $videomanager->printVideo($video);
     }
 
     echo '</div>';

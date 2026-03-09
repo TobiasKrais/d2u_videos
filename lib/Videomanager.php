@@ -3,6 +3,8 @@
 namespace TobiasKrais\D2UVideos;
 
 use rex_addon;
+use rex_clang;
+use rex_escape;
 use rex_media;
 use rex_media_manager;
 use rex_plugin;
@@ -21,6 +23,10 @@ use rex_ycom_media_auth;
  */
 class Videomanager
 {
+    private static bool $plyrAssetsLoaded = false;
+    private static bool $vidstackAssetsLoaded = false;
+    private static bool $vidstackPlaylistAssetsLoaded = false;
+
     /** @var int Max. player window height */
     public int $max_height = 440;
 
@@ -56,6 +62,13 @@ class Videomanager
     public function printVideo($video): void
     {
         if ($video->video_id > 0 && '' !== $video->getVideoURL()) {
+            if ($this->useVidstack()) {
+                $this->printVidstackSingle($video);
+                return;
+            }
+            if ($this->usePlyr() && $this->printPlyrSingle($video)) {
+                return;
+            }
             $useYoutube = $this->useYoutube([$video]);
             $this->printVideoplayer([$video], 'no', $useYoutube);
         }
@@ -75,6 +88,13 @@ class Videomanager
             }
         }
         if (count($proved_videos) > 0) {
+            if ($this->useVidstack()) {
+                $this->printVidstackPlaylist($proved_videos);
+                return;
+            }
+            if ($this->usePlyr() && $this->printPlyrPlaylist($proved_videos)) {
+                return;
+            }
             $useYoutube = $this->useYoutube($proved_videos);
             $this->printVideoplayer($proved_videos, count($proved_videos) > 1 ? 'yes' : 'no', $useYoutube);
         }
@@ -87,9 +107,37 @@ class Videomanager
     public function printPlaylist($playlist): void
     {
         if (count($playlist->videos) > 0) {
+            if ($this->useVidstack()) {
+                $this->printVidstackPlaylist($playlist->videos);
+                return;
+            }
+            if ($this->usePlyr() && $this->printPlyrPlaylist($playlist->videos)) {
+                return;
+            }
             $useYoutube = $this->useYoutube($playlist->videos);
             $this->printVideoplayer($playlist->videos, count($playlist->videos) > 1 ? 'yes' : 'no', $useYoutube);
         }
+    }
+
+    /**
+     * Returns selected player from addon config.
+     */
+    public function getConfiguredPlayer(): string
+    {
+        $player = (string) rex_addon::get('d2u_videos')->getConfig('player', 'ultimate');
+        return in_array($player, ['ultimate', 'plyr', 'vidstack'], true) ? $player : 'ultimate';
+    }
+
+    /**
+     * Checks whether configured external addon is available.
+     */
+    public function isConfiguredPlayerAddonAvailable(): bool
+    {
+        return match ($this->getConfiguredPlayer()) {
+            'plyr' => rex_addon::get('plyr')->isAvailable(),
+            'vidstack' => rex_addon::get('vidstack')->isAvailable(),
+            default => true,
+        };
     }
 
     /**
@@ -216,6 +264,378 @@ class Videomanager
 		});
 	</script>
 	<?php
+    }
+
+    /**
+     * Prints plyr assets once.
+     */
+    private function printPlyrAssets(): void
+    {
+        if (self::$plyrAssetsLoaded) {
+            return;
+        }
+
+        echo '<script src="'. rex_url::base('assets/addons/plyr/vendor/plyr/dist/plyr.min.js') .'"></script>';
+        self::$plyrAssetsLoaded = true;
+    }
+
+    /**
+     * Prints single video with plyr.
+     */
+    private function printPlyrSingle(Video $video): bool
+    {
+        $videoFilename = $this->getRedaxoFilename($video);
+        if ('' === $videoFilename) {
+            return false;
+        }
+
+        $plyrClass = '\\rex_plyr';
+        $this->printPlyrAssets();
+        echo $plyrClass::outputMedia($videoFilename, 'play-large,play,progress,current-time,duration,restart,volume,mute,pip,fullscreen', '' !== $video->getPreviewPictureFilename() ? rex_url::media($video->getPreviewPictureFilename()) : '');
+        echo '<script src="'. rex_url::base('assets/addons/plyr/plyr_init.js') .'"></script>';
+        echo $video->getLDJSONScript();
+
+        return true;
+    }
+
+    /**
+     * Prints playlist with plyr.
+     * @param Video[] $videos
+     */
+    private function printPlyrPlaylist(array $videos): bool
+    {
+        $mediaFilenames = [];
+        $ldJson = '';
+        foreach ($videos as $video) {
+            $videoFilename = $this->getRedaxoFilename($video);
+            if ('' === $videoFilename) {
+                continue;
+            }
+            $mediaFilenames[] = $videoFilename;
+            $ldJson .= $video->getLDJSONScript();
+        }
+
+        if (0 === count($mediaFilenames)) {
+            return false;
+        }
+
+        $plyrClass = '\\rex_plyr';
+        $this->printPlyrAssets();
+        echo $plyrClass::outputMediaPlaylist($mediaFilenames, 'play-large,play,progress,current-time,duration,restart,volume,mute,pip,fullscreen');
+        echo '<script src="'. rex_url::base('assets/addons/plyr/plyr_playlist.js') .'"></script>';
+        echo $ldJson;
+
+        return true;
+    }
+
+    /**
+     * Prints Vidstack assets once.
+     */
+    private function printVidstackAssets(): void
+    {
+        if (self::$vidstackAssetsLoaded) {
+            return;
+        }
+
+        echo '<link rel="stylesheet" href="'. rex_url::addonAssets('vidstack', 'vidstack.css') .'">';
+        echo '<link rel="stylesheet" href="'. rex_url::addonAssets('vidstack', 'vidstack_helper.css') .'">';
+        echo '<script src="'. rex_url::addonAssets('vidstack', 'vidstack.js') .'"></script>';
+        echo '<script src="'. rex_url::addonAssets('vidstack', 'vidstack_helper.js') .'"></script>';
+        self::$vidstackAssetsLoaded = true;
+    }
+
+    /**
+     * Prints Vidstack playlist assets once.
+     */
+    private function printVidstackPlaylistAssets(): void
+    {
+        if (self::$vidstackPlaylistAssetsLoaded) {
+            return;
+        }
+
+        echo '<style>
+            .d2u-videos-vidstack-playlist {
+                display: grid;
+                gap: 1rem;
+            }
+            .d2u-videos-vidstack-stage {
+                display: grid;
+                gap: 0.5rem;
+            }
+            .d2u-videos-vidstack-stage-title {
+                font-size: 1.25rem;
+                font-weight: 600;
+                line-height: 1.3;
+            }
+            .d2u-videos-vidstack-stage-teaser {
+                color: #666;
+                margin: 0;
+            }
+            .d2u-videos-vidstack-items {
+                display: grid;
+                gap: 0.75rem;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+            .d2u-videos-vidstack-button {
+                width: 100%;
+                display: grid;
+                grid-template-columns: 140px 1fr;
+                gap: 0.75rem;
+                align-items: center;
+                border: 1px solid #d9d9d9;
+                border-radius: 0.75rem;
+                background: #fff;
+                padding: 0.75rem;
+                text-align: left;
+            }
+            .d2u-videos-vidstack-button.is-active {
+                border-color: #1f6feb;
+                box-shadow: 0 0 0 1px #1f6feb;
+            }
+            .d2u-videos-vidstack-thumb {
+                aspect-ratio: 16 / 9;
+                width: 100%;
+                object-fit: cover;
+                border-radius: 0.5rem;
+                background: #111;
+            }
+            .d2u-videos-vidstack-thumb.is-empty {
+                display: block;
+            }
+            .d2u-videos-vidstack-meta strong {
+                display: block;
+                margin-bottom: 0.25rem;
+            }
+            .d2u-videos-vidstack-meta span {
+                display: block;
+                color: #666;
+            }
+            .d2u-videos-vidstack-player .audio-container,
+            .d2u-videos-vidstack-player .video-container,
+            .d2u-videos-vidstack-player media-player {
+                width: 100%;
+                display: block;
+            }
+            @media (max-width: 767px) {
+                .d2u-videos-vidstack-button {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>';
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll(".d2u-videos-vidstack-playlist").forEach(function (playlist) {
+                    if (playlist.dataset.vsPlaylistBound === "1") {
+                        return;
+                    }
+                    playlist.dataset.vsPlaylistBound = "1";
+
+                    var stageTitle = playlist.querySelector("[data-stage-title]");
+                    var stageTeaser = playlist.querySelector("[data-stage-teaser]");
+                    var stagePlayer = playlist.querySelector("[data-stage-player]");
+                    var buttons = playlist.querySelectorAll("[data-playlist-target]");
+
+                    buttons.forEach(function (button) {
+                        button.addEventListener("click", function () {
+                            var targetId = button.getAttribute("data-playlist-target");
+                            var template = playlist.querySelector("template[data-playlist-template=\"" + targetId + "\"]");
+                            if (!template || !stagePlayer) {
+                                return;
+                            }
+
+                            stagePlayer.innerHTML = template.innerHTML;
+                            if (stageTitle) {
+                                stageTitle.textContent = button.getAttribute("data-title") || "";
+                            }
+                            if (stageTeaser) {
+                                stageTeaser.textContent = button.getAttribute("data-teaser") || "";
+                            }
+
+                            buttons.forEach(function (candidate) {
+                                candidate.classList.toggle("is-active", candidate === button);
+                            });
+
+                            document.dispatchEvent(new Event("vsrun"));
+                        });
+                    });
+                });
+            });
+        </script>';
+
+        self::$vidstackPlaylistAssetsLoaded = true;
+    }
+
+    /**
+     * Prints single video with Vidstack.
+     */
+    private function printVidstackSingle(Video $video): void
+    {
+        $this->printVidstackAssets();
+        echo '<div class="d2u-videos-vidstack-player">'. $this->getVidstackPlayerHtml($video) .'</div>';
+        echo $video->getLDJSONScript();
+    }
+
+    /**
+     * Prints playlist with Vidstack.
+     * @param Video[] $videos
+     */
+    private function printVidstackPlaylist(array $videos): void
+    {
+        $playlistItems = [];
+        $ldJson = '';
+        foreach ($videos as $index => $video) {
+            if (0 === $video->video_id || '' === $video->getVideoURL()) {
+                continue;
+            }
+
+            $playlistItems[] = [
+                'id' => 'd2u-videos-vidstack-item-'. $video->video_id .'-'. $index .'-'. random_int(1, 1000),
+                'title' => $video->name,
+                'teaser' => $video->teaser,
+                'thumb' => $this->getThumbUrl($video),
+                'player' => $this->getVidstackPlayerHtml($video),
+            ];
+            $ldJson .= $video->getLDJSONScript();
+        }
+
+        if (0 === count($playlistItems)) {
+            return;
+        }
+
+        $firstItem = $playlistItems[0];
+        $this->printVidstackAssets();
+        $this->printVidstackPlaylistAssets();
+
+        echo '<div class="d2u-videos-vidstack-playlist">';
+        echo '<div class="d2u-videos-vidstack-stage">';
+        echo '<div class="d2u-videos-vidstack-stage-title" data-stage-title>'. rex_escape($firstItem['title']) .'</div>';
+        if ('' !== $firstItem['teaser']) {
+            echo '<p class="d2u-videos-vidstack-stage-teaser" data-stage-teaser>'. rex_escape($firstItem['teaser']) .'</p>';
+        } else {
+            echo '<p class="d2u-videos-vidstack-stage-teaser" data-stage-teaser></p>';
+        }
+        echo '<div class="d2u-videos-vidstack-player" data-stage-player>'. $firstItem['player'] .'</div>';
+        echo '</div>';
+        echo '<ul class="d2u-videos-vidstack-items">';
+
+        foreach ($playlistItems as $index => $item) {
+            echo '<li>';
+            echo '<button type="button" class="d2u-videos-vidstack-button'. (0 === $index ? ' is-active' : '') .'" data-playlist-target="'. rex_escape($item['id']) .'" data-title="'. rex_escape($item['title']) .'" data-teaser="'. rex_escape($item['teaser']) .'">';
+            if ('' !== $item['thumb']) {
+                echo '<img class="d2u-videos-vidstack-thumb" src="'. rex_escape($item['thumb']) .'" alt="'. rex_escape($item['title']) .'">';
+            } else {
+                echo '<span class="d2u-videos-vidstack-thumb is-empty"></span>';
+            }
+            echo '<span class="d2u-videos-vidstack-meta"><strong>'. rex_escape($item['title']) .'</strong><span>'. rex_escape($item['teaser']) .'</span></span>';
+            echo '</button>';
+            echo '<template data-playlist-template="'. rex_escape($item['id']) .'">'. $item['player'] .'</template>';
+            echo '</li>';
+        }
+
+        echo '</ul>';
+        echo '</div>';
+        echo $ldJson;
+    }
+
+    /**
+     * Creates the Vidstack player markup for a video object.
+     */
+    private function getVidstackPlayerHtml(Video $video): string
+    {
+        $vidstackClass = '\\FriendsOfRedaxo\\VidStack\\Video';
+        $vidstackVideo = new $vidstackClass($video->getVideoURL(), $video->name, $this->getVidstackLang());
+        $videoInfo = $vidstackClass::getVideoInfo($video->getVideoURL());
+        $isAudio = $vidstackClass::isAudio($video->getVideoURL());
+
+        if (!$isAudio && '' !== $video->getPreviewPictureFilename()) {
+            $vidstackVideo->setPoster(rex_url::media($video->getPreviewPictureFilename()), $video->name);
+        }
+
+        if ($videoInfo['platform'] === 'youtube' || $videoInfo['platform'] === 'vimeo') {
+            $vidstackVideo->setAttributes([
+                'crossorigin' => '',
+                'playsinline' => true,
+                'controls' => false,
+            ]);
+        } elseif ($isAudio) {
+            $vidstackVideo->setAttributes([
+                'controls' => true,
+                'preload' => 'metadata',
+            ]);
+        } else {
+            $vidstackVideo->setAttributes([
+                'crossorigin' => '',
+                'playsinline' => true,
+                'controls' => true,
+                'preload' => 'metadata',
+            ]);
+        }
+
+        return $vidstackVideo->generateFull();
+    }
+
+    /**
+     * Returns the current Vidstack language code.
+     */
+    private function getVidstackLang(): string
+    {
+        $clang = rex_clang::getCurrent();
+        if (null === $clang) {
+            return 'de';
+        }
+
+        $code = strtolower((string) $clang->getCode());
+        return match (substr($code, 0, 2)) {
+            'en' => 'en',
+            'es' => 'es',
+            'fr' => 'fr',
+            default => 'de',
+        };
+    }
+
+    /**
+     * Returns Redaxo media filename of a video if available.
+     */
+    private function getRedaxoFilename(Video $video): string
+    {
+        if ('' !== $video->redaxo_file_lang) {
+            return $video->redaxo_file_lang;
+        }
+        if ('' !== $video->redaxo_file) {
+            return $video->redaxo_file;
+        }
+
+        return '';
+    }
+
+    /**
+     * Returns thumbnail URL for playlist items.
+     */
+    private function getThumbUrl(Video $video): string
+    {
+        if ('' === $video->getPreviewPictureFilename()) {
+            return '';
+        }
+
+        return 'index.php?rex_media_type='. $this->video_thumb_type .'&rex_media_file='. $video->getPreviewPictureFilename();
+    }
+
+    /**
+     * Checks if configured player is Plyr.
+     */
+    private function usePlyr(): bool
+    {
+        return 'plyr' === $this->getConfiguredPlayer() && rex_addon::get('plyr')->isAvailable();
+    }
+
+    /**
+     * Checks if configured player is Vidstack.
+     */
+    private function useVidstack(): bool
+    {
+        return 'vidstack' === $this->getConfiguredPlayer() && rex_addon::get('vidstack')->isAvailable();
     }
 
     /**

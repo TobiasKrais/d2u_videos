@@ -1,6 +1,6 @@
 # D2U Videos - Redaxo Addon
 
-A Redaxo 5 CMS addon for managing videos (YouTube and self-hosted) and playlists. Supports multiple video players (Ultimate Video Player, Plyr), schema.org LD+JSON markup, and video sitemap entries for YRewrite.
+A Redaxo 5 CMS addon for managing videos (YouTube and self-hosted) and playlists. Supports multiple video players (Ultimate Video Player, Plyr, Vidstack), schema.org LD+JSON markup, and video sitemap entries for YRewrite.
 
 ## Tech Stack
 
@@ -25,7 +25,7 @@ d2u_videos/
 ├── lib/                    # PHP classes
 │   ├── Video.php           # Video model (multilingual, LD+JSON, sitemap)
 │   ├── Playlist.php        # Playlist model
-│   ├── Videomanager.php    # Video player rendering (Ultimate/Plyr)
+│   ├── Videomanager.php    # Video player rendering (Ultimate/Plyr/Vidstack)
 │   ├── Module.php          # Module definitions and revisions
 │   └── deprecated_classes.php  # Backward compatibility (since 1.2.0)
 ├── modules/                # 1 module in group 30
@@ -56,7 +56,7 @@ d2u_videos/
 | ----- | ----------- |
 | `Video` | Video model: name, teaser, YouTube/Redaxo video, preview picture, priority, LD+JSON output, sitemap XML. Multilingual with language fallback. Implements `ITranslationHelper` |
 | `Playlist` | Playlist model: name, ordered video IDs (pipe-separated) |
-| `Videomanager` | Video player renderer: supports Ultimate Video Player and Plyr. Single video, multi-video, and playlist output |
+| `Videomanager` | Video player renderer: supports Ultimate Video Player, Plyr and Vidstack. Single video, multi-video, and playlist output |
 | `Module` | Module definitions: 1 module (30-1) |
 
 ## Database Tables
@@ -89,6 +89,7 @@ d2u_videos/
 | ------ | ---- | ----------- |
 | Ultimate Video Player | Commercial | FWDUVPlayer.js with custom skin |
 | Plyr | Open Source | Via Plyr Redaxo addon |
+| Vidstack | Open Source | Via Vidstack Redaxo addon |
 
 ### Schema.org / LD+JSON
 
@@ -126,7 +127,7 @@ Each module has a revision number defined in `lib/Module.php` inside the `getMod
 
 Managed via `pages/settings.php` and stored in `rex_config`:
 
-- `player` — Player type: `ultimate` or `plyr`
+- `player` — Player type: `ultimate`, `plyr` or `vidstack`
 - `player_js` — Media file for player JS
 - `max_height` — Maximum player height (default: 440)
 - `max_width` — Maximum player width (default: 1180)

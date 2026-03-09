@@ -26,6 +26,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
                         $player_options = [
                             'ultimate' => rex_i18n::msg('d2u_videos_settings_ultimate'),
                             'plyr' => rex_i18n::msg('d2u_videos_settings_plyr') .(rex_addon::get('plyr')->isAvailable() ? '' : ' '. rex_i18n::msg('d2u_videos_settings_plyr_install')),
+							'vidstack' => rex_i18n::msg('d2u_videos_settings_vidstack') .(rex_addon::get('vidstack')->isAvailable() ? '' : ' '. rex_i18n::msg('d2u_videos_settings_vidstack_install')),
                         ];
                         \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_videos_settings_player', 'settings[player]', $player_options, [(string) rex_config::get('d2u_videos', 'player')]);
 
