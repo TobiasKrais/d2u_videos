@@ -4,4 +4,9 @@ Mehrsprachiges Redaxo 5 Addon zur Videoverwaltung für YouTube und lokale MP4 Vi
 
 Videos können des weiteren zu Playlists zusammengefügt werden.
 
+Es stehen zwei Beispielmodule zur Verfügung:
+
+- 30-1 D2U Videomanager - Video / Playlist (BS4, deprecated)
+- 30-2 D2U Videomanager - Video / Playlist (BS5)
+
 Im Beispielmodul wird ein Video oder eine Playlist ausgegeben. Die Ausgabe erfolgt auch im LD+JSON Format um die Videoinformationen Suchmaschinen zugänglich zu machen. Als Videoplayer braucht es entweder das Plyr Addon, das Vidstack Addon oder den Ultimate Video Player, der [hier erworben werden kann](https://codecanyon.net/item/ultimate-video-player/7694071). Aus dem gekauften Archiv muss die fwduvplayer.js in den Medienpool hochgeladen werden und in den Einstellungen dieses Addons gespeichert werden.
