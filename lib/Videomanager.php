@@ -125,7 +125,24 @@ class Videomanager
     public function getConfiguredPlayer(): string
     {
         $player = (string) rex_addon::get('d2u_videos')->getConfig('player', 'ultimate');
-        return in_array($player, ['ultimate', 'plyr', 'vidstack'], true) ? $player : 'ultimate';
+        if ('vidstack' === $player && rex_addon::get('vidstack')->isAvailable()) {
+            return 'vidstack';
+        }
+
+        if ('plyr' === $player && rex_addon::get('plyr')->isAvailable()) {
+            return 'plyr';
+        }
+
+        // Prefer Vidstack automatically whenever it is installed.
+        if (rex_addon::get('vidstack')->isAvailable()) {
+            return 'vidstack';
+        }
+
+        if (rex_addon::get('plyr')->isAvailable()) {
+            return 'plyr';
+        }
+
+        return 'ultimate';
     }
 
     /**
@@ -154,9 +171,13 @@ class Videomanager
             echo '<script src="'. rex_url::media((string) $d2u_videos->getConfig('player_js')) .'"></script>';
         } else {
             echo '<p>D2U Videos settings incomplete. Please upload FWDUVPlayer.js to media pool and complete settings.</p>';
+            return;
         }
     ?>
 		<script>
+		if (typeof FWDUVPUtils === 'undefined' || typeof FWDUVPlayer === 'undefined') {
+			console.warn('D2U Videos: FWDUVPlayer assets not available, skipping Ultimate Video Player initialization.');
+		} else {
 		FWDUVPUtils.onReady(function(){
 			FWDUVPlayer.useYoutube = "<?= $useYoutube ?>";
 			new FWDUVPlayer({
@@ -262,6 +283,7 @@ class Videomanager
 				inputColor:"#FFFFFF"
 			});
 		});
+        }
 	</script>
 	<?php
     }

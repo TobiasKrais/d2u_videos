@@ -17,8 +17,11 @@ class Module
     {
         $modules = [];
         $modules[] = new \TobiasKrais\D2UHelper\Module('30-1',
-            'D2U Videomanager - Video / Playlist',
+            'D2U Videomanager - Video / Playlist (BS4, deprecated)',
             5);
+        $modules[] = new \TobiasKrais\D2UHelper\Module('30-2',
+            'D2U Videomanager - Video / Playlist (BS5)',
+            1);
         return $modules;
     }
 }

@@ -399,8 +399,8 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
     private function setPriority($delete = false): void
     {
         // Pull prios from database
-        $query = 'SELECT video_id, priority FROM '. \rex::getTablePrefix() .'d2u_videos_videos '
-            .'WHERE video_id <> '. $this->video_id .' ORDER BY priority';
+        $query = 'SELECT video_id FROM '. \rex::getTablePrefix() .'d2u_videos_videos '
+            .'WHERE video_id <> '. $this->video_id .' ORDER BY priority, video_id';
         $result = rex_sql::factory();
         $result->setQuery($query);
 
@@ -416,7 +416,7 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         $videos = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $videos[(int) $result->getValue('priority')] = (int) $result->getValue('video_id');
+            $videos[] = (int) $result->getValue('video_id');
             $result->next();
         }
         array_splice($videos, $this->priority - 1, 0, [$this->video_id]);
