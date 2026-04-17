@@ -44,10 +44,16 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.3.0-DEV:</p>
 <ul>
+	<li>Neues Modul 30-2 "D2U Videomanager - Video / Playlist (BS5)" hinzugefügt.</li>
+	<li>Modul 30-1 als "(BS4, deprecated)" markiert. Die BS4-Variante wird im nächsten Major Release entfernt.</li>
+	<li>Benötigt d2u_helper &gt;= 2.1.0.</li>
+	<li>Bugfix: Prioritäten werden bei Videos nach dem Speichern wieder stabil neu durchnummeriert, auch wenn in der Datenbank bereits doppelte Werte vorhanden sind.</li>
 	<li>Unterstützung des Vidstack Addons als weitere Player-Option hinzugefügt.</li>
 	<li>Modul "30-1 D2U Videomanager - Video / Playlist" schaltet jetzt zwischen Ultimate Video Player, Plyr und Vidstack um.</li>
 	<li>Vidstack Ausgabe unterstützt einzelne Videos und Playlists inklusive YouTube-Kompatibilität.</li>
 	<li>Ultimate Video Player und Plyr sind als veraltet markiert und werden im nächsten Major Release nicht mehr unterstützt.</li>
+	<li>Backend-Listen sortierbar gemacht und Standardsortierungen von SQL-Queries auf <code>rex_list</code>-<code>defaultSort</code> umgestellt.</li>
+	<li>Die Priorität von Videos kann in der Backend-Liste jetzt direkt per Hoch-/Runter-Buttons geändert werden.</li>
 </ul>
 <p>1.2.1:</p>
 <ul>

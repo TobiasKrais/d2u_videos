@@ -1,4 +1,6 @@
 <?php
+
+use TobiasKrais\D2UHelper\BackendHelper;
 $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
@@ -67,12 +69,12 @@ if ('edit' === $func || 'add' === $func) {
                                 $readonly = false;
                             }
 
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[name]', $playlist->name, true, $readonly, 'text');
+                            BackendHelper::form_input('d2u_helper_name', 'form[name]', $playlist->name, true, $readonly, 'text');
                             $options_videos = [];
                             foreach (TobiasKrais\D2UVideos\Video::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $video) {
                                 $options_videos[$video->video_id] = $video->name;
                             }
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_videos_videos', 'form[video_ids][]', $options_videos, array_keys($playlist->videos), 20, true, $readonly);
+                            BackendHelper::form_select('d2u_videos_videos', 'form[video_ids][]', $options_videos, array_keys($playlist->videos), 20, true, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -95,15 +97,15 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
-        echo \TobiasKrais\D2UHelper\BackendHelper::getJSOpenAll();
+        echo BackendHelper::getCSS();
+        echo BackendHelper::getJS();
+        echo BackendHelper::getJSOpenAll();
 }
 
 if ('' === $func) {
     $query = 'SELECT playlist_id, name FROM '. \rex::getTablePrefix() .'d2u_videos_playlists '
-        .'ORDER BY `name`';
-    $list = rex_list::factory($query, 1000);
+        ;
+    $list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: ['name' => 'ASC']);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
@@ -117,9 +119,11 @@ if ('' === $func) {
 
     $list->setColumnLabel('playlist_id', rex_i18n::msg('id'));
     $list->setColumnLayout('playlist_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('playlist_id');
 
     $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###playlist_id###']);
+    $list->setColumnSortable('name');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

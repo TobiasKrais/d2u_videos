@@ -1,4 +1,6 @@
 <?php
+
+use TobiasKrais\D2UHelper\BackendHelper;
 $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
@@ -86,6 +88,21 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete') || 'delete' === $func) {
 
     $func = '';
 }
+elseif ('priority_down' === $func || 'priority_up' === $func) {
+    $video = new \TobiasKrais\D2UVideos\Video($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'), false);
+    $video->video_id = $entry_id; // Ensure correct ID in case language has no object
+
+    if ('priority_down' === $func) {
+        ++$video->priority;
+        $video->save();
+    } elseif ($video->priority > 1) {
+        --$video->priority;
+        $video->save();
+    }
+
+    header('Location: '. BackendHelper::getCurrentBackendPage(['message' => 'd2u_helper_priority_changed'], ['func', 'entry_id']));
+    exit;
+}
 
 // Form
 if ('edit' === $func || 'add' === $func) {
@@ -106,15 +123,15 @@ if ('edit' === $func || 'add' === $func) {
                                 $readonly = false;
                             }
 
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('header_priority', 'form[priority]', (string) $video->priority, true, $readonly, 'number');
-                            \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_videos_picture', '1', $video->picture, $readonly);
+                            BackendHelper::form_input('header_priority', 'form[priority]', (string) $video->priority, true, $readonly, 'number');
+                            BackendHelper::form_mediafield('d2u_videos_picture', '1', $video->picture, $readonly);
                             $options_link = [
                                 'redaxo' => rex_i18n::msg('d2u_videos_videotype_mp4'),
                                 'youtube' => rex_i18n::msg('d2u_videos_videotype_youtube'),
                             ];
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_videos_videotype', 'form[video_type]', $options_link, [$video->video_type], 1, false, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_videos_redaxo_file', '2', $video->redaxo_file, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_videos_youtube_video_id', 'form[youtube_video_id]', $video->youtube_video_id, false, $readonly, 'text');
+                            BackendHelper::form_select('d2u_videos_videotype', 'form[video_type]', $options_link, [$video->video_type], 1, false, $readonly);
+                            BackendHelper::form_mediafield('d2u_videos_redaxo_file', '2', $video->redaxo_file, $readonly);
+                            BackendHelper::form_input('d2u_videos_youtube_video_id', 'form[youtube_video_id]', $video->youtube_video_id, false, $readonly, 'text');
                         ?>
 						<script>
 							function changeType() {
@@ -156,7 +173,7 @@ if ('edit' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$video->translation_needs_update], 1, false, $readonly_lang);
+                                    BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$video->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
                                 }
@@ -174,12 +191,12 @@ if ('edit' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $video->name, $required, $readonly_lang, 'text');
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_videos_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $video->teaser, 5, false, $readonly_lang, false);
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_videos_videotype', 'form[lang]['. $rex_clang->getId() .'][video_type_lang]', $options_link, [$video->video_type_lang], 1, false, $readonly);
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_videos_redaxo_file_lang', '1'. $rex_clang->getId(), $video->redaxo_file_lang, $readonly_lang);
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_videos_picture_lang', '2'. $rex_clang->getId(), $video->picture_lang, $readonly_lang);
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_videos_youtube_video_id_lang', 'form[lang]['. $rex_clang->getId() .'][youtube_video_id_lang]', $video->youtube_video_id_lang, false, $readonly_lang, 'text');
+                                    BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $video->name, $required, $readonly_lang, 'text');
+                                    BackendHelper::form_textarea('d2u_videos_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $video->teaser, 5, false, $readonly_lang, false);
+                                    BackendHelper::form_select('d2u_videos_videotype', 'form[lang]['. $rex_clang->getId() .'][video_type_lang]', $options_link, [$video->video_type_lang], 1, false, $readonly);
+                                    BackendHelper::form_mediafield('d2u_videos_redaxo_file_lang', '1'. $rex_clang->getId(), $video->redaxo_file_lang, $readonly_lang);
+                                    BackendHelper::form_mediafield('d2u_videos_picture_lang', '2'. $rex_clang->getId(), $video->picture_lang, $readonly_lang);
+                                    BackendHelper::form_input('d2u_videos_youtube_video_id_lang', 'form[lang]['. $rex_clang->getId() .'][youtube_video_id_lang]', $video->youtube_video_id_lang, false, $readonly_lang, 'text');
                                 ?>
 							</div>
 						<script>
@@ -237,17 +254,17 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
+        echo BackendHelper::getCSS();
+        echo BackendHelper::getJS();
 }
 
 if ('' === $func) {
-    $query = 'SELECT videos.video_id, name, priority '
+    $query = 'SELECT videos.video_id, name, priority, '
+        . '(SELECT MAX(priority) FROM '. \rex::getTablePrefix() .'d2u_videos_videos) AS max_priority '
         . 'FROM '. \rex::getTablePrefix() .'d2u_videos_videos AS videos '
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_videos_videos_lang AS lang '
-            . 'ON videos.video_id = lang.video_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
-        .'ORDER BY `priority`';
-    $list = rex_list::factory($query, 1000);
+            . 'ON videos.video_id = lang.video_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' ';
+    $list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: ['priority' => 'ASC']);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
@@ -261,11 +278,25 @@ if ('' === $func) {
 
     $list->setColumnLabel('video_id', rex_i18n::msg('id'));
     $list->setColumnLayout('video_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('video_id');
 
     $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###video_id###']);
+    $list->setColumnSortable('name');
 
     $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
+    $list->setColumnSortable('priority');
+    $list->setColumnFormat('priority', 'custom', static function ($params) {
+        $listParams = $params['list'];
+
+        return BackendHelper::getPriorityButtons(
+            (int) $listParams->getValue('video_id'),
+            (int) $listParams->getValue('priority'),
+            (int) $listParams->getValue('max_priority')
+        );
+    });
+
+    $list->removeColumn('max_priority');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

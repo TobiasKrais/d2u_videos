@@ -1,4 +1,6 @@
 <?php
+
+use TobiasKrais\D2UHelper\BackendHelper;
 // save settings
 if ('save' === filter_input(INPUT_POST, 'btn_save')) {
     $settings = rex_post('settings', 'array', []);
@@ -28,12 +30,12 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
                             'plyr' => rex_i18n::msg('d2u_videos_settings_plyr') .(rex_addon::get('plyr')->isAvailable() ? '' : ' '. rex_i18n::msg('d2u_videos_settings_plyr_install')),
 							'vidstack' => rex_i18n::msg('d2u_videos_settings_vidstack') .(rex_addon::get('vidstack')->isAvailable() ? '' : ' '. rex_i18n::msg('d2u_videos_settings_vidstack_install')),
                         ];
-                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_videos_settings_player', 'settings[player]', $player_options, [(string) rex_config::get('d2u_videos', 'player')]);
+						BackendHelper::form_select('d2u_videos_settings_player', 'settings[player]', $player_options, [(string) rex_config::get('d2u_videos', 'player')]);
 
                         // Fields only for ultimate video player
-                        \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_videos_player_file', 'player_js', (string) rex_config::get('d2u_videos', 'player_js'));
-                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_videos_max_height', 'settings[max_height]', (string) rex_config::get('d2u_videos', 'max_height'), false, false, 'number');
-                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_videos_max_width', 'settings[max_width]', (string) rex_config::get('d2u_videos', 'max_width'), false, false, 'number');
+						BackendHelper::form_mediafield('d2u_videos_player_file', 'player_js', (string) rex_config::get('d2u_videos', 'player_js'));
+						BackendHelper::form_input('d2u_videos_max_height', 'settings[max_height]', (string) rex_config::get('d2u_videos', 'max_height'), false, false, 'number');
+						BackendHelper::form_input('d2u_videos_max_width', 'settings[max_width]', (string) rex_config::get('d2u_videos', 'max_width'), false, false, 'number');
                     ?>
 					<script>
 						function player_type_changer(value) {
@@ -72,6 +74,6 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 	</div>
 </form>
 <?php
-    echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-    echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
-    echo \TobiasKrais\D2UHelper\BackendHelper::getJSOpenAll();
+	echo BackendHelper::getCSS();
+	echo BackendHelper::getJS();
+	echo BackendHelper::getJSOpenAll();

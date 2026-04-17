@@ -21,7 +21,7 @@ page:
 
 requires:
     packages:
-        d2u_helper: '>=1.14.0'
+        d2u_helper: '>=2.1.4'
     php: '>=8.0'
     redaxo: '>=5.10.0'
 
