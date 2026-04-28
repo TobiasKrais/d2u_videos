@@ -5,6 +5,19 @@ $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
+$csrfToken = BackendHelper::getPageCsrfToken();
+if ((
+    1 === (int) filter_input(INPUT_POST, 'btn_save')
+    || 1 === (int) filter_input(INPUT_POST, 'btn_apply')
+    || 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT)
+    || 'save' === filter_input(INPUT_POST, 'btn_save')
+    || 'Speichern' === rex_request::request('btn_save', 'string')
+    || in_array($func, ['delete', 'changestatus', 'priority_up', 'priority_down'], true)
+) && !$csrfToken->isValid()) {
+    echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
+    return;
+}
+
 // Print comments
 if ('' !== $message) {
     echo rex_view::success(rex_i18n::msg($message));
@@ -55,6 +68,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete') || 'delete' === $func) {
 if ('edit' === $func || 'add' === $func) {
 ?>
 	<form action="<?= rex_url::currentBackendPage() ?>" method="post">
+		<?= $csrfToken->getHiddenField() ?>
 		<div class="panel panel-edit">
 			<header class="panel-heading"><div class="panel-title"><?= rex_i18n::msg('d2u_videos_playlists') ?></div></header>
 			<div class="panel-body">
@@ -132,7 +146,7 @@ if ('' === $func) {
     if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_videos[edit_data]'))) {
         $list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
         $list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-        $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###playlist_id###']);
+        $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###playlist_id###'] + $csrfToken->getUrlParams());
         $list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_helper_confirm_delete'));
     }
 
