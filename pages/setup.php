@@ -12,7 +12,11 @@ $d2u_module_id = rex_request('d2u_module_id', 'string');
 $paired_module = rex_request('pair_'. $d2u_module_id, 'int');
 $function = rex_request('function', 'string');
 if ('' !== $d2u_module_id) {
-    $d2u_module_manager->doActions($d2u_module_id, $function, $paired_module);
+    if (!\TobiasKrais\D2UHelper\BackendHelper::getPageCsrfToken()->isValid()) {
+        echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
+    } else {
+        $d2u_module_manager->doActions($d2u_module_id, $function, $paired_module);
+    }
 }
 
 // \TobiasKrais\D2UHelper\ModuleManager show list
@@ -44,6 +48,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.3.0-DEV:</p>
 <ul>
+	<li>Backend: CSRF-Schutz fuer Modul-Installation, -Update und -Deinstallation auf der Setup-Seite ergaenzt.</li>
 	<li>Neues Modul 30-2 "D2U Videomanager - Video / Playlist (BS5)" hinzugefügt.</li>
 	<li>Modul 30-1 als "(BS4, deprecated)" markiert. Die BS4-Variante wird im nächsten Major Release entfernt.</li>
 	<li>Benötigt d2u_helper &gt;= 2.1.0.</li>
