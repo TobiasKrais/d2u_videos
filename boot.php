@@ -44,13 +44,13 @@ function rex_d2u_videos_media_is_in_use(rex_extension_point $ep)
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
-    $filename = addslashes((string) $params['filename']);
+    $filename = (string) $params['filename'];
 
     // News
     $sql_videos = rex_sql::factory();
     $sql_videos->setQuery('SELECT lang.video_id, name FROM `' . rex::getTablePrefix() . 'd2u_videos_videos_lang` AS lang '
         .'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_videos_videos` AS videos ON lang.video_id = videos.video_id '
-        .'WHERE lang.picture = "'. $filename .'" OR videos.picture = "'. $filename .'" OR lang.redaxo_file = "'. $filename .'" OR videos.redaxo_file = "'. $filename .'"');
+        .'WHERE lang.picture = :filename OR videos.picture = :filename OR lang.redaxo_file = :filename OR videos.redaxo_file = :filename', [':filename' => $filename]);
 
     // Prepare warnings
     // News

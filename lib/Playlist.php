@@ -86,17 +86,17 @@ class Playlist
     public function save()
     {
         $query = \rex::getTablePrefix() .'d2u_videos_playlists SET '
-                ."name = '". addslashes($this->name) ."', "
+                .'name = :name, '
                 ."video_ids = '". implode('|', array_keys($this->videos)) ."' ";
 
         if (0 === $this->playlist_id) {
             $query = 'INSERT INTO '. $query;
         } else {
-            $query = 'UPDATE '. $query .' WHERE playlist_id = '. $this->playlist_id;
+            $query = 'UPDATE '. $query .' WHERE playlist_id = '. (int) $this->playlist_id;
         }
 
         $result = rex_sql::factory();
-        $result->setQuery($query);
+        $result->setQuery($query, [':name' => $this->name]);
         if (0 === $this->playlist_id) {
             $this->playlist_id = (int) $result->getLastId();
         }

@@ -24,9 +24,9 @@ $selectedPlayer = $videomanager->getConfiguredPlayer();
 
 if (\rex::isBackend()) {
     if ('playlist' === $type) {
-        echo '<p>Gewählte Playlist: '. $playlist->name .'</p>';
+        echo '<p>Gewählte Playlist: '. rex_escape($playlist->name) .'</p>';
     } elseif ('video' === $type) {
-        echo '<p>Gewähltes Video: '. $video->name .'</p>';
+        echo '<p>Gewähltes Video: '. rex_escape($video->name) .'</p>';
     }
 
     if ('plyr' === $selectedPlayer && !rex_addon::get('plyr')->isAvailable()) {

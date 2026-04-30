@@ -59,6 +59,9 @@ $d2u_module_manager->showManagerList();
 	<li>Ultimate Video Player und Plyr sind als veraltet markiert und werden im nächsten Major Release nicht mehr unterstützt.</li>
 	<li>Backend-Listen sortierbar gemacht und Standardsortierungen von SQL-Queries auf <code>rex_list</code>-<code>defaultSort</code> umgestellt.</li>
 	<li>Die Priorität von Videos kann in der Backend-Liste jetzt direkt per Hoch-/Runter-Buttons geändert werden.</li>
+	<li>Security: Die <code>media-is-in-use</code>-Extension-Points in <code>boot.php</code> verwenden jetzt gebundene Parameter statt SQL-String-Konkatenation mit <code>addslashes()</code>.</li>
+	<li>Security: Die <code>save()</code>-Methoden in <code>lib/Video.php</code> und <code>lib/Playlist.php</code> verwenden jetzt gebundene Parameter statt SQL-String-Konkatenation mit <code>addslashes()</code>.</li>
+	<li>Security: Modul-Ausgaben (<code>modules/30/1/output.php</code>, <code>modules/30/2/output.php</code>) härten Backend-Eingaben gegen XSS via <code>rex_escape()</code> für Playlist- und Video-Namen in HTML- und Attributausgaben.</li>
 </ul>
 <p>1.2.1:</p>
 <ul>

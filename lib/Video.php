@@ -373,10 +373,10 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_video = new self($this->video_id, $this->clang_id);
             if ($pre_save_video !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_videos_videos_lang SET '
-                        ."video_id = '". $this->video_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."teaser = '". addslashes($this->teaser) ."', "
+                        .'video_id = '. (int) $this->video_id .', '
+                        .'clang_id = '. (int) $this->clang_id .', '
+                        .'name = :name, '
+                        .'teaser = :teaser, '
                         ."picture = '". $this->picture_lang ."', "
                         ."video_type = '". $this->video_type_lang ."', "
                         ."youtube_video_id = '". $this->youtube_video_id_lang ."', "
@@ -384,7 +384,7 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
                         ."translation_needs_update = '". $this->translation_needs_update ."' ";
 
                 $result = rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [':name' => $this->name, ':teaser' => $this->teaser]);
                 $error = $result->hasError();
             }
         }
