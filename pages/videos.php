@@ -91,15 +91,17 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete') || 'delete' === $func) {
     }
     $video = new \TobiasKrais\D2UVideos\Video($video_id, (int) rex_config::get('d2u_helper', 'default_lang'), false);
     $video->video_id = $video_id; // Ensure correct ID in case first language has no object
+    $warning = [];
     $playlists = $video->getPlaylists();
     if (count($playlists) > 0) {
-        $message = '<ul>';
         foreach ($playlists as $playlist) {
-            $message .= '<li><a href="index.php?page=d2u_videos/playlist&func=edit&entry_id='. $playlist->playlist_id .'">'. $playlist->name.'</a></li>';
+            $warning[] = '<a href="index.php?page=d2u_videos/playlist&func=edit&entry_id='. $playlist->playlist_id .'">'. $playlist->name.'</a>';
         }
-        $message .= '</ul>';
+    }
+    $warning = rex_extension::registerPoint(new rex_extension_point('D2U_VIDEO_IN_USE', $warning, ['video_id' => $video_id, 'video' => $video]));
 
-        echo rex_view::error(rex_i18n::msg('d2u_helper_could_not_delete') . $message);
+    if (count($warning) > 0) {
+        echo rex_view::error(rex_i18n::msg('d2u_helper_could_not_delete') .'<ul><li>'. implode('</li><li>', $warning) .'</li></ul>');
     } else {
         $video->delete();
     }

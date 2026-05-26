@@ -16,6 +16,9 @@ d2u_videos_playlists = Playlists
 d2u_videos_redaxo_file = Sprachübergreifendes MP4 Video
 d2u_videos_redaxo_file_lang = Übersetzes MP4 Video
 d2u_videos_settings_player = Auswahl Video Player für Ausgabe
+d2u_videos_settings_additional_video_usage_tables = Weitere Video-Verwendungsprüfungen (JSON)
+d2u_videos_settings_additional_video_usage_tables_description = Hier können zusätzliche Datenbankfelder definiert werden, die beim Löschen eines Videos durchsucht werden sollen, um aktive Verwendungen des Videos auszuschließen. Erwartet wird ein JSON-Array mit Objekten wie table, field sowie optional where, name_field und label. Der optionale Filter where erlaubt einfache Bedingungen wie module_id = 10. Für article_slice oder rex_article_slice wird automatisch ein Link zum betroffenen Artikel inklusive Artikelname ausgegeben.
+d2u_videos_settings_json_invalid = Das JSON für weitere Video-Verwendungsprüfungen ist ungültig.
 d2u_videos_settings_plyr = Plyr Addon
 d2u_videos_settings_plyr_install = (das Addon muss installiert und aktiviert sein)
 d2u_videos_settings_plyr_missing = Das Plyr Addon muss installiert und aktiviert sein.

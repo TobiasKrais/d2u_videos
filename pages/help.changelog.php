@@ -1,7 +1,9 @@
 <h2>Changelog</h2>
-<p>1.3.1-DEV:</p>
+<p>1.3.1:</p>
 <ul>
 	<li>Backend: Abbrechen-Buttons in Video- und Playlistformularen fuehren jetzt wieder zur Liste.</li>
+	<li>Neuer Extension Point <code>D2U_VIDEO_IN_USE</code> hinzugefügt. Vor dem Löschen eines Videos werden jetzt Playlist-Verwendungen und externe Verwendungen über Addon-Hooks geprüft.</li>
+	<li>Einstellungen erweitert: Zusätzliche Video-Verwendungsprüfungen können als JSON für eigene Datenbanktabellen/Felder konfiguriert werden. Für Slices wird dabei ein Direktlink zur betroffenen REDAXO-Slice ausgegeben.</li>
 </ul>
 <p>1.3.0:</p>
 <ul>

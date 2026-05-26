@@ -9,10 +9,157 @@ if (\rex::isBackend() && is_object(\rex::getUser())) {
 
 if (\rex::isBackend()) {
     rex_extension::register('CLANG_DELETED', rex_d2u_videos_clang_deleted(...));
+    rex_extension::register('D2U_VIDEO_IN_USE', rex_d2u_videos_configured_video_is_in_use(...));
     rex_extension::register('D2U_HELPER_TRANSLATION_LIST', rex_d2u_videos_translation_list(...));
     rex_extension::register('MEDIA_IS_IN_USE', rex_d2u_videos_media_is_in_use(...));
 } else {
     rex_extension::register('YREWRITE_SITEMAP', rex_d2u_videos_sitemap(...));
+}
+
+/**
+ * Checks if video is used in configured database tables.
+ * @param rex_extension_point<array<string>> $ep Redaxo extension point
+ * @return array<string> Warning message as array
+ */
+function rex_d2u_videos_configured_video_is_in_use(rex_extension_point $ep): array
+{
+    $warning = $ep->getSubject();
+    $params = $ep->getParams();
+    $video_id = (int) $params['video_id'];
+
+    $tables_config = (string) rex_config::get('d2u_videos', 'additional_video_usage_tables', '');
+    if ('' === trim($tables_config)) {
+        return $warning;
+    }
+
+    $tables = json_decode($tables_config, true);
+    if (!is_array($tables)) {
+        return $warning;
+    }
+
+    foreach ($tables as $table_config) {
+        if (!is_array($table_config)) {
+            continue;
+        }
+
+        $table = rex_d2u_videos_get_safe_identifier((string) ($table_config['table'] ?? ''));
+        $field = rex_d2u_videos_get_safe_identifier((string) ($table_config['field'] ?? ''));
+        if ('' === $table || '' === $field) {
+            continue;
+        }
+
+        $id_field = rex_d2u_videos_get_safe_identifier((string) ($table_config['id_field'] ?? ''));
+        $name_field = rex_d2u_videos_get_safe_identifier((string) ($table_config['name_field'] ?? ''));
+        $db_table = str_starts_with($table, rex::getTablePrefix()) ? $table : rex::getTable($table);
+        $is_article_slice_table = in_array($db_table, [rex::getTable('article_slice'), rex::getTablePrefix() . 'article_slice'], true);
+        $select_fields = [$field];
+        if ('' !== $id_field) {
+            $select_fields[] = $id_field;
+        }
+        if ('' !== $name_field) {
+            $select_fields[] = $name_field;
+        }
+        foreach (['id', 'article_id', 'clang_id', 'ctype_id'] as $slice_field) {
+            if ($is_article_slice_table && !in_array($slice_field, $select_fields, true)) {
+                $select_fields[] = $slice_field;
+            }
+        }
+
+        $additional_where = rex_d2u_videos_get_additional_where((string) ($table_config['where'] ?? ''), count($warning));
+        if (null === $additional_where) {
+            continue;
+        }
+
+        $sql = rex_sql::factory();
+        $sql->setQuery('SELECT '. implode(', ', array_map(static fn ($select_field) => '`'. $select_field .'`', $select_fields)) .' FROM `'. $db_table .'` '
+            .'WHERE (`'. $field .'` = :video_id OR FIND_IN_SET(:video_id, `'. $field .'`) OR `'. $field .'` LIKE :pipe_video_id)'
+            . $additional_where['sql'], [
+                ':video_id' => (string) $video_id,
+                ':pipe_video_id' => '%|'. $video_id .'|%',
+                ...$additional_where['params'],
+            ]);
+
+        for ($i = 0; $i < $sql->getRows(); ++$i) {
+            $label = (string) ($table_config['label'] ?? $table);
+            $name = '' !== $name_field ? (string) $sql->getValue($name_field) : '';
+            $message = rex_d2u_videos_get_usage_link($is_article_slice_table, $sql, $label, $name);
+            if (!in_array($message, $warning, true)) {
+                $warning[] = $message;
+            }
+            $sql->next();
+        }
+    }
+
+    return $warning;
+}
+
+/**
+ * Returns safe SQL identifier.
+ */
+function rex_d2u_videos_get_safe_identifier(string $identifier): string
+{
+    return 1 === preg_match('/^[a-zA-Z0-9_]+$/', $identifier) ? $identifier : '';
+}
+
+/**
+ * Returns additional safe WHERE fragment from config.
+ * @return array{sql:string,params:array<string,int|string>}|null Null if invalid
+ */
+function rex_d2u_videos_get_additional_where(string $where, int $index): ?array
+{
+    $where = trim($where);
+    if ('' === $where) {
+        return ['sql' => '', 'params' => []];
+    }
+
+    if (!preg_match('/^([a-zA-Z0-9_]+)\s*(=|!=|>=|<=|>|<)\s*(.+)$/', $where, $matches)) {
+        return null;
+    }
+
+    $field = rex_d2u_videos_get_safe_identifier($matches[1]);
+    if ('' === $field) {
+        return null;
+    }
+
+    $operator = $matches[2];
+    $raw_value = trim($matches[3]);
+    $param_name = ':config_where_'. $index;
+
+    if (preg_match('/^-?\d+$/', $raw_value)) {
+        return [
+            'sql' => ' AND `'. $field .'` '. $operator .' '. $param_name,
+            'params' => [$param_name => (int) $raw_value],
+        ];
+    }
+
+    if (preg_match("/^(\"([^\"]*)\"|'([^']*)')$/", $raw_value, $value_matches)) {
+        $value = '' !== ($value_matches[2] ?? '') ? $value_matches[2] : ($value_matches[3] ?? '');
+        return [
+            'sql' => ' AND `'. $field .'` '. $operator .' '. $param_name,
+            'params' => [$param_name => $value],
+        ];
+    }
+
+    return null;
+}
+
+/**
+ * Returns usage link for configured database table row.
+ */
+function rex_d2u_videos_get_usage_link(bool $is_article_slice_table, rex_sql $sql, string $label, string $name): string
+{
+    if ($is_article_slice_table && (int) $sql->getValue('article_id') > 0) {
+        $article_id = (int) $sql->getValue('article_id');
+        $clang_id = (int) $sql->getValue('clang_id');
+        $slice_id = (int) $sql->getValue('id');
+        $ctype_id = (int) $sql->getValue('ctype_id');
+        $article = rex_article::get($article_id, $clang_id);
+        $article_name = $article instanceof rex_article ? $article->getName() : 'Artikel '. $article_id;
+
+        return '<a href="?page=content/edit&amp;article_id='. $article_id .'&amp;slice_id='. $slice_id .'&amp;clang='. $clang_id .'&amp;ctype='. $ctype_id .'&amp;function=edit">'. rex_escape($article_name) .'</a> (Slice '. $slice_id .')';
+    }
+
+    return rex_escape($label) . ('' !== $name ? ': '. rex_escape($name) : '');
 }
 
 /**
