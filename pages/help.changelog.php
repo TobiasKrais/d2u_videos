@@ -1,4 +1,8 @@
 <h2>Changelog</h2>
+<p>1.3.2-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.3.1:</p>
 <ul>
 	<li>Backend: Abbrechen-Buttons in Video- und Playlistformularen fuehren jetzt wieder zur Liste.</li>
