@@ -30,6 +30,7 @@ d2u_videos_videotype = Video type
 d2u_videos_videotype_mp4 = MP4 file from Redaxo media pool
 d2u_videos_videotype_youtube = Youtube Video ID
 d2u_videos_video = Video
+d2u_videos_video_deleted = Video was deleted.
 d2u_videos_videos = Videos
 d2u_videos_youtube_video_id = Youtube Video ID for all languages
 d2u_videos_youtube_video_id_lang = Translated Youtube Video ID

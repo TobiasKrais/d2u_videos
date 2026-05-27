@@ -31,6 +31,7 @@ d2u_videos_videotype = Videotype
 d2u_videos_videotype_mp4 = MP4-bestand in de Redaxo-mediapool
 d2u_videos_videotype_youtube = Youtube-video-ID
 d2u_videos_video = Video
+d2u_videos_video_deleted = Video is verwijderd.
 d2u_videos_videos = Video's
 d2u_videos_youtube_video_id = Taaloverstijgende Youtube-video-ID
 d2u_videos_youtube_video_id_lang = Youtube-video-ID van de vertaling

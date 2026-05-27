@@ -31,6 +31,7 @@ d2u_videos_videotype = Videotyp
 d2u_videos_videotype_mp4 = MP4 Datei im Redaxo Medienpool
 d2u_videos_videotype_youtube = Youtube Video ID
 d2u_videos_video = Video
+d2u_videos_video_deleted = Video wurde gelöscht.
 d2u_videos_videos = Videos
 d2u_videos_youtube_video_id = Sprachübergreifendes Youtube Video ID
 d2u_videos_youtube_video_id_lang = Youtube Video ID der Übersetzung

@@ -1,7 +1,7 @@
 <h2>Changelog</h2>
 <p>1.3.2-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Bugfix: Nach erfolgreichem Löschen eines Videos wird wieder eine grüne Bestätigungsmeldung mit dem Text "Video wurde gelöscht." angezeigt.</li>
 </ul>
 <p>1.3.1:</p>
 <ul>

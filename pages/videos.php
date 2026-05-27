@@ -104,6 +104,8 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete') || 'delete' === $func) {
         echo rex_view::error(rex_i18n::msg('d2u_helper_could_not_delete') .'<ul><li>'. implode('</li><li>', $warning) .'</li></ul>');
     } else {
         $video->delete();
+        header('Location: '. BackendHelper::getCurrentBackendPage(['message' => 'd2u_videos_video_deleted'], ['entry_id', 'func', 'message', 'message_type']));
+        exit;
     }
 
     $func = '';
