@@ -2,6 +2,7 @@
 <p>1.3.2-DEV:</p>
 <ul>
 	<li>Bugfix: Nach erfolgreichem Löschen eines Videos wird wieder eine grüne Bestätigungsmeldung mit dem Text "Video wurde gelöscht." angezeigt.</li>
+	<li>Security/Bugfix: Die <code>save()</code>-Methode in <code>lib/Video.php</code> verwendet jetzt gebundene Parameter statt SQL-String-Konkatenation (Sprach- und Nicht-Sprach-Felder wie <code>picture</code>, <code>video_type</code>, <code>youtube_video_id</code>, <code>redaxo_file</code>, <code>translation_needs_update</code>); <code>getPlaylists()</code> castet die Video-ID in der LIKE-Abfrage nach <code>int</code>. Verhindert SQL-Injection und <code>rex_sql_exception</code> bei Werten mit Anfuehrungszeichen.</li>
 </ul>
 <p>1.3.1:</p>
 <ul>

@@ -228,7 +228,7 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getPlaylists()
     {
         $query = 'SELECT playlist_id FROM '. \rex::getTablePrefix() .'d2u_videos_playlists '
-            ."WHERE video_ids = '". $this->video_id ."' OR video_ids LIKE '%,". $this->video_id ."%' OR video_ids LIKE '%". $this->video_id .",%'";
+            ."WHERE video_ids = '". (int) $this->video_id ."' OR video_ids LIKE '%,". (int) $this->video_id ."%' OR video_ids LIKE '%". (int) $this->video_id .",%'";
         $result = rex_sql::factory();
         $result->setQuery($query);
 
@@ -348,20 +348,25 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         if (0 === $this->video_id || $pre_save_video !== $this) {
             $query = \rex::getTablePrefix() .'d2u_videos_videos SET '
-                    ."picture = '". $this->picture ."', "
-                    .'priority = '. $this->priority .', '
-                    ."video_type = '". $this->video_type ."', "
-                    ."youtube_video_id = '". $this->youtube_video_id ."', "
-                    ."redaxo_file = '". $this->redaxo_file ."' ";
+                    .'picture = :picture, '
+                    .'priority = '. (int) $this->priority .', '
+                    .'video_type = :video_type, '
+                    .'youtube_video_id = :youtube_video_id, '
+                    .'redaxo_file = :redaxo_file ';
 
             if (0 === $this->video_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE video_id = '. $this->video_id;
+                $query = 'UPDATE '. $query .' WHERE video_id = '. (int) $this->video_id;
             }
 
             $result = rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [
+                ':picture' => $this->picture,
+                ':video_type' => $this->video_type,
+                ':youtube_video_id' => $this->youtube_video_id,
+                ':redaxo_file' => $this->redaxo_file,
+            ]);
             if (0 === $this->video_id) {
                 $this->video_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -377,14 +382,22 @@ class Video implements \TobiasKrais\D2UHelper\ITranslationHelper
                         .'clang_id = '. (int) $this->clang_id .', '
                         .'name = :name, '
                         .'teaser = :teaser, '
-                        ."picture = '". $this->picture_lang ."', "
-                        ."video_type = '". $this->video_type_lang ."', "
-                        ."youtube_video_id = '". $this->youtube_video_id_lang ."', "
-                        ."redaxo_file = '". $this->redaxo_file_lang ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."' ";
+                        .'picture = :picture_lang, '
+                        .'video_type = :video_type_lang, '
+                        .'youtube_video_id = :youtube_video_id_lang, '
+                        .'redaxo_file = :redaxo_file_lang, '
+                        .'translation_needs_update = :translation_needs_update ';
 
                 $result = rex_sql::factory();
-                $result->setQuery($query, [':name' => $this->name, ':teaser' => $this->teaser]);
+                $result->setQuery($query, [
+                    ':name' => $this->name,
+                    ':teaser' => $this->teaser,
+                    ':picture_lang' => $this->picture_lang,
+                    ':video_type_lang' => $this->video_type_lang,
+                    ':youtube_video_id_lang' => $this->youtube_video_id_lang,
+                    ':redaxo_file_lang' => $this->redaxo_file_lang,
+                    ':translation_needs_update' => $this->translation_needs_update,
+                ]);
                 $error = $result->hasError();
             }
         }
