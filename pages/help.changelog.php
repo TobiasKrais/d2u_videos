@@ -1,6 +1,7 @@
 <h2>Changelog</h2>
 <p>1.3.2-DEV:</p>
 <ul>
+	<li>Wartung: Die Backend-Seiten Einstellungen und Setup verzichten jetzt auf separate Inhaltsdateien mit <code>require</code>; der Inhalt steht direkt in <code>pages/settings.settings.php</code> und <code>pages/settings.setup.php</code>. Damit kann ein versehentliches Löschen einer Zieldatei die Seiten nicht mehr unbenutzbar machen.</li>
 	<li>Bugfix: Nach erfolgreichem Löschen eines Videos wird wieder eine grüne Bestätigungsmeldung mit dem Text "Video wurde gelöscht." angezeigt.</li>
 	<li>Security/Bugfix: Die <code>save()</code>-Methode in <code>lib/Video.php</code> verwendet jetzt gebundene Parameter statt SQL-String-Konkatenation (Sprach- und Nicht-Sprach-Felder wie <code>picture</code>, <code>video_type</code>, <code>youtube_video_id</code>, <code>redaxo_file</code>, <code>translation_needs_update</code>); <code>getPlaylists()</code> castet die Video-ID in der LIKE-Abfrage nach <code>int</code>. Verhindert SQL-Injection und <code>rex_sql_exception</code> bei Werten mit Anfuehrungszeichen.</li>
 </ul>
