@@ -32,8 +32,10 @@ $d2u_module_manager->showManagerList();
 		<pre>Header set Accept-Ranges bytes</pre></li>
 </ul>
 <h2>Fremdcode</h2>
-<p>Für den Videoplayer braucht entweder das Plyr Addon, das Vidstack Addon oder den Ultimate Video Player, der hier erworben
-	werden kann: <a href="http://codecanyon.net/item/ultimate-video-player/7694071">
+<p>Für den Videoplayer wird primär das <strong>Vidstack Addon</strong> empfohlen. Aus Gründen der
+	Abwärtskompatibilität werden zusätzlich das Plyr Addon sowie der Ultimate Video Player unterstützt;
+	beide sind jedoch als veraltet markiert und werden im nächsten Major Release entfernt. Der Ultimate
+	Video Player kann hier erworben werden: <a href="http://codecanyon.net/item/ultimate-video-player/7694071">
 	http://codecanyon.net/item/ultimate-video-player/7694071</a>. Aus dem gekauften
 	Archiv muss die start/java/fwduvplayer.js in den Medienpool hochgeladen werden und
 	in den Einstellungen dieses Addons gespeichert werden.</p>

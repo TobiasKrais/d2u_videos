@@ -55,9 +55,10 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<div class="panel-body-wrapper slide">
 					<?php
                         $player_options = [
-                            'ultimate' => rex_i18n::msg('d2u_videos_settings_ultimate'),
-                            'plyr' => rex_i18n::msg('d2u_videos_settings_plyr') .(rex_addon::get('plyr')->isAvailable() ? '' : ' '. rex_i18n::msg('d2u_videos_settings_plyr_install')),
-							'vidstack' => rex_i18n::msg('d2u_videos_settings_vidstack') .(rex_addon::get('vidstack')->isAvailable() ? '' : ' '. rex_i18n::msg('d2u_videos_settings_vidstack_install')),
+                            // Vidstack is the recommended player; Plyr and the Ultimate Video Player are deprecated.
+                            'vidstack' => rex_i18n::msg('d2u_videos_settings_vidstack') .' '. rex_i18n::msg('d2u_videos_settings_recommended') .(rex_addon::get('vidstack')->isAvailable() ? '' : ' '. rex_i18n::msg('d2u_videos_settings_vidstack_install')),
+                            'plyr' => rex_i18n::msg('d2u_videos_settings_plyr') .' '. rex_i18n::msg('d2u_videos_settings_deprecated') .(rex_addon::get('plyr')->isAvailable() ? '' : ' '. rex_i18n::msg('d2u_videos_settings_plyr_install')),
+                            'ultimate' => rex_i18n::msg('d2u_videos_settings_ultimate') .' '. rex_i18n::msg('d2u_videos_settings_deprecated'),
                         ];
 						BackendHelper::form_select('d2u_videos_settings_player', 'settings[player]', $player_options, [(string) rex_config::get('d2u_videos', 'player')]);
 
