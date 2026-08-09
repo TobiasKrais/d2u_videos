@@ -1,5 +1,5 @@
 <h2>Changelog</h2>
-<p>1.3.2-DEV:</p>
+<p>1.3.2:</p>
 <ul>
 	<li>Dokumentation/Einstellungen: Das Vidstack Addon wird jetzt durchgängig als primärer, empfohlener Videoplayer ausgewiesen. In der Player-Auswahl (Einstellungen) steht Vidstack an erster Stelle und ist mit "(empfohlen)" gekennzeichnet, Plyr und der Ultimate Video Player sind mit "(veraltet)" markiert. README und Setup-Hilfeseite wurden entsprechend angepasst (neue Sprachschlüssel <code>d2u_videos_settings_recommended</code> und <code>d2u_videos_settings_deprecated</code> in de/en/nl).</li>
 	<li>Wartung: Die Backend-Seiten Einstellungen und Setup verzichten jetzt auf separate Inhaltsdateien mit <code>require</code>; der Inhalt steht direkt in <code>pages/settings.settings.php</code> und <code>pages/settings.setup.php</code>. Damit kann ein versehentliches Löschen einer Zieldatei die Seiten nicht mehr unbenutzbar machen.</li>
