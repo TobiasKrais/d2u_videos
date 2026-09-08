@@ -11,6 +11,7 @@ if (\rex::isBackend()) {
     rex_extension::register('CLANG_DELETED', rex_d2u_videos_clang_deleted(...));
     rex_extension::register('D2U_VIDEO_IN_USE', rex_d2u_videos_configured_video_is_in_use(...));
     rex_extension::register('D2U_HELPER_TRANSLATION_LIST', rex_d2u_videos_translation_list(...));
+    rex_extension::register('D2U_HELPER_TRANSLATE_OBJECT', rex_d2u_videos_translate_object(...));
     rex_extension::register('MEDIA_IS_IN_USE', rex_d2u_videos_media_is_in_use(...));
 } else {
     rex_extension::register('YREWRITE_SITEMAP', rex_d2u_videos_sitemap(...));
@@ -297,7 +298,7 @@ function rex_d2u_videos_translation_list(rex_extension_point $ep) {
             if ('' === $video->name) {
                 $video = new \TobiasKrais\D2UVideos\Video($video->video_id, $source_clang_id);
             }
-            $html .= '<li><a href="'. rex_url::backendPage('d2u_videos/videos', ['entry_id' => $video->video_id, 'func' => 'edit']) .'">'. $video->name .'</a></li>';
+            $html .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_videos', 'video', $video->video_id, $video->name, rex_url::backendPage('d2u_videos/videos', ['entry_id' => $video->video_id, 'func' => 'edit']));
         }
         $html .= '</ul>';
         
@@ -311,4 +312,38 @@ function rex_d2u_videos_translation_list(rex_extension_point $ep) {
     $list[] = $list_entry;
 
     return $list;
+}
+
+/**
+ * Translate a single d2u_videos object with AI (D2U_HELPER_TRANSLATE_OBJECT).
+ * @param rex_extension_point<array<string,mixed>> $ep Redaxo extension point
+ * @return array<string,mixed> Result array with success, name and message
+ */
+function rex_d2u_videos_translate_object(rex_extension_point $ep) {
+    $params = $ep->getParams();
+    if ('d2u_videos' !== ($params['addon'] ?? '')) {
+        return $ep->getSubject();
+    }
+
+    $type = (string) ($params['type'] ?? '');
+    $id = (int) ($params['id'] ?? 0);
+    $source_clang_id = (int) ($params['source_clang_id'] ?? 0);
+    $target_clang_id = (int) ($params['target_clang_id'] ?? 0);
+
+    if ('video' !== $type) {
+        return $ep->getSubject();
+    }
+
+    $video = new \TobiasKrais\D2UVideos\Video($id, $target_clang_id, false);
+    if ($video->video_id <= 0) {
+        return ['success' => false, 'name' => '', 'message' => rex_i18n::msg('d2u_helper_translations_ai_error')];
+    }
+
+    $success = $video->translateFrom($source_clang_id);
+
+    return [
+        'success' => $success,
+        'name' => $video->name,
+        'message' => $success ? '' : rex_i18n::msg('d2u_helper_translations_ai_error'),
+    ];
 }
