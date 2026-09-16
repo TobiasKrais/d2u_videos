@@ -4,6 +4,10 @@ Mehrsprachiges Redaxo 5 Addon zur Videoverwaltung für YouTube und lokale MP4 Vi
 
 Videos können des weiteren zu Playlists zusammengefügt werden.
 
+## REST API
+
+Bei installiertem [`api`](https://github.com/FriendsOfREDAXO/api)-Addon stellt d2u_videos eine REST API bereit, mit der externe Werkzeuge Videos und Wiedergabelisten auslesen und einspielen können. Es gibt einen Discovery-Endpunkt (`/api/d2u_videos/schema`), der die verfügbaren Felder je Ressource meldet. Details siehe [API.md](API.md) sowie im Backend unter **Hilfe › REST API**.
+
 Es stehen zwei Beispielmodule zur Verfügung:
 
 - 30-1 D2U Videomanager - Video / Playlist (BS4, deprecated)
