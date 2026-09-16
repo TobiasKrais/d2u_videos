@@ -23,6 +23,7 @@ page:
             itemClass: pull-right
             subpages:
                 changelog: { title: 'translate:d2u_helper_help_chapter_changelog' }
+                api: { title: 'translate:d2u_videos_help_chapter_api' }
 
 requires:
     packages:

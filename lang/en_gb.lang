@@ -12,6 +12,7 @@ d2u_videos_no_videos_found = No videos found.
 d2u_videos_picture = Preview image
 d2u_videos_player_file = Ultimate Video Player JS
 d2u_videos_playlists = Playlists
+d2u_videos_help_chapter_api = REST API
 d2u_videos_redaxo_file = MP4 Video for all languages
 d2u_videos_redaxo_file_lang = Translated MP4 Video
 d2u_videos_settings_player = Select video player for output
