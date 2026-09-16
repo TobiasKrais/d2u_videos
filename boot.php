@@ -1,5 +1,10 @@
 <?php
 
+// Register the REST API with the "api" addon (frontend + backend requests).
+if (\rex_addon::get('api')->isAvailable()) {
+    \FriendsOfRedaxo\Api\RouteCollection::registerRoutePackage(new \TobiasKrais\D2UVideos\Api\VideosApi());
+}
+
 if (\rex::isBackend() && is_object(\rex::getUser())) {
     rex_perm::register('d2u_videos[]', rex_i18n::msg('d2u_videos_rights'));
     rex_perm::register('d2u_videos[edit_data]', rex_i18n::msg('d2u_videos_rights_edit_data'), rex_perm::OPTIONS);

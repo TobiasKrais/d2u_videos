@@ -2,6 +2,7 @@
 <p>1.3.3-DEV:</p>
 <ul>
 	<li>Neu: KI-Übersetzung in der Übersetzungshilfe von d2u_helper. Ist das Addon <code>ai_platform</code> installiert und ein Standard-Textprofil konfiguriert, lassen sich fehlende oder zu aktualisierende Übersetzungen von Videos direkt in der Übersetzungshilfe automatisch übersetzen (einzeln oder alle auf einmal). Dazu implementiert <code>Video</code> das neue Interface <code>TobiasKrais\D2UHelper\ITranslateable</code> und die <code>boot.php</code> beantwortet den Extension Point <code>D2U_HELPER_TRANSLATE_OBJECT</code>.</li>
+	<li>Neu: REST-API auf Basis des <code>api</code>-Addons (optional). Ist das Addon <code>api</code> installiert, stehen unter <code>/api/d2u_videos/…</code> CRUD-Endpunkte für Videos und Wiedergabelisten sowie ein Discovery-Endpunkt (<code>/api/d2u_videos/schema</code>) bereit, der die verfügbaren Felder je Ressource beschreibt. Sprachabhängige Felder werden je Sprache unter <code>translations</code> übergeben, sprachunabhängige unter <code>fields</code>. Die neuen Klassen liegen im Namespace <code>TobiasKrais\D2UVideos\Api</code> (<code>VideosApi</code>, <code>Schema</code>).</li>
 </ul>
 <p>1.3.2:</p>
 <ul>
